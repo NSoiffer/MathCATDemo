@@ -1,0 +1,458 @@
+---
+-
+   include: "common-rules.yaml"
+
+
+-
+   name: default
+   tag: msqrt
+   match: "."
+   replace: 
+    - test: 
+         if: "$Verbosity!='Terse'"
+         then: {t: the}
+    - t: square root
+    - test: 
+         if: "$Verbosity!='Terse'"
+         then: {t: of}
+         else: {pause: short}
+    - x: "*[1]"
+    - test: 
+         if: IsNode(*[1], 'leaf')
+         then: [pause: short]
+         else: [t: end root, pause: short]
+
+-
+   name: default
+   tag: mroot
+   match: "."
+   replace: 
+      - test: 
+         if: "$Verbosity!='Terse'"
+         then: {t: the}
+      - test:
+         if: "*[2][self::m:mn]"
+         then_test:
+            - if: "*[2][text()='2']"
+              then: {t: square root}
+            - else_if: "*[2][text()='3']"
+              then: {t: cube root}
+            - else_if: "*[2][not(contains(., '.'))]"
+              then: [x: "ToOrdinal(*[2])", t: root]
+         else:
+            - test:
+               if: "*[2][self::m:mi][string-length(.)=1]"
+               then: [x: "*[2]", ct: "-th"]
+               else: {x: "*[2]"}
+            - t: root
+      - test: 
+            if: "$Verbosity!='Terse'"
+            then: {t: of}
+      - x: "*[1]"
+      - test: 
+         if: IsNode(*[1], 'leaf')
+         then: [pause: short]
+         else: [t: end root, pause: short]
+        
+               
+# Fraction rules
+# Mixed numbers mostly "just work" because the invisible char reads as "and" and other parts read properly on their own
+-
+   name: common-fraction
+   tag: mfrac
+   match:
+      - "*[1][self::m:mn][not(contains(., '.')) and text()<20]   and" 
+      - "*[2][self::m:mn][not(contains(., '.')) and 2<= text() and text()<=10]"
+   replace: [x: ToCommonFraction(.)]
+-
+   name: common-fraction-mixed-number
+   tag: mfrac
+   match:
+      - "preceding-sibling::*[1][self::m:mo][text()='\u2064'] and" # preceding element is invisible plus
+      - "*[1][self::m:mn][not(contains(., '.'))]   and" 
+      - "*[2][self::m:mn][not(contains(., '.'))]"
+   replace: [x: ToCommonFraction(.)]
+-
+   # don't include nested fractions. E.g, fraction a plus b over c + 1 end fraction" is ambiguous
+   # by simplistic SimpleSpeak's rules "b over c" is a fraction, but if we say nested fractions
+   # are never simple, then any 'over' applies only to enclosing "fraction...end fraction" pair.
+   name: simple
+   tag: mfrac
+   match:
+    - "(IsNode(*[1],'leaf') and IsNode(*[2],'leaf')) and"
+    - "not(ancestor::*[name() != 'mrow'][1]/self::m:mfrac)"
+   replace: 
+    - x: "*[1]"
+    - t: over
+    - x: "*[2]"
+    - pause: short
+
+-
+   name: default
+   tag: mfrac
+   match: "."
+   replace: 
+    - t: fraction
+    - pause: short
+    - x: "*[1]"
+    - test:
+         if: "not(IsNode(*[1],'leaf'))"
+         then: [pause: short]
+    - t: over
+    - test:
+         if: "not(IsNode(*[2],'leaf'))"
+         then: [pause: short]
+    - x: "*[2]"
+    - pause: short
+    - t: end fraction
+    - pause: medium
+
+-
+   name: simple-integer
+   tag: msup
+   match: "*[2][self::m:mn][not(contains(., '.'))]"
+   replace: 
+    - x: "*[1]"
+    - t: to the
+    - test: 
+         if: "*[2][.>0]"
+         then: {x: "ToOrdinal(*[2])"}
+         else: {x: "*[2]"}
+-
+   name: simple-negative-integer
+   tag: msup
+   match: 
+    - "*[2][self::m:mrow][count(*)=2]"
+    - "[*[1][self::m:mo][text()='-'] and"
+    - "*[2][self::m:mn][not(contains(., '.'))]]"
+   replace: 
+    - x: "*[1]"
+    - t: to the
+    - x: "*[2]"
+-
+   name: simple-var
+   tag: msup
+   match: "*[2][self::m:mi][string-length(.)=1]"
+   replace: 
+    - x: "*[1]"
+    - t: to the
+    - x: "*[2]"
+    - ct: "-th"
+
+-
+   name: simple
+   tag: msup
+   match: "IsNode(*[2], 'leaf')"
+   replace: 
+    - x: "*[1]"
+    - t: to the
+    - x: "*[2]"
+-
+   # ending nested exponents with "...power power" sounds bad
+   # it won't end in "power" if the exponent is simple enough
+   # FIX: not that important, but this misses the case where the nested exp is a negative integer (change test if this is fixed)
+   name: nested
+   tag: msup
+   match:
+    - "*[2]["
+    - "     (self::m:msup and not(IsNode(*[2], 'leaf'))) or"                  # non-simple nested superscript
+    - "     self::m:mrow[*[last()][self::m:msup[not(IsNode(*[2], 'leaf'))]]]" # same as above but at the end of an mrow
+    - "    ]"
+   replace: 
+    - x: "*[1]"
+    - t: raised to the
+    - x: "*[2]"
+    - pause: short
+    - t: end exponent
+-
+   name: default
+   tag: msup
+   match: "."
+   replace: 
+    - x: "*[1]"
+    - t: raised to the
+    - x: "*[2]"
+    - t: power
+
+#
+# Some rules on mrows
+#
+-
+   name: absolute-value
+   tag: mrow
+   match: "count(*)=3 and not(*[2][self::m:mtable]) and IsBracketed(., '|', '|')"
+   replace: 
+   - test: 
+      if: "$Verbosity!='Terse'"
+      then: {t: the}
+   - t: absolute value of 
+   - x: "*[2]"
+   - test:
+         if: IsNode(*[2], 'leaf')
+         then: [pause: short]
+         else: [pause: short, t: end absolute value, pause: short]
+
+-
+   name: set
+   tag: mrow
+   match: "IsBracketed(., '{', '}')"
+   replace: 
+   - test: 
+       - if: "count(*)=2"
+         then:
+            - test: 
+               if: "$Verbosity!='Terse'"
+               then: {t: the}
+            - t: empty set
+       - else_if: "count(*[2]/*)=3 and *[2]/*[2][self::m:mo][text()=':' or text()='|']"
+         then:
+            - test: 
+               if: "$Verbosity!='Terse'"
+               then: {t: the}
+            - t: set of all
+            - x: "*[2]/*[1]"
+            - t: such that
+            - x: "*[2]/*[3]"
+         else:
+            - test: 
+               if: "$Verbosity!='Terse'"
+               then: {t: the}
+            - t: set 
+            - x: "*[2]"
+
+
+
+-
+   name: intervals
+   tag: mrow
+   match: ".[starts-with(@intent, 'interval')]  "
+   replace: 
+   - test: 
+      if: "$Verbosity!='Terse'"
+      then: {t: the}
+   - test:
+      if: "*[1][text()='(']"
+      then_test:
+         if: "*[3][text()=')']"
+         then: [t: "open"]
+         else: [t: "open closed"]
+      else_test:
+         if: "*[3][text()=')']"
+         then: [t: "closed open"]
+         else: [t: "closed"]
+   - t: interval
+   - x: "*[2]"
+   - pause: short
+
+
+#
+# Matrix/Determinant rules
+# matrix and determinant are the same other than "matrix"/"determinant" based on the bracketing chars
+# the pausing logic is pushed down to the <mtd>
+# the rules either speak the <mtr>s (to get "row n") or the <mtd>s. "column n" spoken if $IsColumnSilent is false
+-
+   name: 1x1-matrix
+   tag: mrow
+   variables: [IsColumnSilent: "true()"]
+   match:
+   - "*[2][self::m:mtable] and"
+   - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+   - count(*[2]/*)=1 and count(*[2]/*[self::m:mtr][1]/*)=1
+   replace:
+    - ot: the
+    - t: 1 by 1
+    - test:
+        if: "*[1][text()='|']"    # just need to check the first bracket since we know it must be (, [, or |
+        then: {t: determinant}
+        else: {t: matrix}
+    - t: with entry
+    - x: "*[2]/*[1]/*"
+
+# simpler reading methods for smaller matrices if the entries are simple
+-
+  name: 2-or-3x1-matrix
+  tag: mrow
+  variables: [IsColumnSilent: true()]
+  match:
+    - "*[2][self::m:mtable] and"
+    - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+    - count(*[2]/*[1]/*)=1 and    # one column
+    - count(*[2]/*)<=3 and   # at least two rows
+    - IsNode(*[2]/*/*/*,'simple')   # IsNode() returns true if all the nodes are simple
+  replace: 
+    - t: the
+    - x: count(*[2]/*)
+    - t: by 1 column matrix
+    - pause: long
+    - x: "*[2]/*/*"
+    - t: end matrix
+
+-
+  name: default-column-matrix
+  tag: mrow
+  variables: [IsColumnSilent: true()]
+  match:
+    - "*[2][self::m:mtable] and"
+    - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+    - count(*[2]/*[1]/*)=1
+  replace: 
+    - t: the
+    - x: "count(*[2]/*)"
+    - t: by 1 column matrix
+    - pause: long
+    - x: "*[2]/*"     # select the rows (mtr)
+    - t: "end matrix"
+
+-
+  name: 1x2-or-3-matrix
+  tag: mrow
+  variables: [IsColumnSilent: true()]
+  match:
+    - "*[2][self::m:mtable] and"
+    - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+    - count(*[2]/*)=1  and          # one row
+    - count(*[2]/*[1]/*)<=3 and   # at least two cols
+    - IsNode(*[2]/*/*/*,'simple')   # IsNode() returns true if all the nodes are simple
+  replace: 
+    - t: the 1 by
+    - x: count(*[2]/*/*)
+    - t: row matrix
+    - pause: long
+    - x: "*[2]/*/*"
+    - t: end matrix
+ 
+-
+  name: default-row-matrix
+  tag: mrow
+  variables: [IsColumnSilent: false()]
+  match:
+    - "*[2][self::m:mtable] and"
+    - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+    - count(*[2]/*)=1         # one row
+  replace: 
+    - t: the 1 by
+    - x: "count(*[2]/*/*)"
+    - t: row matrix
+    - pause: long
+    - pause: medium
+    - x: "*[2]/*/*"     # select the cols (mtd)
+    - t: "end matrix"
+
+-
+  name: simple-small-matrix
+  tag: mrow
+  match:
+    - "*[2][self::m:mtable] and"
+    - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|')) and
+    - (count(*[2]/*)<=3 and count(*[2]/*[1]/*)<=3) and       # no bigger than a 3x3 matrix
+    - IsNode(*[2]/*/*/*,'simple')         # IsNode() returns true if all the nodes are simple
+  variables: [IsColumnSilent: true()]
+  replace: 
+    - t: the
+    - x: count(*[2]/*)
+    - t: by
+    - x: count(*[2]/*[self::m:mtr][1]/*)
+    - test:
+        if: "*[1][text()='|']"    # just need to check the first bracket since we know it must be (, [, or |
+        then: {t: determinant}
+        else: {t: matrix}
+    - pause: long
+    - x: "*[2]/*"
+    - t: end matrix
+ 
+-
+   name: default-matrix
+   tag: mrow
+   variables: [IsColumnSilent: false()]
+   match:
+   - "*[2][self::m:mtable] and"
+   - (IsBracketed(., '(', ')') or IsBracketed(., '[', ']') or IsBracketed(., '|', '|'))
+   replace: 
+    - t: the
+    - x: "count(*[2]/*)"
+    - t: by
+    - x: "count(*[2]/*[self::m:mtr][1]/*)"
+    - test:
+        if: "*[1][text()='|']"    # just need to check the first bracket since we know it must be (, [, or |
+        then: {t: determinant}
+        else: {t: matrix}
+    - pause: long
+    - x: "*[2]/*"
+    - t: end
+    - test:
+        if: "*[1][text()='|']"    # just need to check the first bracket since we know it must be (, [, or |
+        then: {t: determinant}
+        else: {t: matrix}
+-
+  name: default
+  tag: [mtr, mlabeledtr]
+  match: "."
+  replace:
+   - t: row
+   - x: "count(preceding-sibling::*)+1"
+   - test:
+      if: .[self::m:mlabeledtr]
+      then:
+         - t: with label
+         - x: "*[1]/*"
+         - pause: short
+   - pause: medium
+   - test:
+      if: .[self::m:mlabeledtr]
+      then: [x: "*[position()>1]"]
+      else: {x: "*"}
+-
+  name: default
+  tag: mtd
+  match: "."
+  replace:
+   - test: 
+      if: "not($IsColumnSilent)"
+      then:
+         - t: column
+         - x: "count(preceding-sibling::*)+1"
+         - pause: medium
+   - x: "*"
+   - test:
+      # short pause after each element; medium pause if last element in a row; long pause for last element in matrix
+      - if: count(following-sibling::*) > 0
+        then: {pause: short}
+      - else_if: count(../following-sibling::*) > 0
+        then: {pause: medium}
+        else: {pause: long}
+ 
+
+-
+   name: times
+   tag: mo
+   match:
+      # say "times" when invisible times is followed by parens or a superscript that has a base with parens or "|"s
+      - "text()='\u2062' and ("
+      - "  following-sibling::*[1][" 
+      - "    IsBracketed(., '(', ')') or IsBracketed(., '[(]', ']') or IsBracketed(., '|', '|') or "  # followed by parens
+      - "    ( (self::m:msup or self::m:msub or self::m:msubsup) and "                                # followed by msup, etc.
+      - "       *[1][self::m:mrow][IsBracketed(., '(', ')') or IsBracketed(., '[(]', ']') or IsBracketed(., '|', '|')]"  # base has parens
+      - "    )"
+      - "  ]"
+       # other possibility is the preceding element has parens (but not the following)
+      - " or "  
+      - "  preceding-sibling::*[1][" 
+      - "    IsBracketed(., '(', ')') or IsBracketed(., '[(]', ']') or IsBracketed(., '|', '|')]"  # followed by parens
+      - " )"
+   replace:
+      - t: times
+
+-
+   name: no-say-parens
+   tag: mrow
+   match:
+      - "parent::*[not(self::m:msup) and not(self::m:msub) and not(self::m:msubsup)] and "
+      - "( IsBracketed(., '(', ')') or IsBracketed(., '[', ']') ) and "
+      - "( IsNode(*[2], 'simple')  )"
+         # missing clause: 'a positive fraction that is spoken as an ordinal
+         #   (either by the Ordinal preference or by the default rules_'
+   replace:
+      - x: "*[2]"
+
+-
+   include: "default-rules.yaml"

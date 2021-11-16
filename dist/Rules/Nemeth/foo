@@ -1,0 +1,2736 @@
+          - "       following-sibling::*[2][DEBUG(IsNode(., 'nemeth_punctuation'))] "
+          - "       preceding-sibling::*[2][IsNode(., 'nemeth_punctuation')] "
+          - "    (DEBUG(text() = '\u2062') and DEBUG(count(following-sibling::*) > 1) and "
+          - "    (text() != '\u2062' and IsNode(., 'nemeth_punctuation')) or "
+          - "    (text() != '\u2062' and IsNode(., 'nemeth_punctuation')) or "
+          - "    (text() = '\u2062' and count(preceding-sibling::*) > 1 and "
+          - "    ) ]  )"
+          - "    ) ] )"
+          - "  count(following-sibling::*) > 0 and "
+          - "  count(preceding-sibling::*) > 0 and "
+          - "  following-sibling::*[1][ "
+          - "  preceding-sibling::*[1][ "
+          - "not("
+          - "not("
+          # test if first ancestor that isn't an mrow is a script tag (rule 78)
+        else: [t: "⠠⠀"]
+        else: [t: "⠤"]
+        else: [t: "⠨⠐"]         # add multipurpose indicator rule 177.v (use if not followed by digit or comma)
+        else: [t: "⠸⠖"]
+        if: "not(following-sibling::*[1][IsBracketed(., '', '')])"
+        if: "self::m:mn"
+        if: "self::m:mo"
+        if: "self::m:mtext"
+        if:
+        if:
+        then: [t: "⠀"]
+        then: [t: "⠀"]
+        then: [t: "⠀"]
+        then: [t: "⠠"]
+        then: [t: "⠨"]
+        then: [t: "⠪"]        # Rule 78
+        then: [t: "⠯"]
+        then: [t: "⠸⠤"]
+      - else_if: "self::m:mn"
+      - if: "ancestor::*[name() != 'mrow'][1]/.[self::m:msub or self::m:msup or self::m:msubsup]"
+      # tests are ugly because an invisible times might have been inserted and we need to skip that
+    - t: "⠄⠄⠄"
+    - test:
+    - test:
+    - test:
+    - test:
+    - test:
+    - test:
+    - test:
+ - " ": [t: "⠀"]                 # 0x20 (space)
+ - " ": [t: "⠀"]                # 0x20
+ - " ": [t: "⠀"]                # 0x202f
+ - " ": [t: "⠀"]                # 0x205f
+ - " ": [t: "⠀"]                 # 0xA0 (non-breaking space)
+ - " ": [t: "⠀"]                # 0xa0
+ - " ": [t: "⠀"]                # 0x2000
+ - " ": [t: "⠀"]                # 0x2002
+ - " ": [t: "⠀"]                # 0x2001
+ - " ": [t: "⠀"]                # 0x2003
+ - " ": [t: "⠀"]                # 0x2004
+ - " ": [t: "⠀"]                # 0x2005
+ - " ": [t: "⠀"]                # 0x2006
+ - " ": [t: "⠀"]                # 0x2007
+ - " ": [t: "⠀"]                # 0x2008
+ - " ": [t: "⠀"]                # 0x2009
+ - " ": [t: "⠀"]                # 0x200a
+ - "​": [t: "⠀"]                # 0x200b
+ - " ": [t: "⠀"]                # 0x2028
+ - "⟦": [t: "⠈⠸⠷"]              # 0x27E6 (Mathematical left white square bracket)
+ - "⟦": [t: "⠈⠸⠷"]              # 0x27e6
+ - " ": [t: "⠀"]                # 0x2029
+ - "⟧": [t: "⠈⠸⠾"]              # 0x27E7 (Mathematical right white square bracket)
+ - "⟧": [t: "⠈⠸⠾"]              # 0x27e7
+ - "!":                          # 0x21 (Factorial)
+ - "!": [t: "⠖"]                # 0x21
+ - "‼": [t: "⠖⠖"]               # 0x203c
+ - "⁉": [t: "⠖⠹"]               # 0x2049
+ - "-":                         # 0x002D (Hyphen)  (0x2212 normalized to here)
+ - "⁡":                         # 0x2061⁡ (invisible function apply) -- add a space if arg is not in
+ - "⁢": [t: ""]                 # 0x2062⁡ (invisible times)
+ - "⁣": [t: ""]                 # 0x2063⁡ (invisible separator)
+ - "⁤": [t: ""]                 # 0x2064 (invisible plus)
+ - "⁡": [t: "⠀"]                # 0x2061
+ - "﻿": [t: "⠀"]                # 0xfeff
+ - "'": [t: "⠄"]                # 0x27
+ - "ʹ": [t: "⠄"]                # 0x2b9
+ - "ʺ": [t: "⠄⠄"]               # 0x2ba
+ - "⁢": [t: "⠈⠡"]               # 0x2062
+ - "⁣": [t: "⠠"]                # 0x2063
+ - "‐": [t: "⠤"]                # 0x2010
+ - "‑": [t: "⠤"]                # 0x2011
+ - "−": [t: "⠤"]                # 0x2212 (Minus sign)
+ - "−": [t: "⠤"]                # 0x2212
+ - "-": [t: "⠤"]                # 0x2d
+ - "­": [t: "⠤"]                # 0xad
+ - "‒": [t: "⠤⠤"]               # 0x2012
+ - "–": [t: "⠤⠤"]               # 0x2013
+ - "—": [t: "⠤⠤"]               # 0x2014 (Em dash)
+ - "—": [t: "⠤⠤"]               # 0x2014
+ - "―": [t: "⠤⠤"]               # 0x2015
+ - "―": [t: "⠤⠤⠤⠤"]             # 0x2015 (Horizontal bar)
+ - "⯃": [t: "⠫⠸⠦"]              # 0x2BC3 (Horizontal black octagon)
+ - "⁤": [t: "⠬"]                # 0x2064
+ - "'": [t: "⠸⠄"]                # 0x27 (Apostrophe)
+ - "⁗": [t: "⠄⠄.."]               # 0x2057 (Quadruple prime)
+ - "#": [t: "⠨⠼"]               # 0x23 (Number sign)
+ - "#": [t: "⠨⠼"]               # 0x23
+ - "﹩": [t: "⠈⠎"]               # 0xfe69
+ - "$": [t: "⠈⠎"]               # 0x24 (Dollar sign)
+ - "$": [t: "⠈⠎"]               # 0x24
+ - "＄": [t: "⠈⠎"]               # 0xff04
+ - "%": [t: "⠈⠴"]               # 0x25 (Percent sign)
+ - "%": [t: "⠈⠴"]               # 0x25
+ - "&": [t: "⠸⠯"]               # 0x26 (Ampersand)
+ - "&": [t: "⠸⠯"]               # 0x26
+ - "⦃": [t: "⠨⠸⠷"]              # 0x2983 (Left white curly bracket)
+ - "⦃": [t: "⠨⠸⠷"]              # 0x2983
+ - "⦶": [t: "⠫⠉⠸⠫⠳⠻"]           # 0x29b6
+ - "(": [t: "⠷"]                # 0x28 (Left parenthesis)
+ - "(": [t: "⠷"]                # 0x28
+ - "⦄": [t: "⠨⠸⠾"]              # 0x2984 (Right white curly bracket)
+ - "⦄": [t: "⠨⠸⠾"]              # 0x2984
+ - ")": [t: "⠾"]                # 0x29 (Right parenthesis)
+ - ")": [t: "⠾"]                # 0x29
+ - "*": [t: "⠈⠼"]               # 0x002A (Asterisk)
+ - "*": [t: "⠈⠼"]               # 0x2a
+ - ",":                         # 0x002C (Comma)
+ - ",": [t: "⠠"]                # 0x2c
+ - ".":                          # 0x002E (Full stop or decimal pt)
+ - "․": [t: "⠄"]                # 0x2024
+ - ".": [t: "⠨"]                # 0x2e
+ - "/": [t: "⠸⠌"]               # 0x002F (Solidus)
+ - "/": [t: "⠸⠌"]               # 0x2f
+ - ":": [t: "⠸⠒"]               # 0x003A (Colon)
+ - ":": [t: "⠸⠒"]               # 0x3a
+ - ";": [t: "⠆"]                # 0x3b
+ - ";": [t: "⠸⠆"]               # 0x003B (Semicolon)
+ - "?": [t: "⠸⠦"]               # 0x003F (Question mark)
+ - "⁈": [t: "⠹⠖"]               # 0x2048
+ - "⁇": [t: "⠹⠹"]               # 0x2047
+ - "?": [t: "⠿"]                # 0x3f
+ - "@": [t: "⠈⠁"]               # 0x40 (Commercial at)
+ - "@": [t: "⠈⠁"]               # 0x40
+ - "[": [t: "⠈⠷"]               # 0x005B (Left square bracket)
+ - "[": [t: "⠈⠷"]               # 0x5b
+ - "\"": [t: ""]                # 0x22 (Quotation mark)
+ - "\"": [t: "⠄⠄"]              # 0x22
+ - "\\": [t: "⠸⠡"]              # 0x005C (Reverse solidus)
+ - "\\": [t: "⠸⠡"]              # 0x5c
+ - "]": [t: "⠈⠾"]               # 0x005D (Right square bracket)
+ - "]": [t: "⠈⠾"]               # 0x5d
+ - "^": [t: "⠸⠣"]               # 0x005E (Circumflex accent)
+ - "^": [t: "⠸⠣"]               # 0x5e
+ - "_": [t: ""]                 # 0x005F (Low line)
+ - "＿": [t: "⠱"]                # 0xff3f
+ - "_": [t: "⠸"]                # 0x5f
+ - "`": [t: "⠈"]                # 0x60
+ - "{": [t: "⠨⠷"]               # 0x007B (Left curly bracket)
+ - "{": [t: "⠨⠷"]               # 0x7b
+ - "|": [t: "⠡"]                # 0x007C (Vertical line)
+ - "|": [t: "⠳"]                # 0x7c
+ - "}": [t: "⠨⠾"]               # 0x007D (Right curly bracket)
+ - "}": [t: "⠨⠾"]               # 0x7d
+ - "~": [t: "⠈⠱"]               # 0x007E (Tilde)
+ - "~": [t: "⠈⠱"]               # 0x7e
+ - "～": [t: "⠈⠱"]               # 0xff5e
+ - "¡": [t: "⠖"]                # 0xa1
+ - "¯": [t: "⠱"]                # 0x00AF (bar)
+ - "¯": [t: "⠱"]                # 0xaf
+ - "￣": [t: "⠱"]                # 0xffe3
+ - "´": [t: "⠈"]                # 0xb4
+ - "⦑": [t: "⠡⠈⠨⠨⠷⠻"]           # 0x2991 (Left angle bracket w dot)
+ - "⟪": [t: "⠨⠨⠨⠷"]             # 0x27ea
+ - "⟨": [t: "⠨⠨⠷"]              # 0x27E8 (Mathematical left angle bracket)
+ - "⟨": [t: "⠨⠨⠷"]              # 0x27e8
+ - "⦒": [t: "⠡⠈⠨⠨⠾⠻"]           # 0x2992 (Right angle bracket w dot)
+ - "¿": [t: "⠦"]                # 0xbf
+ - "⟫": [t: "⠨⠨⠨⠾"]             # 0x27eb
+ - "⟩": [t: "⠨⠨⠾"]              # 0x27E9 (Mathematical right angle bracket)
+ - "⟩": [t: "⠨⠨⠾"]              # 0x27e9
+ - "˜": [t: "⠈⠱"]               # 0x2dc
+ - "‖": [t: "⠳⠳"]               # 0x2016
+ - "‘": [t: "⠠⠦"]               # 0x2018
+ - "‘": [t: "⠸⠠⠦"]               # 0x2018 (Left single quotation mark)
+ - "’": [t: "⠄"]                # 0x2019
+ - "’": [t: "⠸⠴⠠"]               # 0x2019 (Right single quotation mark)
+ - "“": [t: "⠦"]                # 0x201c
+ - "“": [t: "⠸⠦"]                # 0x201C (Left double quotation mark)
+ - "”": [t: "⠴"]                # 0x201d
+ - "”": [t: "⠸⠴"]                # 0x201D (Right double quotation mark)
+ - "′": [t: "⠄"]                # 0x2032 (Prime)
+ - "′": [t: "⠄"]                # 0x2032
+ - "″": [t: "⠄⠄"]               # 0x2033 (Double prime)
+ - "″": [t: "⠄⠄"]               # 0x2033
+ - "‴": [t: "⠄⠄."]               # 0x2034 (Triple prime)
+ - "‴": [t: "⠄⠄⠄"]              # 0x2034
+ - "‾": [t: "⠱"]                # 0x203e
+ - "〈": [t: "⠨⠨⠷"]              # 0x2329
+ - "〈": [t: "⠨⠨⠷"]              # 0x3008
+ - "〉": [t: "⠨⠨⠾"]              # 0x232a
+ - "〉": [t: "⠨⠨⠾"]              # 0x3009
+ - "¢": [t: "⠈⠉"]               # 0x00A2 (Cent sign)
+ - "¢": [t: "⠈⠉"]               # 0xa2
+ - "￠": [t: "⠈⠉"]               # 0xffe0
+ - "《": [t: "⠨⠨⠨⠷"]             # 0x300a
+ - "£": [t: "⠈⠇"]               # 0x00A3 (Pound sterling)
+ - "£": [t: "⠈⠇"]               # 0xa3
+ - "￡": [t: "⠈⠇"]               # 0xffe1
+ - "¤": [t: "⠈⠫"]               # 0xa4
+ - "》": [t: "⠨⠨⠨⠾"]             # 0x300b
+ - "¥": [t: "⠈⠽"]               # 0xa5
+ - "￥": [t: "⠈⠽"]               # 0xffe5
+ - "「": [t: "⠈⠘⠷"]              # 0x300c
+ - "」": [t: "⠈⠘⠾"]              # 0x300d
+ - "⬟": [t: "⠫⠸⠢"]              # 0x2B1F (Black pentagon)
+ - "⬟": [t: "⠫⠸⠢"]              # 0x2b1f
+ - "⏞": [t: "⠣⠨⠷"]              # 0x23de
+ - "⏟": [t: "⠣⠨⠾"]              # 0x23df
+ - "⨤": [t: "⠐⠬⠣⠈⠱⠻"]           # 0x2A24 (Plus sign w tilde above)
+ - "⨢": [t: "⠐⠬⠣⠨⠡⠻"]           # 0x2A22 (Plus sign w small circle above)
+ - "⨣": [t: "⠐⠬⠣⠸⠣⠻"]           # 0x2A23 (Plus sign w circumflex accent above)
+ - "⨥": [t: "⠐⠬⠩⠡⠻"]            # 0x2A25 (Plus sign w dot below)
+ - "⊕": [t: "⠫⠉⠸⠫⠬⠻"]           # 0x2295 (Circled plus)
+ - "⊕": [t: "⠫⠉⠸⠫⠬⠻"]           # 0x2295
+ - "⨹": [t: "⠫⠞⠸⠫⠬⠻"]           # 0x2A39 (Plus sign in triangle)
+ - "⊞": [t: "⠫⠲⠸⠫⠬⠻"]           # 0x229E (Squared plus)
+ - "⊞": [t: "⠫⠲⠸⠫⠬⠻"]           # 0x229e
+ - "+": [t: "⠬"]                # 0x002B (Plus sign)
+ - "+": [t: "⠬"]                # 0x2b
+ - "⨪": [t: "⠐⠱⠩⠡⠻"]            # 0x2A2A (Minus sign w dot below)
+ - "⊖": [t: "⠫⠉⠸⠫⠤⠻"]           # 0x2296 (Circled minus)
+ - "⊖": [t: "⠫⠉⠸⠫⠤⠻"]           # 0x2296
+ - "⨺": [t: "⠫⠞⠸⠫⠤⠻"]           # 0x2A3A (Minus sign in triangle)
+ - "⊟": [t: "⠫⠲⠸⠫⠤⠻"]           # 0x229F (Squared minus)
+ - "⊟": [t: "⠫⠲⠸⠫⠤⠻"]           # 0x229f
+ - "⊝": [t: "⠫⠉⠸⠫⠤⠤⠻"]          # 0x229D (Circled dash)
+ - "⊝": [t: "⠫⠉⠸⠫⠤⠻"]           # 0x229d
+ - "⊗": [t: "⠫⠉⠸⠫⠈⠡⠻"]          # 0x2297 (Circled times)
+ - "⊗": [t: "⠫⠉⠸⠫⠈⠡⠻"]          # 0x2297
+ - "⊠": [t: "⠫⠲⠸⠫⠈⠡⠻"]          # 0x22A0 (Squared times)
+ - "⊠": [t: "⠫⠲⠸⠫⠈⠡⠻"]          # 0x22a0
+ - "⊘": [t: "⠫⠉⠸⠫⠸⠌⠻"]          # 0x2298 (Circled division slash)
+ - "⊘": [t: "⠫⠉⠸⠫⠸⠌⠻"]          # 0x2298
+ - "∕": [t: "⠸⠌"]               # 0x2215 (Division slash )
+ - "∕": [t: "⠸⠌"]               # 0x2215
+ - "∗": [t: "⠈⠼"]               # 0x2217 (Asterisk operator)
+ - "∗": [t: "⠈⠼"]               # 0x2217
+ - "⊛": [t: "⠫⠉⠸⠫⠈⠼⠻"]          # 0x229B (Circled asterisk operator)
+ - "⊛": [t: "⠫⠉⠸⠫⠈⠼⠻"]          # 0x229b
+ - "∘": [t: "⠨⠡"]               # 0x2218 (Ring operator)
+ - "∘": [t: "⠨⠡"]               # 0x2218
+ - "⊚": [t: "⠫⠉⠸⠫⠘⠨⠡⠻"]         # 0x229a
+ - "⦿": [t: "⠫⠉⠸⠫⠔⠔⠻"]          # 0x29bf
+ - "⊙": [t: "⠫⠉⠸⠫⠡⠻"]           # 0x2299 (Circled dot operator)
+ - "⊙": [t: "⠫⠉⠸⠫⠡⠻"]           # 0x2299
+ - "⊡": [t: "⠫⠲⠸⠫⠡⠻"]           # 0x22A1 (Squared dot operator)
+ - "⊡": [t: "⠫⠲⠸⠫⠡⠻"]           # 0x22a1
+ - "∓": [t: "⠤⠬"]               # 0x2213 (Minus-or-plus sign)
+ - "∓": [t: "⠤⠬"]               # 0x2213
+ - "≮": [t: "⠀⠌⠐⠅⠀"]            # 0x226E (Not less-than)
+ - "<": [t: "⠀⠐⠅⠀"]             # 0x003C (Less-than sign)
+ - "⩦": [t: "⠀⠐⠨⠅⠩⠡⠻⠀"]         # 0x2A66 (Equals sign w dot below)
+ - "≮": [t: "⠌⠐⠅"]              # 0x226e
+ - "<": [t: "⠐⠅"]               # 0x3c
+ - "⧀": [t: "⠫⠉⠸⠫⠐⠅⠻"]          # 0x29c0
+ - "⩧": [t: "⠀⠐⠸⠇⠣⠡⠻⠀"]         # 0x2A67 (Identical w dot above)
+ - "≺": [t: "⠀⠨⠐⠅⠀"]            # 0x227A (Precedes)
+ - "⪻": [t: "⠀⠨⠐⠅⠈⠨⠐⠅⠻⠀"]       # 0x2ABB (Double precedes)
+ - "⪼": [t: "⠀⠨⠨⠂⠈⠨⠨⠂⠻⠀"]       # 0x2ABC (Double succeeds)
+ - "⊀": [t: "⠌⠨⠐⠅"]             # 0x2280
+ - "≺": [t: "⠨⠐⠅"]              # 0x227a
+ - "⪻": [t: "⠨⠐⠅⠈⠨⠐⠅⠻"]         # 0x2abb
+ - "⪼": [t: "⠨⠨⠐⠈⠨⠨⠐⠻"]         # 0x2abc
+ - "≠": [t: "⠀⠌⠨⠅⠀"]            # 0x2260 (Not equal to)
+ - "⩪": [t: "⠀⠐⠈⠱⠣⠡⠻⠀"]         # 0x2A6A (Tilde operator w dot above)
+ - "=": [t: "⠀⠨⠅⠀"]             # 0x003D (Equals sign)
+ - "⩵": [t: "⠀⠨⠅⠨⠅⠀"]           # 0x2A75 (Two consecutive equals signs)
+ - "⩶": [t: "⠀⠨⠅⠨⠅⠨⠅⠀"]         # 0x2A76 (Three consecutive equals signs)
+ - "≠": [t: "⠌⠨⠅"]              # 0x2260
+ - "=": [t: "⠨⠅"]               # 0x3d
+ - "⊜": [t: "⠫⠉⠸⠫⠨⠅⠻"]          # 0x229C (Circled equals)
+ - "⊜": [t: "⠫⠉⠸⠫⠨⠅⠻"]          # 0x229c
+ - "⩬": [t: "⠀⠈⠱⠱⠈⠱⠀"]          # 0x2A6C (Similar minus similar)
+ - "≯": [t: "⠀⠌⠨⠂⠀"]            # 0x226F (Not greater-than)
+ - ">": [t: "⠀⠨⠂⠀"]             # 0x003E (Greater-than sign)
+ - "≯": [t: "⠌⠨⠂"]              # 0x226f
+ - ">": [t: "⠨⠂"]               # 0x3e
+ - "⧁": [t: "⠫⠉⠸⠫⠨⠂⠻"]          # 0x29c1
+ - "⩭": [t: "⠀⠐⠈⠱⠨⠅⠣⠡⠻⠀"]       # 0x2A6D (Congruent w dot above)
+ - "≻": [t: "⠀⠨⠨⠂⠀"]            # 0x227B (Succeeds)
+ - "⊁": [t: "⠌⠨⠐⠅"]             # 0x2281
+ - "≻": [t: "⠨⠨⠐"]              # 0x227b
+ - "⩮": [t: "⠀⠐⠨⠅⠣⠈⠼⠻⠀"]        # 0x2A6E (Equals w asterisk)
+ - "⩯": [t: "⠀⠐⠈⠱⠈⠱⠣⠸⠣⠻⠀"]      # 0x2A6F (Almost equal to w circumflex)
+ - "±": [t: "⠬⠤"]               # 0x00B1 (Plus-minus sign)
+ - "±": [t: "⠬⠤"]               # 0xb1
+ - "⩰": [t: "⠀⠈⠱⠈⠱⠨⠅⠀"]         # 0x2A70 (Approximately equal or equal to)
+ - "«": [t: "⠐⠅⠈⠐⠅⠻"]           # 0xab
+ - "≪": [t: "⠀⠐⠅⠈⠐⠅⠻⠀"]         # 0x226A (Much less-than)
+ - "⩱": [t: "⠀⠨⠅⠬⠀"]            # 0x2A71 (Equals sign above plus sign)
+ - "≪": [t: "⠐⠅⠈⠐⠅⠻"]           # 0x226a
+ - "⩲": [t: "⠀⠬⠨⠅⠀"]            # 0x2A72 (Plus sign above equals sign)
+ - "≫": [t: "⠀⠨⠂⠈⠨⠂⠻⠀"]         # 0x226B (Much greater-than)
+ - "⩳": [t: "⠀⠨⠅⠈⠱⠀"]           # 0x2A73 (Equals sign above tilde operator)
+ - "≫": [t: "⠨⠂⠈⠨⠂⠻"]           # 0x226b
+ - "⩴": [t: "⠀⠐⠂⠐⠂⠨⠅⠀"]         # 0x2A74 (Double colon equal)
+ - "×": [t: "⠈⠡"]               # 0x00D7 (Multiplication sign)
+ - "×": [t: "⠈⠡"]               # 0xd7
+ - "⨱": [t: "⠈⠡⠱"]              # 0x2A31 (Multiplication sign w underbar)
+ - "⨰": [t: "⠐⠈⠡⠣⠡⠻"]           # 0x2A30 (Multiplication sign w dot above)
+ - "⨻": [t: "⠫⠞⠸⠫⠈⠡⠻"]          # 0x2A3B (Multiplication sign in triangle)
+ - "⩷": [t: "⠀⠐⠨⠅⠩⠡⠡⠣⠡⠡⠻⠀"]     # 0x2A77 (Equals sign w two dots above and two dots below)
+ - "÷": [t: "⠈⠌"]               # 0xf7
+ - "÷": [t: "⠨⠌"]               # 0x00F7 (Division sign)
+ - "⨸": [t: "⠫⠉⠸⠫⠈⠌⠻"]          # 0x2a38
+ - "⨸": [t: "⠫⠉⠸⠫⠨⠌⠻"]          # 0x2A38 (Circled division sign)
+ - "⩸": [t: "⠀⠐⠸⠇⠣⠡⠡⠡⠡⠻⠀"]      # 0x2A78 (Equivalent w four dots above)
+ - "⩹": [t: "⠀⠐⠅⠈⠨⠡⠻⠀"]         # 0x2A79 (Less than w circle inside)
+ - "⩺": [t: "⠀⠨⠂⠈⠨⠡⠻⠀"]         # 0x2A7A (Greater than w circle inside)
+ - "∀": [t: "⠈⠯"]               # 0x2200 (For all)
+ - "∀": [t: "⠈⠯"]               # 0x2200
+ - "∂": [t: "⠈⠙"]               # 0x2202 (Partial differential)
+ - "∂": [t: "⠈⠙"]               # 0x2202
+ - "∃": [t: "⠈⠿"]               # 0x2203 (There exists)
+ - "∃": [t: "⠈⠿"]               # 0x2203
+ - "∄": [t: "⠌⠈⠿"]              # 0x2204 (There does not exist)
+ - "∄": [t: "⠌⠈⠿"]              # 0x2204
+ - "∅": [t: "⠸⠴"]               # 0x2205 (Empty set)
+ - "∅": [t: "⠸⠴"]               # 0x2205
+ - "∇": [t: "⠨⠫"]               # 0x2207 (Nabla)
+ - "∇": [t: "⠨⠫"]               # 0x2207
+ - "∈": [t: "⠀⠈⠑⠀"]             # 0x2208 (Element of)
+ - "∉": [t: "⠀⠌⠈⠑⠀"]            # 0x2209 (Not an element of)
+ - "⋵": [t: "⠀⠐⠈⠑⠣⠡⠻⠀"]         # 0x22F5 (Element of w dot above)
+ - "⋲": [t: "⠀⠱⠈⠈⠑⠻⠀"]          # 0x22F2 (Element of w long horizontal stroke)
+ - "⋶": [t: "⠀⠱⠈⠑⠀"]            # 0x22F6 (Element of w overbar)
+ - "∈": [t: "⠈⠑"]               # 0x2208
+ - "∉": [t: "⠌⠈⠑"]              # 0x2209
+ - "⪷": [t: "⠀⠨⠐⠅⠈⠱⠈⠱⠀"]        # 0x2AB7 (Precedes above almost equals to)
+ - "⪹": [t: "⠀⠨⠐⠅⠌⠈⠱⠈⠱⠀"]       # 0x2AB9 (Precedes above not almost equals to)
+ - "⪵": [t: "⠀⠨⠐⠅⠌⠨⠅⠀"]         # 0x2AB5 (Precedes above not equal to)
+ - "⪱": [t: "⠀⠨⠐⠅⠌⠱⠀"]          # 0x2AB1 (Precedes above single-line not equal to)
+ - "⪳": [t: "⠀⠨⠐⠅⠨⠅⠀"]          # 0x2AB3 (Precedes above equals sign)
+ - "⪯": [t: "⠀⠨⠐⠅⠱⠀"]           # 0x2AAF (Precedes above single-line equals sign)
+ - "⪷": [t: "⠨⠐⠅⠈⠱⠈⠱"]          # 0x2ab7
+ - "⪹": [t: "⠨⠐⠅⠌⠈⠱⠈⠱"]         # 0x2ab9
+ - "⪵": [t: "⠨⠐⠅⠌⠨⠅"]           # 0x2ab5
+ - "⪱": [t: "⠨⠐⠅⠌⠱"]            # 0x2ab1
+ - "⪳": [t: "⠨⠐⠅⠨⠅"]            # 0x2ab3
+ - "⪯": [t: "⠨⠐⠅⠱"]             # 0x2aaf
+ - "∊": [t: "⠈⠑"]               # 0x220a
+ - "∋": [t: "⠀⠈⠢⠀"]             # 0x220B (Contains as member)
+ - "∌": [t: "⠀⠌⠈⠢⠀"]            # 0x220C (Does not contain as member)
+ - "∋": [t: "⠈⠢"]               # 0x220b
+ - "∌": [t: "⠌⠈⠢"]              # 0x220c
+ - "⪸": [t: "⠀⠨⠨⠂⠈⠱⠈⠱⠀"]        # 0x2AB8 (Succeeds above almost equals to)
+ - "⪺": [t: "⠀⠨⠨⠂⠌⠈⠱⠈⠱⠀"]       # 0x2ABA (Succeeds above not almost equals to)
+ - "⪶": [t: "⠀⠨⠨⠂⠌⠨⠅⠀"]         # 0x2AB6 (Succeeds above not equal to)
+ - "⪲": [t: "⠀⠨⠨⠂⠌⠱⠀"]          # 0x2AB2 (Succeeds above single-line not equal to)
+ - "⪴": [t: "⠀⠨⠨⠂⠨⠅⠀"]          # 0x2AB4 (Succeeds above equals sign)
+ - "⪰": [t: "⠀⠨⠨⠂⠱⠀"]           # 0x2AB0 (Succeeds above single-line equals sign)
+ - "⪸": [t: "⠨⠨⠐⠈⠱⠈⠱"]          # 0x2ab8
+ - "⪺": [t: "⠨⠨⠐⠌⠈⠱⠈⠱"]         # 0x2aba
+ - "⪶": [t: "⠨⠨⠐⠌⠨⠅"]           # 0x2ab6
+ - "⪲": [t: "⠨⠨⠐⠌⠱"]            # 0x2ab2
+ - "⪴": [t: "⠨⠨⠐⠨⠅"]            # 0x2ab4
+ - "⪰": [t: "⠨⠨⠐⠱"]             # 0x2ab0
+ - "∍": [t: "⠈⠢"]               # 0x220d
+ - "∎": [t: "⠸⠳"]               # 0x220E (End of proof)
+ - "∎": [t: "⠸⠳"]               # 0x220e
+ - "∑": [t: "⠨⠠⠎"]              # 0x2211 (N-ary summation)
+ - "∑": [t: "⠨⠠⠎"]              # 0x2211
+ - "∔": [t: "⠐⠬⠣⠡⠻"]            # 0x2214 (Dot plus)
+ - "⦸": [t: "⠫⠉⠸⠫⠸⠡⠻"]          # 0x29b8
+ - "∖": [t: "⠸⠡"]               # 0x2216
+ - "√": [t: "⠜"]                # 0x221A (Square root)
+ - "∛": [t: "⠣⠒⠜"]              # 0x221B (Cube root)
+ - "∜": [t: "⠣⠲⠜"]              # 0x221C (Fourth root)
+ - "∝": [t: "⠀⠸⠿⠀"]             # 0x221D (Proportional to)
+ - "∝": [t: "⠰⠆"]               # 0x221d
+ - "∟": [t: "⠫⠪⠨⠗⠻"]            # 0x221F (Right angle)
+ - "∟": [t: "⠫⠪⠨⠗⠻"]            # 0x221f
+ - "∠": [t: "⠫⠪"]               # 0x2220 (Angle)
+ - "∠": [t: "⠫⠪"]               # 0x2220
+ - "∡": [t: "⠫⠪⠈⠫⠁⠻"]           # 0x2221 (Measured angle)
+ - "∡": [t: "⠫⠪⠸⠫⠫⠁⠻"]          # 0x2221
+ - "∢": [t: "⠫⠪⠸⠫⠫⠁⠻"]          # 0x2222
+ - "∤": [t: "⠀⠌⠳⠀"]             # 0x2224 (Does not divide)
+ - "∣": [t: "⠀⠳⠀"]              # 0x2223 (Divides)
+ - "∤": [t: "⠌⠳"]               # 0x2224
+ - "∣": [t: "⠳"]                # 0x2223
+ - "⪅": [t: "⠀⠐⠅⠈⠱⠈⠱⠀"]         # 0x2A85 (Less-than or approximate)
+ - "⪏": [t: "⠀⠐⠅⠈⠱⠨⠂⠀"]         # 0x2A8F (Less-than above similar above greater-than)
+ - "⪍": [t: "⠀⠐⠅⠈⠱⠱⠀"]          # 0x2A8D (Less-than above similar or equal to)
+ - "⪑": [t: "⠀⠐⠅⠨⠂⠨⠅⠀"]         # 0x2A91 (Less-than above greater-than above double-line equal)
+ - "⪋": [t: "⠀⠐⠅⠨⠅⠨⠂⠀"]         # 0x2A8B (Less-than above double-line equal above greater-than)
+ - "⩻": [t: "⠀⠐⠐⠅⠣⠸⠦⠻⠀"]        # 0x2A7B (Less-than w question mark above)
+ - "∦": [t: "⠀⠌⠫⠇⠀"]            # 0x2226 (Not parallel to)
+ - "∥": [t: "⠀⠫⠇⠀"]             # 0x2225 (Parallel to)
+ - "∦": [t: "⠌⠫⠇"]              # 0x2226
+ - "∥": [t: "⠫⠇"]               # 0x2225
+ - "⦷": [t: "⠫⠉⠸⠫⠫⠇⠻"]          # 0x29b7
+ - "⩼": [t: "⠀⠐⠨⠂⠣⠸⠦⠻⠀"]        # 0x2A7C (Greater-than w question mark above)
+ - "⪆": [t: "⠀⠨⠂⠈⠱⠈⠱⠀"]         # 0x2A86 (Greater-than or approximate)
+ - "⪐": [t: "⠀⠨⠂⠈⠱⠐⠅⠀"]         # 0x2A90 (Greater-than above similar above less-than)
+ - "⪎": [t: "⠀⠨⠂⠈⠱⠱⠀"]          # 0x2A8E (Greater-than above similar or equal to)
+ - "⪒": [t: "⠀⠨⠂⠐⠅⠨⠅⠀"]         # 0x2A92 (Greater-than above less-than above double-line equal)
+ - "⪌": [t: "⠀⠨⠂⠨⠅⠐⠅⠀"]         # 0x2A8C (Greater-than above double-line equal above less-than)
+ - "∧": [t: "⠈⠩"]               # 0x2227 (Logical AND)
+ - "∧": [t: "⠈⠩"]               # 0x2227
+ - "⩟": [t: "⠈⠩⠱"]              # 0x2A5F (Logical AND w underbar)
+ - "⩠": [t: "⠈⠩⠱⠱"]             # 0x2A60 (Logical AND w double underbar)
+ - "⩑": [t: "⠐⠈⠩⠣⠡⠻"]           # 0x2A51 (Logical AND w dot above)
+ - "⩜": [t: "⠱⠈⠈⠩⠻"]            # 0x2A5C (Logical AND with horizontal dash)
+ - "⩞": [t: "⠱⠱⠈⠩"]             # 0x2A5E (Logical AND w double overbar)
+ - "∨": [t: "⠈⠬"]               # 0x2228 (Logical OR)
+ - "∨": [t: "⠈⠬"]               # 0x2228
+ - "⩣": [t: "⠈⠬⠱⠱"]             # 0x2A63 (Logical OR w double underbar)
+ - "⩒": [t: "⠐⠈⠬⠣⠡⠻"]           # 0x2A52 (Logical OR w dot above)
+ - "⩝": [t: "⠱⠈⠈⠬⠻"]            # 0x2A5D (Logical OR with horizontal dash)
+ - "⩢": [t: "⠱⠱⠈⠬"]             # 0x2A62 (Logical OR w double overbar)
+ - "⩀": [t: "⠡⠈⠨⠩⠻"]            # 0x2A40 (Intersection w dot)
+ - "∩": [t: "⠨⠩"]               # 0x2229 (Intersection)
+ - "∩": [t: "⠨⠩"]               # 0x2229
+ - "⨙": [t: "⠮⠈⠨⠩⠻"]            # 0x2A19 (Integral w intersection)
+ - "⩃": [t: "⠱⠨⠩"]              # 0x2A43 (Intersection w overbar)
+ - "⩁": [t: "⠤⠈⠨⠬⠻"]            # 0x2A41 (Union w minus sign)
+ - "∪": [t: "⠨⠬"]               # 0x222A (Union)
+ - "∪": [t: "⠨⠬"]               # 0x222a
+ - "⨚": [t: "⠮⠈⠨⠬⠻"]            # 0x2A1A (Integral w union)
+ - "⩂": [t: "⠱⠨⠬"]              # 0x2A42 (Union w overbar)
+ - "∫": [t: "⠮"]                # 0x222B (Integral)
+ - "∫": [t: "⠮"]                # 0x222b
+ - "⪙": [t: "⠀⠨⠅⠐⠅⠀"]           # 0x2A99 (Double-line equal to or less-than)
+ - "⪚": [t: "⠀⠨⠅⠨⠂⠀"]           # 0x2A9A (Double-line equal to or greater-than)
+ - "⪝": [t: "⠀⠈⠱⠐⠅⠀"]           # 0x2A9D (Similar or less-than)
+ - "⪟": [t: "⠀⠈⠱⠐⠅⠨⠅⠀"]         # 0x2A9F (Similar above less-than above equals sign)
+ - "⪞": [t: "⠀⠈⠱⠨⠂⠀"]           # 0x2A9E (Similar or greater-than)
+ - "⪠": [t: "⠀⠈⠱⠨⠂⠨⠅⠀"]         # 0x2AA0 (Similar above greater-than above equals sign)
+ - "∮": [t: "⠮⠈⠫⠉⠻"]            # 0x222E (Contour integral)
+ - "∮": [t: "⠮⠈⠫⠉⠻"]            # 0x222e
+ - "∲": [t: "⠮⠈⠫⠪⠢⠔⠻"]          # 0x2232 (Clockwise contour integral ??? §156 has half arcs)
+ - "∲": [t: "⠮⠈⠫⠪⠢⠔⠻"]          # 0x2232
+ - "∳": [t: "⠮⠈⠫⠢⠔⠕⠻"]          # 0x2233 (Anticlockwise contour integral ???)
+ - "∳": [t: "⠮⠈⠫⠢⠔⠕⠻"]          # 0x2233
+ - "∴": [t: "⠀⠠⠡⠀"]             # 0x2234 (Therefore)
+ - "∴": [t: "⠠⠡"]               # 0x2234
+ - "∵": [t: "⠀⠈⠌⠀"]             # 0x2235 (Because)
+ - "∵": [t: "⠈⠌"]               # 0x2235
+ - "∶": [t: "⠀⠐⠂⠀"]             # 0x2236 (Ratio)
+ - "∶": [t: "⠐⠂"]               # 0x2236
+ - "∷": [t: "⠀⠰⠆⠀"]             # 0x2237 (Proportion)
+ - "∷": [t: "⠰⠆"]               # 0x2237
+ - "∸": [t: "⠨⠤"]               # 0x2238 (Dot minus)
+ - "∸": [t: "⠨⠤"]               # 0x2238
+ - "∹": [t: "⠀⠤⠐⠂⠀"]            # 0x2239 (Excess)
+ - "∺": [t: "⠀⠐⠤⠩⠡⠡⠣⠡⠡⠻⠀"]      # 0x223A (Geometric proportion)
+ - "∻": [t: "⠀⠐⠈⠱⠩⠡⠣⠡⠻⠀"]       # 0x223B (Homothetic)
+ - "∼": [t: "⠀⠈⠱⠀"]             # 0x223C (Tilde operator)
+ - "∼": [t: "⠈⠱"]               # 0x223c
+ - "≁": [t: "⠌⠈⠱"]              # 0x2241
+ - "∽": [t: "⠀⠠⠱⠀"]             # 0x223D (Reversed tilde)
+ - "⫴": [t: "⠀⠳⠳⠳⠀"]            # 0x2AF4 (Triple vertical bar binary relation)
+ - "⫴": [t: "⠳⠳⠳"]              # 0x2af4
+ - "≂": [t: "⠀⠱⠈⠱⠀"]            # 0x2242 (Minus tilde)
+ - "≂": [t: "⠱⠈⠱"]              # 0x2242
+ - "≃": [t: "⠀⠈⠱⠱⠀"]            # 0x2243 (Asymptotically equal to)
+ - "≃": [t: "⠈⠱⠱"]              # 0x2243
+ - "≄": [t: "⠌⠈⠱⠱"]             # 0x2244
+ - "≅": [t: "⠀⠈⠱⠨⠅⠀"]           # 0x2245 (Approximately equal to)
+ - "≅": [t: "⠈⠱⠨⠅"]             # 0x2245
+ - "≇": [t: "⠌⠈⠱⠨⠅"]            # 0x2247
+ - "≆": [t: "⠈⠱⠌⠨⠅"]            # 0x2246
+ - "⫰": [t: "⠀⠫⠣⠨⠡⠒⠒⠀"]         # 0x2AF0 (Vertical line w circle below)
+ - "⫯": [t: "⠀⠫⠩⠨⠡⠒⠒⠀"]         # 0x2AEF (Vertical line w circle above)
+ - "≈": [t: "⠀⠈⠱⠈⠱⠀"]           # 0x2248 (Almost equal to)
+ - "≈": [t: "⠈⠱⠈⠱"]             # 0x2248
+ - "≉": [t: "⠌⠈⠱⠈⠱"]            # 0x2249
+ - "≊": [t: "⠀⠈⠱⠈⠱⠱⠀"]          # 0x224A (Almost equal or equal to)
+ - "≊": [t: "⠈⠱⠈⠱⠱"]            # 0x224a
+ - "≋": [t: "⠀⠈⠱⠈⠱⠈⠱⠀"]         # 0x224B (Triple tilde)
+ - "≌": [t: "⠀⠠⠱⠨⠅⠀"]           # 0x224C (All equal to)
+ - "≭": [t: "⠀⠌⠈⠣⠠⠣⠀"]          # 0x226D (Not equivalent to)
+ - "≍": [t: "⠀⠫⠠⠫⠈⠀"]           # 0x224D (Equivalent to)
+ - "≍": [t: "⠈⠣⠠⠣"]             # 0x224d
+ - "≭": [t: "⠌⠈⠣⠠⠣"]            # 0x226d
+ - "≎": [t: "⠀⠈⠣⠠⠣⠀"]           # 0x224E (Geometrically equivalent to)
+ - "≎": [t: "⠈⠣⠠⠣"]             # 0x224e
+ - "≏": [t: "⠀⠈⠣⠱⠀"]            # 0x224F (Difference between)
+ - "≐": [t: "⠀⠐⠨⠅⠣⠡⠻⠀"]         # 0x2250 (Approaches the limit)
+ - "≐": [t: "⠐⠨⠅⠣⠡⠻"]           # 0x2250
+ - "≑": [t: "⠀⠐⠨⠅⠩⠡⠣⠡⠻⠀"]       # 0x2251 (Geometrically equal to)
+ - "≑": [t: "⠐⠨⠅⠩⠡⠣⠡⠻"]         # 0x2251
+ - "≔": [t: "⠀⠐⠂⠨⠅⠀"]           # 0x2254 (Colon equals)
+ - "≕": [t: "⠀⠨⠅⠐⠂⠀"]           # 0x2255 (Equals colon)
+ - "≖": [t: "⠀⠨⠡⠈⠨⠅⠻⠀"]         # 0x2256 (Ring in equal to)
+ - "≗": [t: "⠀⠐⠨⠅⠣⠨⠡⠻⠀"]        # 0x2257 (Ring equal to)
+ - "≗": [t: "⠐⠨⠅⠣⠨⠡⠻"]          # 0x2257
+ - "≘": [t: "⠀⠐⠨⠅⠣⠫⠁⠻⠀"]        # 0x2258 (Corresponds to)
+ - "≘": [t: "⠐⠨⠅⠣⠫⠁⠻"]          # 0x2258
+ - "≙": [t: "⠀⠐⠨⠅⠣⠸⠣⠻⠀"]        # 0x2259 (Estimates)
+ - "≙": [t: "⠐⠨⠅⠣⠸⠣⠻"]          # 0x2259
+ - "≚": [t: "⠀⠐⠨⠅⠣⠸⠩⠻⠀"]        # 0x225A (Equiangular to)
+ - "≚": [t: "⠐⠨⠅⠣⠸⠩⠻"]          # 0x225a
+ - "≛": [t: "⠀⠐⠨⠅⠣⠫⠎⠻⠀"]        # 0x225B (Star equals)
+ - "≛": [t: "⠐⠨⠅⠣⠫⠸⠎⠻"]         # 0x225b
+ - "≜": [t: "⠀⠐⠨⠅⠣⠫⠞⠻⠀"]        # 0x225C (Delta equal to)
+ - "≜": [t: "⠐⠨⠅⠣⠫⠞⠻"]          # 0x225c
+ - "≝": [t: "⠀⠐⠨⠅⠣⠙⠑⠋⠻⠀"]       # 0x225D (Equal to by definition)
+ - "≝": [t: "⠐⠨⠅⠣⠙⠑⠋⠻"]         # 0x225d
+ - "≞": [t: "⠀⠐⠨⠅⠣⠍⠻⠀"]         # 0x225E (Measured by)
+ - "≞": [t: "⠐⠨⠅⠣⠍⠻"]           # 0x225e
+ - "≟": [t: "⠀⠐⠨⠅⠣⠸⠢⠻⠀"]        # 0x225F (Questioned equal to)
+ - "≟": [t: "⠐⠨⠅⠣⠸⠦⠻"]          # 0x225f
+ - "≢": [t: "⠀⠌⠸⠇⠀"]            # 0x2262 (Not identical to)
+ - "≡": [t: "⠀⠸⠇⠀"]             # 0x2261 (Identical to)
+ - "≢": [t: "⠌⠸⠇"]              # 0x2262
+ - "≡": [t: "⠸⠇"]               # 0x2261
+ - "≰": [t: "⠀⠌⠐⠅⠱⠀"]           # 0x2270 (Neither less-than nor equal to)
+ - "≤": [t: "⠀⠐⠅⠱⠀"]            # 0x2264 (Less-than or equal to)
+ - "≰": [t: "⠌⠐⠅⠱"]             # 0x2270
+ - "≤": [t: "⠐⠅⠱"]              # 0x2264
+ - "≱": [t: "⠀⠌⠨⠂⠱⠀"]           # 0x2271 (Neither greater-than nor equal to)
+ - "≥": [t: "⠀⠨⠂⠱⠀"]            # 0x2265 (Greater-than or equal to)
+ - "≱": [t: "⠌⠨⠂⠱"]             # 0x2271
+ - "≥": [t: "⠨⠂⠱"]              # 0x2265
+ - "≦": [t: "⠀⠐⠅⠨⠅⠀"]           # 0x2266 (Less-than over equal to)
+ - "≦": [t: "⠐⠅⠨⠅"]             # 0x2266
+ - "≧": [t: "⠀⠨⠂⠨⠅⠀"]           # 0x2267 (Greater-than over equal to)
+ - "≧": [t: "⠨⠂⠨⠅"]             # 0x2267
+ - "≨": [t: "⠀⠐⠅⠌⠨⠅⠀"]          # 0x2268 (Less-than but not equal to)
+ - "≨": [t: "⠐⠅⠌⠨⠅"]            # 0x2268
+ - "≩": [t: "⠀⠨⠂⠌⠨⠅⠀"]          # 0x2269 (Greater-than but not equal to)
+ - "≩": [t: "⠨⠂⠌⠨⠅"]            # 0x2269
+ - "⋽": [t: "⠀⠱⠈⠢⠀"]            # 0x22FD (Contains w overbar)
+ - "≴": [t: "⠀⠌⠐⠅⠈⠱⠀"]          # 0x2274 (Neither less-than nor equivalent to)
+ - "≲": [t: "⠀⠐⠅⠈⠱⠀"]           # 0x2272 (Less-than or equivalent to)
+ - "≴": [t: "⠌⠐⠅⠈⠱"]            # 0x2274
+ - "≲": [t: "⠐⠅⠈⠱"]             # 0x2272
+ - "≵": [t: "⠀⠌⠨⠂⠈⠱⠀"]          # 0x2275 (Neither greater-than nor equivalent to)
+ - "≳": [t: "⠀⠨⠂⠈⠱⠀"]           # 0x2273 (Greater-than or equivalent to)
+ - "≵": [t: "⠌⠨⠂⠈⠱"]            # 0x2275
+ - "≳": [t: "⠨⠂⠈⠱"]             # 0x2273
+ - "⨌": [t: "⠮⠮⠮⠮"]             # 0x2A0C (Quadruple integral operator)
+ - "⨍": [t: "⠮⠈⠱⠻"]             # 0x2A0D (Finite part integral)
+ - "≸": [t: "⠀⠌⠐⠅⠨⠂⠀"]          # 0x2278 (Neither less-than nor greater-than)
+ - "≶": [t: "⠀⠐⠅⠨⠂⠀"]           # 0x2276 (Less-than or greater-than)
+ - "≸": [t: "⠌⠐⠅⠨⠂"]            # 0x2278
+ - "≶": [t: "⠐⠅⠨⠂"]             # 0x2276
+ - "≹": [t: "⠀⠌⠨⠂⠐⠅⠀"]          # 0x2279 (Neither greater-than nor less-than)
+ - "≷": [t: "⠀⠨⠂⠐⠅⠀"]           # 0x2277 (Greater-than or less-than)
+ - "≹": [t: "⠌⠨⠂⠐⠅"]            # 0x2279
+ - "≷": [t: "⠨⠂⠐⠅"]             # 0x2277
+ - "≼": [t: "⠨⠐⠅⠱"]             # 0x227c
+ - "≽": [t: "⠨⠨⠐⠱"]             # 0x227d
+ - "≾": [t: "⠀⠨⠐⠅⠈⠱⠀"]          # 0x227E (Precedes or equivalent to)
+ - "≾": [t: "⠨⠐⠅⠈⠱"]            # 0x227e
+ - "≿": [t: "⠀⠨⠨⠂⠈⠱⠀"]          # 0x227F (Succeeds or equivalent to)
+ - "≿": [t: "⠨⠨⠐⠈⠱"]            # 0x227f
+ - "⨖": [t: "⠮⠈⠫⠲⠻"]            # 0x2A16 (Quaternion integral operator)
+ - "⊄": [t: "⠀⠌⠸⠐⠅⠀"]           # 0x2284 (Not a subset of)
+ - "⫁": [t: "⠀⠐⠸⠐⠅⠩⠈⠡⠻⠀"]       # 0x2AC1 (Subset with multiplication sign below)
+ - "⪿": [t: "⠀⠐⠸⠐⠅⠩⠬⠻⠀"]        # 0x2ABF (Subset with plus sign below)
+ - "⪽": [t: "⠀⠡⠈⠸⠐⠅⠻⠀"]         # 0x2ABD (Subset w dot)
+ - "⊂": [t: "⠀⠸⠐⠅⠀"]            # 0x2282 (Subset of)
+ - "⫇": [t: "⠀⠸⠐⠅⠈⠱⠀"]          # 0x2AC7 (Subset of above tilde operator)
+ - "⫉": [t: "⠀⠸⠐⠅⠈⠱⠈⠱⠀"]        # 0x2AC9 (Subset of above almost equal to)
+ - "⫋": [t: "⠀⠸⠐⠅⠌⠨⠅⠀"]         # 0x2ACB (Subset of above not equals sign)
+ - "⫅": [t: "⠀⠸⠐⠅⠨⠅⠀"]          # 0x2AC5 (Subset of above equals sign)
+ - "⫕": [t: "⠀⠸⠐⠅⠸⠐⠅⠀"]         # 0x2AD5 (Subset above subset)
+ - "⊄": [t: "⠌⠸⠐⠅"]             # 0x2284
+ - "⊂": [t: "⠸⠐⠅"]              # 0x2282
+ - "⊅": [t: "⠀⠌⠸⠨⠂⠀"]           # 0x2285 (Not a superset of)
+ - "⫂": [t: "⠀⠐⠸⠨⠂⠩⠈⠡⠻⠀"]       # 0x2AC2 (Superset with multiplication sign below)
+ - "⫀": [t: "⠀⠐⠸⠨⠂⠩⠬⠻⠀"]        # 0x2AC0 (Superset with plus sign below)
+ - "⪾": [t: "⠀⠡⠈⠸⠨⠂⠻⠀"]         # 0x2ABE (Superset w dot)
+ - "⫓": [t: "⠀⠸⠐⠅⠸⠨⠂⠀"]         # 0x2AD3 (Subset above superset)
+ - "⊃": [t: "⠀⠸⠨⠂⠀"]            # 0x2283 (Superset of)
+ - "⫈": [t: "⠀⠸⠨⠂⠈⠱⠀"]          # 0x2AC8 (Superset of above tilde operator)
+ - "⫊": [t: "⠀⠸⠨⠂⠈⠱⠈⠱⠀"]        # 0x2ACA (Superset of above almost equal to)
+ - "⫌": [t: "⠀⠸⠨⠂⠌⠨⠅⠀"]         # 0x2ACC (Superset of above not equals sign)
+ - "⫗": [t: "⠀⠸⠨⠂⠐⠸⠐⠅⠀"]        # 0x2AD7 (Superset beside subset)
+ - "⫆": [t: "⠀⠸⠨⠂⠨⠅⠀"]          # 0x2AC6 (Superset of above equals sign)
+ - "⫔": [t: "⠀⠸⠨⠂⠸⠐⠅⠀"]         # 0x2AD4 (Superset above subset)
+ - "⫖": [t: "⠀⠸⠨⠂⠸⠨⠂⠀"]         # 0x2AD6 (Superset above superset)
+ - "⊅": [t: "⠌⠸⠨⠂"]             # 0x2285
+ - "⊃": [t: "⠸⠨⠂"]              # 0x2283
+ - "⊈": [t: "⠀⠌⠸⠐⠅⠱⠀"]          # 0x2288 (Neither a subset of nor equal to)
+ - "⊆": [t: "⠀⠸⠐⠅⠱⠀"]           # 0x2286 (Subset of or equal to)
+ - "⊈": [t: "⠌⠸⠐⠅⠱"]            # 0x2288
+ - "⊆": [t: "⠸⠐⠅⠱"]             # 0x2286
+ - "⊉": [t: "⠀⠌⠸⠨⠂⠱⠀"]          # 0x2289 (Neither a superset of nor equal to)
+ - "⊇": [t: "⠀⠸⠨⠂⠱⠀"]           # 0x2287 (Superset of or equal to)
+ - "⊉": [t: "⠌⠸⠨⠂⠱"]            # 0x2289
+ - "⊇": [t: "⠸⠨⠂⠱"]             # 0x2287
+ - "⊊": [t: "⠀⠸⠐⠅⠌⠱⠀"]          # 0x228A (Subset of w not equal to)
+ - "⊊": [t: "⠸⠐⠅⠌⠨⠅"]           # 0x228a
+ - "⊋": [t: "⠀⠸⠨⠂⠌⠱⠀"]          # 0x228B (Superset of w not equal to)
+ - "⊋": [t: "⠸⠨⠂⠌⠨⠅"]           # 0x228b
+ - "⊌": [t: "⠨⠬⠈⠫⠪⠒⠻"]          # 0x228C (Multiset)
+ - "⊍": [t: "⠡⠈⠨⠬⠻"]            # 0x228D (Multiset multiplication)
+ - "⊎": [t: "⠬⠈⠨⠬⠻"]            # 0x228E (Multiset union)
+ - "⊢": [t: "⠀⠫⠳⠒⠀"]            # 0x22A2 (Right tack)
+ - "⊣": [t: "⠀⠫⠒⠳⠀"]            # 0x22A3 (Left tack)
+ - "⊤": [t: "⠀⠫⠩⠳⠒⠀"]           # 0x22A4 (Down tack)
+ - "⊥": [t: "⠀⠫⠏⠀ or ⠀⠫⠣⠳⠒⠀"]   # 0x22A5 (Up tack (See also 27C2))
+ - "⊥": [t: "⠀⠫⠏⠀"]             # 0x27C2 (Perpendicular)
+ - "⊥": [t: "⠫⠏"]               # 0x22a5
+ - "⊦": [t: ""]                 # 0x22A6 (Assertion)
+ - "⊨": [t: ""]                 # 0x22A8 (TRUE)
+ - "⪮": [t: "⠀⠈⠣⠨⠅⠀"]           # 0x2AAE (Equals sign with bumpy above)
+ - "⊲": [t: ""]                 # 0x22B2 (Normal subgroup of)
+ - "⊳": [t: ""]                 # 0x22B3 (Contains as normal subgroup)
+ - "⊴": [t: ""]                 # 0x22B4 (Normal subgroup of or equal to)
+ - "⊵": [t: ""]                 # 0x22B5 (Contains as normal subgroup or equal to)
+ - "⊶": [t: "⠀⠫⠨⠡⠒⠡⠀"]          # 0x22B6 (Original of)
+ - "⊷": [t: "⠀⠫⠡⠒⠨⠡⠀"]          # 0x22B7 (Image of)
+ - "⊸": [t: "⠀⠫⠒⠨⠡⠀"]           # 0x22B8 (Multimap)
+ - "⊾": [t: ""]                 # 0x22BE (Right angle w arc)
+ - "⊿": [t: "⠫⠞⠨⠗⠻"]            # 0x22BF (Right triangle)
+ - "⋀": [t: "⠈⠩"]               # 0x22c0
+ - "⋁": [t: "⠈⠬"]               # 0x22c1
+ - "⋂": [t: "⠨⠩"]               # 0x22c2
+ - "⋃": [t: "⠨⠬"]               # 0x22c3
+ - "⋅": [t: "⠡"]                # 0x22C5 (Dot operator)
+ - "⋅": [t: "⠡"]                # 0x22c5
+ - "⋆": [t: "⠫⠎"]               # 0x22C6 (Star operator)
+ - "⋺": [t: "⠀⠱⠈⠈⠢⠻⠀"]          # 0x22FA (Contains w long horizontal stroke)
+ - "⨂": [t: "⠫⠉⠸⠫⠈⠡⠻"]          # 0x2a02
+ - "⨀": [t: "⠫⠉⠸⠫⠡⠻"]           # 0x2a00
+ - "⨁": [t: "⠫⠉⠸⠫⠬⠻"]           # 0x2a01
+ - "⋍": [t: "⠀⠠⠱⠱⠀"]            # 0x22CD (Reversed tilde equals)
+ - "⨛": [t: "⠣⠮"]               # 0x2A1B (Integral w overbar (upper))
+ - "⨜": [t: "⠩⠮"]               # 0x2A1C (Integral w underbar (lower))
+ - "⨘": [t: "⠮⠈⠈⠡⠻"]            # 0x2A18 (Integral w times sign)
+ - "⨎": [t: "⠮⠈⠱⠱⠻"]            # 0x2A0E (Integral w double stroke)
+ - "⋖": [t: "⠀⠡⠈⠐⠅⠻⠀"]          # 0x22D6 (Less-than w dot)
+ - "⋗": [t: "⠀⠡⠈⠨⠂⠻⠀"]          # 0x22D7 (Greater-than w dot)
+ - "⋘": [t: "⠀⠐⠅⠈⠐⠅⠈⠐⠅⠻⠀"]      # 0x22D8 (Much less-than)
+ - "⋙": [t: "⠀⠨⠂⠈⠨⠂⠈⠨⠂⠻⠀"]      # 0x22D9 (Much greater-than)
+ - "⋜": [t: "⠀⠱⠐⠅⠀"]            # 0x22DC (Equal to or less-than)
+ - "⋜": [t: "⠱⠐⠅"]              # 0x22dc
+ - "⋝": [t: "⠀⠱⠨⠂⠀"]            # 0x22DD (Equal to or greater-than)
+ - "⋝": [t: "⠱⠨⠂"]              # 0x22dd
+ - "⦹": [t: "⠫⠉⠸⠫⠫⠏⠻"]          # 0x29b9
+ - "⫱": [t: "⠀⠫⠣⠨⠡⠒⠒⠳⠀"]        # 0x2AF1 (Down tack w circle below)
+ - "⫲": [t: "⠀⠱⠈⠫⠇⠻⠀"]          # 0x2AF2 (Parallel w horizontal stroke)
+ - "⫳": [t: "⠀⠈⠱⠈⠫⠇⠻⠀"]         # 0x2AF3 (Parallel w tilde operator)
+ - "⋮": [t: "⠀⠩⠒⠒⠒⠀"]           # 0x22EE (Vertical ellipsis)
+ - "⋮": [t: "⠣⠄⠄⠄"]             # 0x22ee
+ - "⋯": [t: "⠀⠒⠒⠒"]             # 0x22EF (Midline horizontal ellipsis)
+ - "⋯": [t: "⠄⠄⠄"]              # 0x22ef
+ - "⋰": [t: "⠀⠘⠒⠒⠒⠀"]           # 0x22F0 (Up right diagonal ellipsis)
+ - "⋰": [t: "⠘⠄⠄⠄"]             # 0x22f0
+ - "⋱": [t: "⠀⠰⠒⠒⠒⠀"]           # 0x22F1 (Down right diagonal ellipsis)
+ - "⋱": [t: "⠰⠄⠄⠄"]             # 0x22f1
+ - "⌈": [t: "⠈⠘⠷"]              # 0x2308 (Left ceiling)
+ - "⌈": [t: "⠈⠘⠷"]              # 0x2308
+ - "⌉": [t: "⠈⠘⠾"]              # 0x2309 (Right ceiling)
+ - "⌉": [t: "⠈⠘⠾"]              # 0x2309
+ - "⌊": [t: "⠈⠰⠷"]              # 0x230A (Left floor)
+ - "⌊": [t: "⠈⠰⠷"]              # 0x230a
+ - "⌋": [t: "⠈⠰⠾"]              # 0x230B (Right floor)
+ - "⌋": [t: "⠈⠰⠾"]              # 0x230b
+ - "⌜": [t: "⠈⠘⠷"]              # 0x231c
+ - "⌝": [t: "⠈⠘⠾"]              # 0x231d
+ - "⌞": [t: "⠈⠰⠷"]              # 0x231e
+ - "⌟": [t: "⠈⠰⠾"]              # 0x231f
+ - "⌢": [t: "⠀⠫⠁⠀"]             # 0x2322 (Frown)
+ - "⌣": [t: "⠀⠫⠄⠀"]             # 0x2323 (Smile)
+ - "⤡": [t: "⠀⠫⠘⠪⠒⠒⠕⠀"]         # 0x2921 (North west and south east arrow)
+ - "⤢": [t: "⠀⠫⠰⠪⠒⠒⠕⠀"]         # 0x2922 (North east and south west arrow)
+ - "⟸": [t: "⠀⠫⠪⠶⠶⠶⠀"]          # 0x27F8 (Long leftwards arrow )
+ - "⟺": [t: "⠀⠫⠪⠶⠶⠶⠕⠀"]         # 0x27FA (Long left right arrow)
+ - "⟽": [t: "⠀⠫⠪⠶⠶⠶⠳⠀"]         # 0x27FD (Long leftwards double arrow from bar)
+ - "⟹": [t: "⠀⠫⠶⠶⠶⠕⠀"]          # 0x27F9 (Long rightwards arrow)
+ - "⟵": [t: "⠀⠫⠪⠒⠒⠒⠀"]          # 0x27F5 (Long leftwards arrow )
+ - "⟶": [t: "⠀⠫⠒⠒⠒⠕⠀"]          # 0x27F6 (Long rightwards arrow)
+ - "⟷": [t: "⠀⠫⠪⠒⠒⠒⠕⠀"]         # 0x27F7 (Long left right arrow)
+ - "⟻": [t: "⠀⠫⠪⠒⠒⠒⠳⠀"]         # 0x27FB (Long leftwards arrow from bar)
+ - "⟼": [t: "⠀⠫⠳⠒⠒⠒⠕⠀"]         # 0x27FC (Long rightwards arrow from bar)
+ - "⟿": [t: "⠀⠫⠢⠤⠔⠒⠢⠤⠔⠒⠢⠕⠀"]    # 0x27FF (Long rightwards squiggle arrow)
+ - "⟾": [t: "⠀⠫⠳⠶⠶⠶⠕⠀"]         # 0x27FE (Long rightwards double arrow from bar)
+ - "□": [t: "⠫⠲"]               # 0x25A1 (Square)
+ - "□": [t: "⠫⠲"]               # 0x25a1
+ - "◫": [t: "⠫⠲⠸⠫⠳⠻"]           # 0x25EB (White square w vertical bisecting line)
+ - "▫": [t: "⠫⠸⠗"]              # 0x25ab
+ - "■": [t: "⠫⠸⠲"]              # 0x25A0 (Filled square)
+ - "■": [t: "⠫⠸⠲"]              # 0x25a0
+ - "▬": [t: "⠫⠗"]               # 0x25ac
+ - "▭": [t: "⠫⠗"]               # 0x25AD (Rectangle)
+ - "▬": [t: "⠫⠸⠗"]              # 0x25AC (Filled rectangle)
+ - "▱": [t: "⠫⠛"]               # 0x25b1
+ - "▰": [t: "⠫⠸⠛"]              # 0x25b0
+ - "△": [t: "⠫⠞"]               # 0x25B3 (White up-pointing triangle)
+ - "△": [t: "⠫⠞"]               # 0x25b3
+ - "▲": [t: "⠫⠸⠞"]              # 0x25B2 (Black up-pointing triangle)
+ - "▲": [t: "⠫⠸⠞"]              # 0x25b2
+ - "▽": [t: "⠨⠫"]               # 0x25bd
+ - "▼": [t: "⠸⠨⠫"]              # 0x25BC (Black down-pointing triangle)
+ - "▼": [t: "⠸⠨⠫"]              # 0x25bc
+ - "◇": [t: "⠫⠙"]               # 0x25c7
+ - "◆": [t: "⠫⠸⠙"]              # 0x25c6
+ - "◈": [t: "⠫⠸⠙"]              # 0x25c8
+ - "◉": [t: "⠫⠸⠉"]              # 0x25c9
+ - "◊": [t: "⠫⠙"]               # 0x25ca
+ - "○": [t: "⠫⠉"]               # 0x25CB (White circle)
+ - "○": [t: "⠫⠉"]               # 0x25cb
+ - "●": [t: "⠫⠸⠉"]              # 0x25CF (Black circle)
+ - "●": [t: "⠫⠸⠉"]              # 0x25cf
+ - "⇧": [t: ""]                 # 0x21E7 (Upwards white arrow)
+ - "⇡": [t: "⠀⠫⠣⠒⠀⠒⠕⠀"]         # 0x21E1 (Upwards dashed arrow)
+ - "↿": [t: "⠀⠫⠣⠒⠒⠈⠕⠀"]         # 0x21BF (Upwards harpoon w barb leftwards)
+ - "↑": [t: "⠀⠫⠣⠒⠒⠕⠀"]          # 0x2191 (Upwards arrow)
+ - "⇈": [t: "⠀⠫⠣⠒⠒⠕⠐⠫⠣⠒⠒⠕⠀"]    # 0x21C8 (Upwards paired arrows)
+ - "↟": [t: "⠀⠫⠣⠒⠒⠕⠕⠀"]         # 0x219F (Upwards two headed arrow)
+ - "↾": [t: "⠀⠫⠣⠒⠒⠠⠕⠀"]         # 0x21BE (Upwards harpoon w barb rightwards)
+ - "↥": [t: "⠀⠫⠣⠳⠒⠒⠕⠀"]         # 0x21A5 (Upwards arrow from bar)
+ - "⇑": [t: "⠀⠫⠣⠶⠶⠕⠀"]          # 0x21D1 (Upwards double arrow)
+ - "⇞": [t: "⠀⠳⠳⠈⠫⠣⠒⠒⠕⠻⠀"]      # 0x21DE (Upwards arrow w double stroke)
+ - "↿": [t: "⠫⠣⠒⠒⠈⠕"]           # 0x21bf
+ - "↑": [t: "⠫⠣⠒⠒⠕"]            # 0x2191
+ - "⇡": [t: "⠫⠣⠒⠒⠕"]            # 0x21e1
+ - "⇈": [t: "⠫⠣⠒⠒⠕⠐⠫⠣⠒⠒⠕"]      # 0x21c8
+ - "↟": [t: "⠫⠣⠒⠒⠕⠕"]           # 0x219f
+ - "⇑": [t: "⠫⠣⠒⠒⠕⠕"]           # 0x21d1
+ - "↾": [t: "⠫⠣⠒⠒⠠⠕"]           # 0x21be
+ - "↥": [t: "⠫⠣⠳⠒⠒⠕"]           # 0x21a5
+ - "⇧": [t: "⠫⠣⠸⠒⠒⠕"]           # 0x21e7
+ - "⇞": [t: "⠳⠳⠈⠫⠣⠒⠒⠕⠻"]        # 0x21de
+ - "↗": [t: "⠀⠫⠘⠒⠒⠕⠀"]          # 0x2197 (North east arrow)
+ - "⇗": [t: "⠀⠫⠘⠶⠶⠕⠀"]          # 0x21D7 (North east double arrow)
+ - "↗": [t: "⠫⠘⠒⠒⠕"]            # 0x2197
+ - "⇗": [t: "⠫⠘⠒⠒⠕⠕"]           # 0x21d7
+ - "↬": [t: ""]                 # 0x21AC (Rightwards arrow w loop)
+ - "⇨": [t: ""]                 # 0x21E8 (Rightwards white arrow)
+ - "⇾": [t: ""]                 # 0x21FE (Rightwards open-headed arrow)
+ - "⇴": [t: "⠀⠨⠡⠈⠫⠒⠒⠕⠻⠀"]       # 0x21F4 (Right arrow w small circle)
+ - "↪": [t: "⠀⠫⠈⠯⠒⠒⠕⠀"]         # 0x21AA (Rightwards arrow w hook)
+ - "⇢": [t: "⠀⠫⠒⠀⠒⠕⠀"]          # 0x21E2 (Rightwards dashed arrow)
+ - "⇀": [t: "⠀⠫⠒⠒⠈⠕⠀"]          # 0x21C0 (Rightwards harpoon w barb upwards)
+ - "↠": [t: "⠀⠫⠒⠒⠕⠕⠀"]          # 0x21A0 (Rightwards two headed arrow)
+ - "⇉": [t: "⠀⠫⠒⠒⠕⠫⠒⠒⠕⠀"]       # 0x21C9 (Rightwards paired arrows)
+ - "⇶": [t: "⠀⠫⠒⠒⠕⠫⠒⠒⠕⠫⠒⠒⠕⠀"]   # 0x21F6 (Three rightwards arrows)
+ - "⇥": [t: "⠀⠫⠒⠒⠕⠳⠀"]          # 0x21E5 (Rightwards arrow to bar)
+ - "⇁": [t: "⠀⠫⠒⠒⠠⠕⠀"]          # 0x21C1 (Rightwards harpoon w barb downwards)
+ - "↝": [t: "⠀⠫⠔⠒⠢⠕⠀"]          # 0x219D (Rightwards wave arrow)
+ - "→": [t: "⠀⠫⠕⠀"]             # 0x2192 (Rightwards arrow)
+ - "↣": [t: "⠀⠫⠠⠯⠒⠒⠕⠀"]         # 0x21A3 (Rightwards arrow w tail)
+ - "⇝": [t: "⠀⠫⠢⠤⠔⠒⠢⠕⠀"]        # 0x21DD (Rightwards squiggle arrow)
+ - "↦": [t: "⠀⠫⠳⠒⠒⠕⠀"]          # 0x21A6 (Rightwards arrow from bar)
+ - "⇒": [t: "⠀⠫⠶⠶⠕⠀"]           # 0x21D2 (Rightwards double arrow)
+ - "⇛": [t: "⠀⠫⠸⠸⠕⠀"]           # 0x21DB (Rightwards triple arrow)
+ - "↛": [t: "⠀⠳⠈⠫⠒⠒⠕⠻⠀"]        # 0x219B (Rightwards arrow w stroke)
+ - "⇸": [t: "⠀⠳⠈⠫⠒⠒⠕⠻⠀"]        # 0x21F8 (Rightwards arrow w vertical stroke)
+ - "⇹": [t: "⠀⠳⠈⠫⠪⠒⠒⠕⠻⠀"]       # 0x21F9 (Left right arrow w vertical stroke)
+ - "⇏": [t: "⠀⠳⠈⠫⠶⠶⠕⠻⠀"]        # 0x21CF (Rightwards double arrow w stroke)
+ - "⇻": [t: "⠀⠳⠳⠈⠫⠒⠒⠕⠻⠀"]       # 0x21FB (Rightwards arrow w double vertical stroke)
+ - "⇀": [t: "⠫⠒⠒⠈⠕"]            # 0x21c0
+ - "⇢": [t: "⠫⠒⠒⠕"]             # 0x21e2
+ - "↠": [t: "⠫⠒⠒⠕⠕"]            # 0x21a0
+ - "⇒": [t: "⠫⠒⠒⠕⠕"]            # 0x21d2
+ - "⇛": [t: "⠫⠒⠒⠕⠕⠕"]           # 0x21db
+ - "⇴": [t: "⠫⠒⠒⠕⠨⠡"]           # 0x21f4
+ - "⇉": [t: "⠫⠒⠒⠕⠫⠒⠒⠕"]         # 0x21c9
+ - "⇶": [t: "⠫⠒⠒⠕⠫⠒⠒⠕⠫⠒⠒⠕"]     # 0x21f6
+ - "⇥": [t: "⠫⠒⠒⠕⠳"]            # 0x21e5
+ - "⇁": [t: "⠫⠒⠒⠠⠕"]            # 0x21c1
+ - "⇾": [t: "⠫⠒⠒⠳"]             # 0x21fe
+ - "↝": [t: "⠫⠔⠒⠢⠕"]            # 0x219d
+ - "→": [t: "⠫⠕"]               # 0x2192
+ - "↪": [t: "⠫⠠⠪⠒⠒⠕"]           # 0x21aa
+ - "↣": [t: "⠫⠠⠯⠒⠒⠕"]           # 0x21a3
+ - "⇝": [t: "⠫⠢⠤⠔⠒⠢⠕"]          # 0x21dd
+ - "↬": [t: "⠫⠨⠡⠒⠒⠕"]           # 0x21ac
+ - "↦": [t: "⠫⠳⠒⠒⠕"]            # 0x21a6
+ - "⇨": [t: "⠫⠸⠒⠒⠕"]            # 0x21e8
+ - "⇏": [t: "⠳⠈⠫⠒⠒⠕⠕"]          # 0x21cf
+ - "↛": [t: "⠳⠈⠫⠒⠒⠕⠻"]          # 0x219b
+ - "⇸": [t: "⠳⠈⠫⠒⠒⠕⠻"]          # 0x21f8
+ - "⇹": [t: "⠳⠈⠫⠪⠒⠒⠕"]          # 0x21f9
+ - "⇻": [t: "⠳⠳⠈⠫⠒⠒⠕⠻"]         # 0x21fb
+ - "↘": [t: "⠀⠫⠰⠒⠒⠕⠀"]          # 0x2198 (South east arrow)
+ - "⇘": [t: "⠀⠫⠰⠶⠶⠕⠀"]          # 0x21D8 (South east double arrow)
+ - "↘": [t: "⠫⠰⠒⠒⠕"]            # 0x2198
+ - "⇘": [t: "⠫⠰⠒⠒⠕⠕"]           # 0x21d8
+ - "⇩": [t: ""]                 # 0x21E9 (Downwards white arrow)
+ - "⇣": [t: "⠀⠫⠩⠒⠀⠒⠕⠀"]         # 0x21E3 (Downwards dashed arrow)
+ - "⇂": [t: "⠀⠫⠩⠒⠒⠈⠕⠀"]         # 0x21C2 (Downwards harpoon w barb rightwards)
+ - "↓": [t: "⠀⠫⠩⠒⠒⠕⠀"]          # 0x2193 (Downwards arrow)
+ - "⇵": [t: "⠀⠫⠩⠒⠒⠕⠐⠫⠣⠒⠒⠕⠀"]    # 0x21F5 (Downwards arrow leftwards of upwards arrow)
+ - "⇊": [t: "⠀⠫⠩⠒⠒⠕⠐⠫⠩⠒⠒⠕⠀"]    # 0x21CA (Downwards paired arrows)
+ - "↡": [t: "⠀⠫⠩⠒⠒⠕⠕⠀"]         # 0x21A1 (Downwards two headed arrow)
+ - "⇃": [t: "⠀⠫⠩⠒⠒⠠⠕⠀"]         # 0x21C3 (Downwards harpoon w barb leftwards)
+ - "↯": [t: "⠀⠫⠩⠔⠢⠔⠕⠀"]         # 0x21AF (Downwards zigzag arrow)
+ - "↴": [t: "⠀⠫⠩⠠⠳⠒⠕⠀"]         # 0x21B4 (Rightwards arrow w corner downwards)
+ - "↧": [t: "⠀⠫⠩⠳⠒⠒⠕⠀"]         # 0x21A7 (Downwards arrow from bar)
+ - "⇓": [t: "⠀⠫⠩⠶⠶⠕⠀"]          # 0x21D3 (Downwards double arrow)
+ - "⇟": [t: "⠀⠳⠳⠈⠫⠩⠒⠒⠕⠻⠀"]      # 0x21DF (Downwards arrow w double stroke)
+ - "⇼": [t: "⠀⠳⠳⠈⠫⠪⠒⠒⠕⠻⠀"]      # 0x21FC (Left right arrow w double vertical stroke)
+ - "↴": [t: "⠫⠠⠳⠒⠒⠕"]           # 0x21b4
+ - "⇓": [t: "⠫⠣⠒⠒⠕⠕"]           # 0x21d3
+ - "↓": [t: "⠫⠩⠒⠒⠕"]            # 0x2193
+ - "⇣": [t: "⠫⠩⠒⠒⠕"]            # 0x21e3
+ - "⇵": [t: "⠫⠩⠒⠒⠕⠐⠫⠣⠒⠒⠕"]      # 0x21f5
+ - "⇊": [t: "⠫⠩⠒⠒⠕⠐⠫⠩⠒⠒⠕"]      # 0x21ca
+ - "↡": [t: "⠫⠩⠒⠒⠕⠕"]           # 0x21a1
+ - "⇃": [t: "⠫⠩⠒⠒⠠⠕"]           # 0x21c3
+ - "↯": [t: "⠫⠩⠔⠢⠔"]            # 0x21af
+ - "↧": [t: "⠫⠩⠳⠒⠒⠕"]           # 0x21a7
+ - "⇩": [t: "⠫⠩⠸⠒⠒⠕"]           # 0x21e9
+ - "⇂": [t: "⠫⠪⠒⠒⠈⠕"]           # 0x21c2
+ - "⇟": [t: "⠳⠳⠈⠫⠩⠒⠒⠕⠻"]        # 0x21df
+ - "⇼": [t: "⠳⠳⠈⠫⠪⠒⠒⠕"]         # 0x21fc
+ - "↙": [t: "⠀⠫⠰⠪⠒⠒⠀"]          # 0x2199 (South west arrow)
+ - "⇙": [t: "⠀⠫⠰⠪⠶⠶⠀"]          # 0x21D9 (South west double arrow )
+ - "↙": [t: "⠫⠰⠪⠒⠒"]            # 0x2199
+ - "⇙": [t: "⠫⠰⠪⠪⠒⠒"]           # 0x21d9
+ - "↫": [t: ""]                 # 0x21AB (Leftwards arrow w loop)
+ - "⇦": [t: ""]                 # 0x21E6 (Leftwards white arrow)
+ - "⇽": [t: ""]                 # 0x21FD (Leftwards open-headed arrow)
+ - "⇿": [t: ""]                 # 0x21FF (Left right open-headed arrow)
+ - "↼": [t: "⠀⠫⠈⠪⠒⠒⠀"]          # 0x21BC (Leftwards harpoon w barb upwards)
+ - "↽": [t: "⠀⠫⠠⠪⠒⠒⠀"]          # 0x21BD (Leftwards harpoon w barb downwards)
+ - "⇠": [t: "⠀⠫⠪⠒⠀⠒⠀"]          # 0x21E0 (Leftwards dashed arrow)
+ - "↵": [t: "⠀⠫⠪⠒⠈⠳⠀"]          # 0x21B5 (Downwards arrow w corner leftwards)
+ - "←": [t: "⠀⠫⠪⠒⠒⠀"]           # 0x2190 (Leftwards arrow )
+ - "↩": [t: "⠀⠫⠪⠒⠒⠈⠽⠀"]         # 0x21A9 (Leftwards arrow w hook)
+ - "↢": [t: "⠀⠫⠪⠒⠒⠠⠽⠀"]         # 0x21A2 (Leftwards arrow w tail)
+ - "⇇": [t: "⠀⠫⠪⠒⠒⠫⠪⠒⠒⠀"]       # 0x21C7 (Leftwards paired arrows)
+ - "↤": [t: "⠀⠫⠪⠒⠒⠳⠀"]          # 0x21A4 (Leftwards arrow from bar)
+ - "↜": [t: "⠀⠫⠪⠔⠒⠢⠀"]          # 0x219C (Leftwards wave arrow)
+ - "⇜": [t: "⠀⠫⠪⠢⠤⠔⠒⠢⠀"]        # 0x21DC (Leftwards squiggle arrow)
+ - "↞": [t: "⠀⠫⠪⠪⠒⠒⠀"]          # 0x219E (Leftwards two headed arrow)
+ - "⇐": [t: "⠀⠫⠪⠶⠶⠀"]           # 0x21D0 (Leftwards double arrow)
+ - "⇚": [t: "⠀⠫⠪⠸⠸⠀"]           # 0x21DA (Leftwards triple arrow)
+ - "↚": [t: "⠀⠳⠈⠫⠪⠒⠒⠻⠀"]        # 0x219A (Leftwards arrow w stroke)
+ - "⇷": [t: "⠀⠳⠈⠫⠪⠒⠒⠻⠀"]        # 0x21F7 (Leftwards arrow w vertical stroke)
+ - "⇍": [t: "⠀⠳⠈⠫⠪⠶⠶⠻⠀"]        # 0x21CD (Leftwards double arrow w stroke)
+ - "⇤": [t: "⠀⠳⠫⠪⠒⠒⠀"]          # 0x21E4 (Leftwards arrow to bar)
+ - "⇺": [t: "⠀⠳⠳⠈⠫⠪⠒⠒⠻⠀"]       # 0x21FA (Leftwards arrow w double vertical stroke)
+ - "↼": [t: "⠫⠈⠪⠒⠒"]            # 0x21bc
+ - "⇇": [t: "⠫⠚⠒⠒⠫⠚⠒⠒"]         # 0x21c7
+ - "↽": [t: "⠫⠠⠪⠒⠒"]            # 0x21bd
+ - "↵": [t: "⠫⠩⠠⠳⠒⠒⠕"]          # 0x21b5
+ - "←": [t: "⠫⠪⠒⠒"]             # 0x2190
+ - "⇠": [t: "⠫⠪⠒⠒"]             # 0x21e0
+ - "↩": [t: "⠫⠪⠒⠒⠠⠕"]           # 0x21a9
+ - "↢": [t: "⠫⠪⠒⠒⠠⠽"]           # 0x21a2
+ - "↫": [t: "⠫⠪⠒⠒⠨⠡"]           # 0x21ab
+ - "↤": [t: "⠫⠪⠒⠒⠳"]            # 0x21a4
+ - "↜": [t: "⠫⠪⠔⠒⠢"]            # 0x219c
+ - "⇜": [t: "⠫⠪⠢⠤⠔⠒⠢"]          # 0x21dc
+ - "↞": [t: "⠫⠪⠪⠒⠒"]            # 0x219e
+ - "⇚": [t: "⠫⠪⠪⠪⠒⠒"]           # 0x21da
+ - "⇐": [t: "⠫⠪⠶⠶"]             # 0x21d0
+ - "⇽": [t: "⠫⠳⠒⠒"]             # 0x21fd
+ - "⇿": [t: "⠫⠳⠒⠒⠳"]            # 0x21ff
+ - "⇤": [t: "⠫⠳⠪⠒⠒"]            # 0x21e4
+ - "⇦": [t: "⠫⠸⠪⠒⠒"]            # 0x21e6
+ - "↚": [t: "⠳⠈⠫⠪⠒⠒⠻"]          # 0x219a
+ - "⇷": [t: "⠳⠈⠫⠪⠒⠒⠻"]          # 0x21f7
+ - "⇍": [t: "⠳⠈⠫⠪⠪⠒⠒"]          # 0x21cd
+ - "⇺": [t: "⠳⠳⠈⠫⠪⠒⠒⠻"]         # 0x21fa
+ - "↖": [t: "⠀⠫⠘⠪⠒⠒⠀"]          # 0x2196 (North west arrow)
+ - "⇖": [t: "⠀⠫⠘⠪⠶⠶⠀"]          # 0x21D6 (North west double arrow)
+ - "↖": [t: "⠫⠘⠪⠒⠒"]            # 0x2196
+ - "⇖": [t: "⠫⠘⠪⠪⠒⠒"]           # 0x21d6
+ - "⇋": [t: "⠀⠫⠈⠪⠒⠒⠫⠒⠒⠠⠕⠀"]     # 0x21CB (Leftwards harpoon over rightwards harpoon)
+ - "⇌": [t: "⠀⠫⠒⠒⠈⠕⠫⠠⠪⠒⠒⠀"]     # 0x21CC (Rightwards harpoon over leftwards harpoon)
+ - "⇄": [t: "⠀⠫⠒⠒⠕⠫⠪⠒⠒⠀"]       # 0x21C4 (Rightwards arrow over leftwards arrow)
+ - "↔": [t: "⠀⠫⠪⠒⠒⠕⠀"]          # 0x2194 (Left right arrow)
+ - "⇆": [t: "⠀⠫⠪⠒⠒⠫⠒⠒⠕⠀"]       # 0x21C6 (Leftwards arrow over rightwards arrow)
+ - "↭": [t: "⠀⠫⠪⠔⠒⠢⠕⠀"]         # 0x21AD (Left right wave arrow)
+ - "⇔": [t: "⠀⠫⠪⠶⠶⠕⠀"]          # 0x21D4 (Left right double arrow)
+ - "↮": [t: "⠀⠳⠈⠫⠪⠒⠒⠕⠻⠀"]       # 0x21AE (Left right arrow w stroke)
+ - "⇎": [t: "⠀⠳⠈⠫⠪⠶⠶⠕⠻⠀"]       # 0x21CE (Left right double arrow w stroke)
+ - "⇋": [t: "⠫⠈⠪⠒⠒⠫⠒⠒⠈⠕"]       # 0x21cb
+ - "⇌": [t: "⠫⠒⠒⠈⠕⠫⠈⠪⠒⠒"]       # 0x21cc
+ - "⇄": [t: "⠫⠒⠒⠕⠫⠪⠒⠒"]         # 0x21c4
+ - "↔": [t: "⠫⠪⠒⠒⠕"]            # 0x2194
+ - "⇆": [t: "⠫⠪⠒⠒⠫⠒⠒⠕"]         # 0x21c6
+ - "↭": [t: "⠫⠪⠔⠒⠢⠕"]           # 0x21ad
+ - "⇔": [t: "⠫⠪⠪⠒⠒⠕⠕"]          # 0x21d4
+ - "↮": [t: "⠳⠈⠫⠪⠒⠒⠕"]          # 0x21ae
+ - "⇎": [t: "⠳⠈⠫⠪⠪⠒⠒⠕⠕"]        # 0x21ce
+ - "⇳": [t: ""]                 # 0x21F3 (Up down white arrow)
+ - "⇅": [t: "⠀⠫⠣⠒⠒⠕⠐⠫⠩⠒⠒⠕⠀"]    # 0x21C5 (Upwards arrow leftwards of downwards arrow)
+ - "↕": [t: "⠀⠫⠣⠪⠒⠒⠕⠀"]         # 0x2195 (Up down arrow)
+ - "↨": [t: "⠀⠫⠣⠪⠒⠒⠕⠳⠀"]        # 0x21A8 (Up down arrow w base)
+ - "⇕": [t: "⠀⠫⠣⠪⠶⠶⠕⠀"]         # 0x21D5 (Up down double arrow)
+ - "⇅": [t: "⠫⠣⠒⠒⠕⠐⠫⠩⠒⠒⠕"]      # 0x21c5
+ - "↕": [t: "⠫⠣⠩⠪⠒⠒⠕"]          # 0x2195
+ - "⇕": [t: "⠫⠣⠪⠪⠒⠒⠕⠕"]         # 0x21d5
+ - "⇳": [t: "⠫⠣⠸⠪⠒⠒⠕"]          # 0x21f3
+ - "↨": [t: "⠫⠪⠒⠳⠒⠕"]           # 0x21a8
+ - "↷": [t: ""]                 # 0x21B7 (Clockwise top semicircle arrow)
+ - "↻": [t: "⠀⠫⠪⠢⠔⠀"]           # 0x21BB (Clockwise open circle arrow)
+ - "↷": [t: "⠫⠪⠢⠔"]             # 0x21b7
+ - "↻": [t: "⠫⠪⠢⠔"]             # 0x21bb
+ - "↶": [t: ""]                 # 0x21B6 (Anticlockwise top semicircle arrow)
+ - "↺": [t: "⠀⠫⠢⠔⠕⠀"]           # 0x21BA (Anticlockwise open circle arrow)
+ - "↶": [t: "⠫⠢⠔⠕"]             # 0x21b6
+ - "↺": [t: "⠫⠢⠔⠕"]             # 0x21ba
+ - "─": [t: "⠱"]                # 0x2500
+ - "│": [t: "⠳"]                # 0x2502
+ - "§": [t: "⠈⠠⠎"]              # 0x00A7 (Section sign)
+ - "§": [t: "⠈⠠⠎"]              # 0xa7
+ - "©": [t: "⠘⠉"]               # 0xa9
+ - "©": [t: "⠷⠠⠉⠾"]             # 0x00A9 (Copyright sign)
+ - "¬": [t: ""]                 # 0x00AC (Not sign)
+ - "®": [t: "⠘⠗"]               # 0xae
+ - "®": [t: "⠷⠠r⠾"]             # 0x00AE (Registered sign)
+ - "°": [t: "⠘⠨⠡"]              # 0x00B0 (Degree sign)
+ - "°": [t: "⠘⠨⠡"]              # 0xb0
+ - "µ": [t: "⠨⠍"]               # 0xb5
+ - "¶": [t: "⠈⠠⠏"]              # 0x00B6 (Pilcrow sign)
+ - "¶": [t: "⠈⠠⠏"]              # 0xb6
+ - "·": [t: "⠡"]                # 0x00B7 (Middle dot)
+ - "·": [t: "⠡"]                # 0xb7
+ - "‥": [t: "⠄⠄"]               # 0x2025
+ - "…":                          # 0x2026 (Ellipsis)
+ - "…": [t: "⠄⠄⠄"]              # 0x2026
+ - "∬": [t: "⠮⠮"]               # 0x222C (Double integral)
+ - "∬": [t: "⠮⠮"]               # 0x222c
+ - "∭": [t: "⠮⠮⠮"]              # 0x222D (Triple integral)
+ - "∭": [t: "⠮⠮⠮"]              # 0x222d
+ - "☆": [t: "⠫⠎"]               # 0x2606
+ - "✕": [t: "⠈⠡"]               # 0x2715
+ - "⟞": [t: "⠀⠫⠒⠒⠳⠀"]           # 0x27DE (Long left tack)
+ - "⟝": [t: "⠀⠫⠳⠒⠒⠀"]           # 0x27DD (Long right tack)
+ - "†": [t: "⠸⠻"]               # 0x2020 (Dagger)
+ - "†": [t: "⠸⠻"]               # 0x2020
+ - "‡": [t: "⠸⠸⠻"]              # 0x2021 (Double dagger)
+ - "‡": [t: "⠸⠸⠻"]              # 0x2021
+ - "•": [t: "⠔⠔"]               # 0x2022 (Bullet)
+ - "•": [t: "⠔⠔"]               # 0x2022
+ - "‰": [t: "`00"]
+ - "⧆": [t: "⠫⠲⠸⠫⠈⠼⠻"]          # 0x29C6 (Squared asterisk)
+ - "⧄": [t: "⠫⠲⠸⠫⠔⠻"]           # 0x29C4 (Square rising diagonal slash)
+ - "⧅": [t: "⠫⠲⠸⠫⠢⠻"]           # 0x29C5 (Square falling diagonal slash)
+ - "⧊": [t: "⠐⠫⠞⠣⠡⠻"]           # 0x29CA (Triangle w dot above)
+ - "⧌": [t: "⠫⠞⠎"]              # 0x29CC (s in triangle §114)
+ - "⧋": [t: "⠫⠞⠱"]              # 0x29CB (Triangle w underbar)
+ - "⟜": [t: "⠀⠫⠨⠡⠒⠒⠀"]          # 0x27DC (Left multimap)
+ - "⟟": [t: "⠫⠣⠳⠒⠒⠨⠡"]          # 0x27DF (Up tack w circle above)
+ - "⦀": [t: "⠳⠳⠳"]              # 0x2980
+ - "⧦": [t: "⠫⠳⠶⠶⠳"]            # 0x29E6 (Gleich stark)
+ - "⬰": [t: "⠀⠨⠡⠈⠫⠪⠒⠒⠻⠀"]       # 0x2B30 (Left arrow w small circle)
+ - "⬲": [t: "⠀⠫⠪⠒⠒⠈⠫⠉⠸⠫⠬⠻⠀"]    # 0x2B32 (Left arrow w circled plus)
+ - "⬱": [t: "⠀⠫⠪⠒⠒⠫⠪⠒⠒⠫⠪⠒⠒⠀"]   # 0x2B31 (Three leftwards arrows)
+ - "⬭": [t: "⠫⠑"]               # 0x2B2D (White ellipse)
+ - "⬡": [t: "⠫⠖"]               # 0x2B21 (White hexagon)
+ - "⬡": [t: "⠫⠖"]               # 0x2b21
+ - "⬠": [t: "⠫⠢"]               # 0x2B20 (White pentagon)
+ - "⬠": [t: "⠫⠢"]               # 0x2b20
+ - "⬤": [t: "⠫⠸⠉"]              # 0x2b24
+ - "⬬": [t: "⠫⠸⠑"]              # 0x2B2C (Black ellipse)
+ - "⬢": [t: "⠫⠸⠖"]              # 0x2B22 (Black hexagon)
+ - "⬢": [t: "⠫⠸⠖"]              # 0x2b22
+ - "⬣": [t: "⠫⠸⠖"]              # 0x2b23
+ - "⬥": [t: "⠫⠸⠙"]              # 0x2b25
+ - "⟂": [t: "⠫⠏"]               # 0x27c2
+ - "⟃": [t: "⠀⠨⠡⠈⠸⠐⠅⠻⠀"]        # 0x27C3 (Open subset)
+ - "⟄": [t: "⠀⠨⠡⠈⠸⠨⠂⠻⠀"]        # 0x27C4 (Open superset)
+ - "⁰": [t: "⠘⠴"]               # 0x2070
+ - "⓪": [t: "⠫⠉⠸⠫⠼⠴⠻"]          # 0x24ea
+ - "⓿": [t: "⠫⠸⠉⠸⠫⠼⠴⠻"]         # 0x24ff
+ - "₀": [t: "⠰⠴"]               # 0x2080
+ - "0": [t: "⠴"]                # 0x30
+ - "０": [t: "⠴"]                # 0xff10
+ - "↉": [t: "⠹⠴⠌⠒⠼"]            # 0x2189
+ - "⅒": [t: "⠹⠂⠌⠂⠴⠼"]           # 0x2152
+ - "⅑": [t: "⠹⠂⠌⠔⠼"]            # 0x2151
+ - "⅛": [t: "⠹⠂⠌⠦⠼"]            # 0x215b
+ - "⅐": [t: "⠹⠂⠌⠶⠼"]            # 0x2150
+ - "⅙": [t: "⠹⠂⠌⠖⠼"]            # 0x2159
+ - "⅕": [t: "⠹⠂⠌⠢⠼"]            # 0x2155
+ - "¼": [t: "⠹⠂⠌⠲⠼"]            # 0xbc
+ - "⅓": [t: "⠹⠂⠌⠒⠼"]            # 0x2153
+ - "⅜": [t: "⠹⠒⠌⠦⠼"]            # 0x215c
+ - "⅖": [t: "⠹⠆⠌⠢⠼"]            # 0x2156
+ - "½": [t: "⠹⠂⠌⠆⠼"]            # 0xbd
+ - "⅗": [t: "⠹⠒⠌⠢⠼"]            # 0x2157
+ - "⅝": [t: "⠹⠢⠌⠦⠼"]            # 0x215d
+ - "⅔": [t: "⠹⠆⠌⠒⠼"]            # 0x2154
+ - "¾": [t: "⠹⠒⠌⠲⠼"]            # 0xbe
+ - "⅘": [t: "⠹⠲⠌⠢⠼"]            # 0x2158
+ - "⅚": [t: "⠹⠢⠌⠖⠼"]            # 0x215a
+ - "⅞": [t: "⠹⠶⠌⠦⠼"]            # 0x215e
+ - "1": [t: "⠂"]                # 0x31
+ - "１": [t: "⠂"]                # 0xff11
+ - "⒈": [t: "⠂⠸⠲"]              # 0x2488
+ - "¹": [t: "⠘⠂"]               # 0xb9
+ - "➀": [t: "⠫⠉⠸⠫⠠⠨⠼⠂⠻"]        # 0x2780
+ - "⓵": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠂⠻⠻"]     # 0x24f5
+ - "①": [t: "⠫⠉⠸⠫⠼⠂⠻"]          # 0x2460
+ - "➊": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠂⠻"]       # 0x278a
+ - "❶": [t: "⠫⠸⠉⠸⠫⠼⠂⠻"]         # 0x2776
+ - "₁": [t: "⠰⠂"]               # 0x2081
+ - "⑴": [t: "⠷⠂⠾"]              # 0x2474
+ - "2": [t: "⠆"]                # 0x32
+ - "２": [t: "⠆"]                # 0xff12
+ - "⒉": [t: "⠆⠸⠲"]              # 0x2489
+ - "²": [t: "⠘⠆"]               # 0xb2
+ - "➁": [t: "⠫⠉⠸⠫⠠⠨⠼⠆⠻"]        # 0x2781
+ - "⓶": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠆⠻⠻"]     # 0x24f6
+ - "②": [t: "⠫⠉⠸⠫⠼⠆⠻"]          # 0x2461
+ - "➋": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠆⠻"]       # 0x278b
+ - "❷": [t: "⠫⠸⠉⠸⠫⠼⠆⠻"]         # 0x2777
+ - "₂": [t: "⠰⠆"]               # 0x2082
+ - "⑵": [t: "⠷⠆⠾"]              # 0x2475
+ - "3": [t: "⠒"]                # 0x33
+ - "３": [t: "⠒"]                # 0xff13
+ - "⒊": [t: "⠒⠸⠲"]              # 0x248a
+ - "³": [t: "⠘⠒"]               # 0xb3
+ - "➂": [t: "⠫⠉⠸⠫⠠⠨⠼⠒⠻"]        # 0x2782
+ - "⓷": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠒⠻⠻"]     # 0x24f7
+ - "③": [t: "⠫⠉⠸⠫⠼⠒⠻"]          # 0x2462
+ - "➌": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠒⠻"]       # 0x278c
+ - "❸": [t: "⠫⠸⠉⠸⠫⠼⠒⠻"]         # 0x2778
+ - "₃": [t: "⠰⠒"]               # 0x2083
+ - "⑶": [t: "⠷⠒⠾"]              # 0x2476
+ - "⁴": [t: "⠘⠲"]               # 0x2074
+ - "➃": [t: "⠫⠉⠸⠫⠠⠨⠼⠲⠻"]        # 0x2783
+ - "⓸": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠲⠻⠻"]     # 0x24f8
+ - "④": [t: "⠫⠉⠸⠫⠼⠲⠻"]          # 0x2463
+ - "➍": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠲⠻"]       # 0x278d
+ - "❹": [t: "⠫⠸⠉⠸⠫⠼⠲⠻"]         # 0x2779
+ - "₄": [t: "⠰⠲"]               # 0x2084
+ - "4": [t: "⠲"]                # 0x34
+ - "４": [t: "⠲"]                # 0xff14
+ - "⒋": [t: "⠲⠸⠲"]              # 0x248b
+ - "⑷": [t: "⠷⠲⠾"]              # 0x2477
+ - "⁵": [t: "⠘⠢"]               # 0x2075
+ - "5": [t: "⠢"]                # 0x35
+ - "５": [t: "⠢"]                # 0xff15
+ - "⒌": [t: "⠢⠸⠲"]              # 0x248c
+ - "➄": [t: "⠫⠉⠸⠫⠠⠨⠼⠢⠻"]        # 0x2784
+ - "⓹": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠢⠻⠻"]     # 0x24f9
+ - "⑤": [t: "⠫⠉⠸⠫⠼⠢⠻"]          # 0x2464
+ - "➎": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠢⠻"]       # 0x278e
+ - "❺": [t: "⠫⠸⠉⠸⠫⠼⠢⠻"]         # 0x277a
+ - "₅": [t: "⠰⠢"]               # 0x2085
+ - "⑸": [t: "⠷⠢⠾"]              # 0x2478
+ - "6": [t: "⠖"]                # 0x36
+ - "６": [t: "⠖"]                # 0xff16
+ - "⒍": [t: "⠖⠸⠲"]              # 0x248d
+ - "⁶": [t: "⠘⠖"]               # 0x2076
+ - "➅": [t: "⠫⠉⠸⠫⠠⠨⠼⠖⠻"]        # 0x2785
+ - "⓺": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠖⠻⠻"]     # 0x24fa
+ - "⑥": [t: "⠫⠉⠸⠫⠼⠖⠻"]          # 0x2465
+ - "➏": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠖⠻"]       # 0x278f
+ - "❻": [t: "⠫⠸⠉⠸⠫⠼⠖⠻"]         # 0x277b
+ - "₆": [t: "⠰⠖"]               # 0x2086
+ - "⑹": [t: "⠷⠖⠾"]              # 0x2479
+ - "⁷": [t: "⠘⠶"]               # 0x2077
+ - "➆": [t: "⠫⠉⠸⠫⠠⠨⠼⠶⠻"]        # 0x2786
+ - "⓻": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠶⠻⠻"]     # 0x24fb
+ - "⑦": [t: "⠫⠉⠸⠫⠼⠶⠻"]          # 0x2466
+ - "➐": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠶⠻"]       # 0x2790
+ - "❼": [t: "⠫⠸⠉⠸⠫⠼⠶⠻"]         # 0x277c
+ - "₇": [t: "⠰⠶"]               # 0x2087
+ - "7": [t: "⠶"]                # 0x37
+ - "７": [t: "⠶"]                # 0xff17
+ - "⒎": [t: "⠶⠸⠲"]              # 0x248e
+ - "⑺": [t: "⠷⠶⠾"]              # 0x247a
+ - "⁸": [t: "⠘⠦"]               # 0x2078
+ - "8": [t: "⠦"]                # 0x38
+ - "８": [t: "⠦"]                # 0xff18
+ - "⒏": [t: "⠦⠸⠲"]              # 0x248f
+ - "➇": [t: "⠫⠉⠸⠫⠠⠨⠼⠦⠻"]        # 0x2787
+ - "⓼": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠦⠻⠻"]     # 0x24fc
+ - "⑧": [t: "⠫⠉⠸⠫⠼⠦⠻"]          # 0x2467
+ - "➑": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠦⠻"]       # 0x2791
+ - "❽": [t: "⠫⠸⠉⠸⠫⠼⠦⠻"]         # 0x277d
+ - "₈": [t: "⠰⠦"]               # 0x2088
+ - "⑻": [t: "⠷⠦⠾"]              # 0x247b
+ - "9": [t: "⠔"]                # 0x39
+ - "９": [t: "⠔"]                # 0xff19
+ - "⒐": [t: "⠔⠸⠲"]              # 0x2490
+ - "⁹": [t: "⠘⠔"]               # 0x2079
+ - "➈": [t: "⠫⠉⠸⠫⠠⠨⠼⠔⠻"]        # 0x2788
+ - "⓽": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠔⠻⠻"]     # 0x24fd
+ - "⑨": [t: "⠫⠉⠸⠫⠼⠔⠻"]          # 0x2468
+ - "➒": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠔⠻"]       # 0x2792
+ - "❾": [t: "⠫⠸⠉⠸⠫⠼⠔⠻"]         # 0x277e
+ - "₉": [t: "⠰⠔"]               # 0x2089
+ - "⑼": [t: "⠷⠔⠾"]              # 0x247c
+ - "⒑": [t: "⠂⠴⠸⠲"]             # 0x2491
+ - "➉": [t: "⠫⠉⠸⠫⠠⠨⠼⠂⠴⠻"]       # 0x2789
+ - "⓾": [t: "⠫⠉⠸⠫⠫⠉⠸⠫⠼⠂⠴⠻⠻"]    # 0x24fe
+ - "⑩": [t: "⠫⠉⠸⠫⠼⠂⠴⠻"]         # 0x2469
+ - "➓": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠂⠴⠻"]      # 0x2793
+ - "❿": [t: "⠫⠸⠉⠸⠫⠼⠂⠴⠻"]        # 0x277f
+ - "㉈": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠂⠴⠻⠻"]   # 0x3248
+ - "⑽": [t: "⠷⠂⠴⠾"]             # 0x247d
+ - "⒒": [t: "⠂⠂⠸⠲"]             # 0x2492
+ - "⑪": [t: "⠫⠉⠸⠫⠼⠂⠂⠻"]         # 0x246a
+ - "⓫": [t: "⠫⠸⠉⠸⠫⠼⠂⠂⠻"]        # 0x24eb
+ - "⑾": [t: "⠷⠂⠂⠾"]             # 0x247e
+ - "⒓": [t: "⠂⠆⠸⠲"]             # 0x2493
+ - "⑫": [t: "⠫⠉⠸⠫⠼⠂⠆⠻"]         # 0x246b
+ - "⓬": [t: "⠫⠸⠉⠸⠫⠼⠂⠆⠻"]        # 0x24ec
+ - "⑿": [t: "⠷⠂⠆⠾"]             # 0x247f
+ - "⒔": [t: "⠂⠒⠸⠲"]             # 0x2494
+ - "⑬": [t: "⠫⠉⠸⠫⠼⠂⠒⠻"]         # 0x246c
+ - "⓭": [t: "⠫⠸⠉⠸⠫⠼⠂⠒⠻"]        # 0x24ed
+ - "⒀": [t: "⠷⠂⠒⠾"]             # 0x2480
+ - "⒕": [t: "⠂⠲⠸⠲"]             # 0x2495
+ - "⑭": [t: "⠫⠉⠸⠫⠼⠂⠲⠻"]         # 0x246d
+ - "⓮": [t: "⠫⠸⠉⠸⠫⠼⠂⠲⠻"]        # 0x24ee
+ - "⒁": [t: "⠷⠂⠲⠾"]             # 0x2481
+ - "⒖": [t: "⠂⠢⠸⠲"]             # 0x2496
+ - "⑮": [t: "⠫⠉⠸⠫⠼⠂⠢⠻"]         # 0x246e
+ - "⓯": [t: "⠫⠸⠉⠸⠫⠼⠂⠢⠻"]        # 0x24ef
+ - "⒂": [t: "⠷⠂⠢⠾"]             # 0x2482
+ - "⒗": [t: "⠂⠖⠸⠲"]             # 0x2497
+ - "⑯": [t: "⠫⠉⠸⠫⠼⠂⠖⠻"]         # 0x246f
+ - "⓰": [t: "⠫⠸⠉⠸⠫⠼⠂⠖⠻"]        # 0x24f0
+ - "⒃": [t: "⠷⠂⠖⠾"]             # 0x2483
+ - "⒘": [t: "⠂⠶⠸⠲"]             # 0x2498
+ - "⑰": [t: "⠫⠉⠸⠫⠼⠂⠶⠻"]         # 0x2470
+ - "⓱": [t: "⠫⠸⠉⠸⠫⠼⠂⠶⠻"]        # 0x24f1
+ - "⒄": [t: "⠷⠂⠶⠾"]             # 0x2484
+ - "⒙": [t: "⠂⠦⠸⠲"]             # 0x2499
+ - "⑱": [t: "⠫⠉⠸⠫⠼⠂⠦⠻"]         # 0x2471
+ - "⓲": [t: "⠫⠸⠉⠸⠫⠼⠂⠦⠻"]        # 0x24f2
+ - "⒅": [t: "⠷⠂⠦⠾"]             # 0x2485
+ - "⒚": [t: "⠂⠔⠸⠲"]             # 0x249a
+ - "⑲": [t: "⠫⠉⠸⠫⠼⠂⠔⠻"]         # 0x2472
+ - "⓳": [t: "⠫⠸⠉⠸⠫⠼⠂⠔⠻"]        # 0x24f3
+ - "⒆": [t: "⠷⠂⠔⠾"]             # 0x2486
+ - "⒛": [t: "⠆⠴⠸⠲"]             # 0x249b
+ - "⑳": [t: "⠫⠉⠸⠫⠼⠆⠴⠻"]         # 0x2473
+ - "⓴": [t: "⠫⠸⠉⠸⠫⠼⠆⠴⠻"]        # 0x24f4
+ - "㉉": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠆⠴⠻⠻"]   # 0x3249
+ - "⒇": [t: "⠷⠆⠴⠾"]             # 0x2487
+ - "㉑": [t: "⠫⠉⠸⠫⠼⠆⠂⠻"]         # 0x3251
+ - "㉒": [t: "⠫⠉⠸⠫⠼⠆⠆⠻"]         # 0x3252
+ - "㉓": [t: "⠫⠉⠸⠫⠼⠆⠒⠻"]         # 0x3253
+ - "㉔": [t: "⠫⠉⠸⠫⠼⠆⠲⠻"]         # 0x3254
+ - "㉕": [t: "⠫⠉⠸⠫⠼⠆⠢⠻"]         # 0x3255
+ - "㉖": [t: "⠫⠉⠸⠫⠼⠆⠖⠻"]         # 0x3256
+ - "㉗": [t: "⠫⠉⠸⠫⠼⠆⠶⠻"]         # 0x3257
+ - "㉘": [t: "⠫⠉⠸⠫⠼⠆⠦⠻"]         # 0x3258
+ - "㉙": [t: "⠫⠉⠸⠫⠼⠆⠔⠻"]         # 0x3259
+ - "㉚": [t: "⠫⠉⠸⠫⠼⠒⠴⠻"]         # 0x325a
+ - "㉊": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠒⠴⠻⠻"]   # 0x324a
+ - "㉛": [t: "⠫⠉⠸⠫⠼⠒⠂⠻"]         # 0x325b
+ - "㉜": [t: "⠫⠉⠸⠫⠼⠒⠆⠻"]         # 0x325c
+ - "㉝": [t: "⠫⠉⠸⠫⠼⠒⠒⠻"]         # 0x325d
+ - "㉞": [t: "⠫⠉⠸⠫⠼⠒⠲⠻"]         # 0x325e
+ - "㉟": [t: "⠫⠉⠸⠫⠼⠒⠢⠻"]         # 0x325f
+ - "㊱": [t: "⠫⠉⠸⠫⠼⠒⠖⠻"]         # 0x32b1
+ - "㊲": [t: "⠫⠉⠸⠫⠼⠒⠶⠻"]         # 0x32b2
+ - "㊳": [t: "⠫⠉⠸⠫⠼⠒⠦⠻"]         # 0x32b3
+ - "㊴": [t: "⠫⠉⠸⠫⠼⠒⠔⠻"]         # 0x32b4
+ - "㊵": [t: "⠫⠉⠸⠫⠼⠲⠴⠻"]         # 0x32b5
+ - "㉋": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠲⠴⠻⠻"]   # 0x324b
+ - "㊶": [t: "⠫⠉⠸⠫⠼⠲⠂⠻"]         # 0x32b6
+ - "㊷": [t: "⠫⠉⠸⠫⠼⠲⠆⠻"]         # 0x32b7
+ - "㊸": [t: "⠫⠉⠸⠫⠼⠲⠒⠻"]         # 0x32b8
+ - "㊹": [t: "⠫⠉⠸⠫⠼⠲⠲⠻"]         # 0x32b9
+ - "㊺": [t: "⠫⠉⠸⠫⠼⠲⠢⠻"]         # 0x32ba
+ - "㊻": [t: "⠫⠉⠸⠫⠼⠲⠖⠻"]         # 0x32bb
+ - "㊼": [t: "⠫⠉⠸⠫⠼⠲⠶⠻"]         # 0x32bc
+ - "㊽": [t: "⠫⠉⠸⠫⠼⠲⠦⠻"]         # 0x32bd
+ - "㊾": [t: "⠫⠉⠸⠫⠼⠲⠔⠻"]         # 0x32be
+ - "㊿": [t: "⠫⠉⠸⠫⠼⠢⠴⠻"]         # 0x32bf
+ - "㉌": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠢⠴⠻⠻"]   # 0x324c
+ - "㉍": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠖⠴⠻⠻"]   # 0x324d
+ - "㉎": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠶⠴⠻⠻"]   # 0x324e
+ - "㉏": [t: "⠫⠸⠲⠸⠫⠫⠉⠸⠫⠼⠦⠴⠻⠻"]   # 0x324f
+ - "⅟": [t: "⠹⠂⠌⠼"]             # 0x215f
+ - "∞": [t: "⠠⠿"]               # 0x221E (Infinity)
+ - "∞": [t: "⠠⠿"]               # 0x221e
+ - "a": [t: "⠁"]                # 0x61
+ - "ａ": [t: "⠁"]                # 0xff41
+ - "à": [t: "⠈⠁"]               # 0xe0
+ - "á": [t: "⠈⠁"]               # 0xe1
+ - "â": [t: "⠈⠁"]               # 0xe2
+ - "ã": [t: "⠈⠁"]               # 0xe3
+ - "ä": [t: "⠈⠁"]               # 0xe4
+ - "å": [t: "⠈⠁"]               # 0xe5
+ - "Å": [t: "⠈⠠⠁"]              # 0x212b
+ - "A": [t: "⠠⠁"]               # 0x41
+ - "Ａ": [t: "⠠⠁"]               # 0xff21
+ - "À": [t: "⠠⠈⠁"]              # 0xc0
+ - "Á": [t: "⠠⠈⠁"]              # 0xc1
+ - "Â": [t: "⠠⠈⠁"]              # 0xc2
+ - "Ã": [t: "⠠⠈⠁"]              # 0xc3
+ - "Ä": [t: "⠠⠈⠁"]              # 0xc4
+ - "Å": [t: "⠠⠈⠁"]              # 0xc5
+ - "ⓐ": [t: "⠫⠉⠸⠫⠁⠻"]           # 0x24d0
+ - "Ⓐ": [t: "⠫⠉⠸⠫⠠⠁⠻"]          # 0x24b6
+ - "⒜": [t: "⠷⠁⠾"]              # 0x249c
+ - "ª": [t: "⠸⠰⠁"]              # 0xaa
+ - "b": [t: "⠃"]                # 0x62
+ - "ｂ": [t: "⠃"]                # 0xff42
+ - "ℬ": [t: "⠈⠰⠠⠃"]             # 0x212c
+ - "B": [t: "⠠⠃"]               # 0x42
+ - "Ｂ": [t: "⠠⠃"]               # 0xff22
+ - "ⓑ": [t: "⠫⠉⠸⠫⠃⠻"]           # 0x24d1
+ - "Ⓑ": [t: "⠫⠉⠸⠫⠠⠃⠻"]          # 0x24b7
+ - "⒝": [t: "⠷⠃⠾"]              # 0x249d
+ - "ç": [t: "⠈⠉"]               # 0xe7
+ - "ℂ": [t: "⠈⠰⠠⠉"]             # 0x2102
+ - "c": [t: "⠉"]                # 0x63
+ - "ｃ": [t: "⠉"]                # 0xff43
+ - "Ç": [t: "⠠⠈⠉"]              # 0xc7
+ - "C": [t: "⠠⠉"]               # 0x43
+ - "Ｃ": [t: "⠠⠉"]               # 0xff23
+ - "ⓒ": [t: "⠫⠉⠸⠫⠉⠻"]           # 0x24d2
+ - "Ⓒ": [t: "⠫⠉⠸⠫⠠⠉⠻"]          # 0x24b8
+ - "⒞": [t: "⠷⠉⠾"]              # 0x249e
+ - "ℭ": [t: "⠸⠠⠉"]              # 0x212d
+ - "ⅆ": [t: ""]                 # 0x2146 (Double-struck italic small d)
+ - "ⅆ": [t: "⠙"]                # 0x2146
+ - "d": [t: "⠙"]                # 0x64
+ - "ｄ": [t: "⠙"]                # 0xff44
+ - "D": [t: "⠠⠙"]               # 0x44
+ - "Ｄ": [t: "⠠⠙"]               # 0xff24
+ - "ⓓ": [t: "⠫⠉⠸⠫⠙⠻"]           # 0x24d3
+ - "Ⓓ": [t: "⠫⠉⠸⠫⠠⠙⠻"]          # 0x24b9
+ - "⒟": [t: "⠷⠙⠾"]              # 0x249f
+ - "ⅇ": [t: ""]                 # 0x2147 (Double-struck italic small e)
+ - "è": [t: "⠈⠑"]               # 0xe8
+ - "é": [t: "⠈⠑"]               # 0xe9
+ - "ê": [t: "⠈⠑"]               # 0xea
+ - "ë": [t: "⠈⠑"]               # 0xeb
+ - "ℯ": [t: "⠈⠰⠑"]              # 0x212f
+ - "ℰ": [t: "⠈⠰⠠⠑"]             # 0x2130
+ - "ⅇ": [t: "⠑"]                # 0x2147
+ - "e": [t: "⠑"]                # 0x65
+ - "ｅ": [t: "⠑"]                # 0xff45
+ - "È": [t: "⠠⠈⠑"]              # 0xc8
+ - "É": [t: "⠠⠈⠑"]              # 0xc9
+ - "Ê": [t: "⠠⠈⠑"]              # 0xca
+ - "Ë": [t: "⠠⠈⠑"]              # 0xcb
+ - "E": [t: "⠠⠑"]               # 0x45
+ - "Ｅ": [t: "⠠⠑"]               # 0xff25
+ - "ⓔ": [t: "⠫⠉⠸⠫⠑⠻"]           # 0x24d4
+ - "Ⓔ": [t: "⠫⠉⠸⠫⠠⠑⠻"]          # 0x24ba
+ - "⒠": [t: "⠷⠑⠾"]              # 0x24a0
+ - "ℱ": [t: "⠈⠰⠠⠋"]             # 0x2131
+ - "f": [t: "⠋"]                # 0x66
+ - "ｆ": [t: "⠋"]                # 0xff46
+ - "F": [t: "⠠⠋"]               # 0x46
+ - "Ｆ": [t: "⠠⠋"]               # 0xff26
+ - "ⓕ": [t: "⠫⠉⠸⠫⠋⠻"]           # 0x24d5
+ - "Ⓕ": [t: "⠫⠉⠸⠫⠠⠋⠻"]          # 0x24bb
+ - "⒡": [t: "⠷⠋⠾"]              # 0x24a1
+ - "ℊ": [t: "⠈⠰⠛"]              # 0x210a
+ - "g": [t: "⠛"]                # 0x67
+ - "ｇ": [t: "⠛"]                # 0xff47
+ - "G": [t: "⠠⠛"]               # 0x47
+ - "Ｇ": [t: "⠠⠛"]               # 0xff27
+ - "ⓖ": [t: "⠫⠉⠸⠫⠛⠻"]           # 0x24d6
+ - "Ⓖ": [t: "⠫⠉⠸⠫⠠⠛⠻"]          # 0x24bc
+ - "⒢": [t: "⠷⠛⠾"]              # 0x24a2
+ - "ℏ": [t: "⠈⠓"]               # 0x210F (Planck constant over two pi)
+ - "ℋ": [t: "⠈⠰⠠⠓"]             # 0x210b
+ - "ℍ": [t: "⠈⠰⠠⠓"]             # 0x210d
+ - "h": [t: "⠓"]                # 0x68
+ - "ｈ": [t: "⠓"]                # 0xff48
+ - "H": [t: "⠠⠓"]               # 0x48
+ - "Ｈ": [t: "⠠⠓"]               # 0xff28
+ - "ℎ": [t: "⠨⠰⠓"]              # 0x210e
+ - "ⓗ": [t: "⠫⠉⠸⠫⠓⠻"]           # 0x24d7
+ - "Ⓗ": [t: "⠫⠉⠸⠫⠠⠓⠻"]          # 0x24bd
+ - "⒣": [t: "⠷⠓⠾"]              # 0x24a3
+ - "ℌ": [t: "⠸⠠⠓"]              # 0x210c
+ - "ì": [t: "⠈⠊"]               # 0xec
+ - "í": [t: "⠈⠊"]               # 0xed
+ - "î": [t: "⠈⠊"]               # 0xee
+ - "ï": [t: "⠈⠊"]               # 0xef
+ - "ℐ": [t: "⠈⠰⠠⠊"]             # 0x2110
+ - "i": [t: "⠊"]                # 0x69
+ - "ｉ": [t: "⠊"]                # 0xff49
+ - "Ì": [t: "⠠⠈⠊"]              # 0xcc
+ - "Í": [t: "⠠⠈⠊"]              # 0xcd
+ - "Î": [t: "⠠⠈⠊"]              # 0xce
+ - "Ï": [t: "⠠⠈⠊"]              # 0xcf
+ - "I": [t: "⠠⠊"]               # 0x49
+ - "Ｉ": [t: "⠠⠊"]               # 0xff29
+ - "ⓘ": [t: "⠫⠉⠸⠫⠊⠻"]           # 0x24d8
+ - "Ⓘ": [t: "⠫⠉⠸⠫⠠⠊⠻"]          # 0x24be
+ - "⒤": [t: "⠷⠊⠾"]              # 0x24a4
+ - "ℑ": [t: "⠸⠠⠊"]              # 0x2111
+ - "j": [t: "⠚"]                # 0x6a
+ - "ｊ": [t: "⠚"]                # 0xff4a
+ - "J": [t: "⠠⠚"]               # 0x4a
+ - "Ｊ": [t: "⠠⠚"]               # 0xff2a
+ - "ⓙ": [t: "⠫⠉⠸⠫⠚⠻"]           # 0x24d9
+ - "Ⓙ": [t: "⠫⠉⠸⠫⠠⠚⠻"]          # 0x24bf
+ - "⒥": [t: "⠷⠚⠾"]              # 0x24a5
+ - "k": [t: "⠅"]                # 0x6b
+ - "ｋ": [t: "⠅"]                # 0xff4b
+ - "K": [t: "⠠⠅"]               # 0x4b
+ - "Ｋ": [t: "⠠⠅"]               # 0xff2b
+ - "ⓚ": [t: "⠫⠉⠸⠫⠅⠻"]           # 0x24da
+ - "Ⓚ": [t: "⠫⠉⠸⠫⠠⠅⠻"]          # 0x24c0
+ - "⒦": [t: "⠷⠅⠾"]              # 0x24a6
+ - "l": [t: "⠇"]                # 0x6c
+ - "ｌ": [t: "⠇"]                # 0xff4c
+ - "ℓ": [t: "⠈⠇"]               # 0x2113 (Script small l (differs from 1d4c1: 4-56-123))
+ - "ℓ": [t: "⠈⠰⠇"]              # 0x2113
+ - "ℒ": [t: "⠈⠰⠠⠇"]             # 0x2112
+ - "L": [t: "⠠⠇"]               # 0x4c
+ - "Ｌ": [t: "⠠⠇"]               # 0xff2c
+ - "ⓛ": [t: "⠫⠉⠸⠫⠇⠻"]           # 0x24db
+ - "Ⓛ": [t: "⠫⠉⠸⠫⠠⠇⠻"]          # 0x24c1
+ - "⒧": [t: "⠷⠇⠾"]              # 0x24a7
+ - "℔": [t: "⠳"]                # 0x2114
+ - "ℳ": [t: "⠈⠰⠠⠍"]             # 0x2133
+ - "m": [t: "⠍"]                # 0x6d
+ - "ｍ": [t: "⠍"]                # 0xff4d
+ - "M": [t: "⠠⠍"]               # 0x4d
+ - "Ｍ": [t: "⠠⠍"]               # 0xff2d
+ - "ⓜ": [t: "⠫⠉⠸⠫⠍⠻"]           # 0x24dc
+ - "Ⓜ": [t: "⠫⠉⠸⠫⠠⠍⠻"]          # 0x24c2
+ - "⒨": [t: "⠷⠍⠾"]              # 0x24a8
+ - "ñ": [t: "⠈⠝"]               # 0xf1
+ - "ℕ": [t: "⠈⠰⠠⠝"]             # 0x2115
+ - "n": [t: "⠝"]                # 0x6e
+ - "ｎ": [t: "⠝"]                # 0xff4e
+ - "Ñ": [t: "⠠⠈⠝"]              # 0xd1
+ - "N": [t: "⠠⠝"]               # 0x4e
+ - "Ｎ": [t: "⠠⠝"]               # 0xff2e
+ - "ⓝ": [t: "⠫⠉⠸⠫⠝⠻"]           # 0x24dd
+ - "Ⓝ": [t: "⠫⠉⠸⠫⠠⠝⠻"]          # 0x24c3
+ - "⒩": [t: "⠷⠝⠾"]              # 0x24a9
+ - "ò": [t: "⠈⠕"]               # 0xf2
+ - "ó": [t: "⠈⠕"]               # 0xf3
+ - "ô": [t: "⠈⠕"]               # 0xf4
+ - "õ": [t: "⠈⠕"]               # 0xf5
+ - "ö": [t: "⠈⠕"]               # 0xf6
+ - "ø": [t: "⠈⠕"]               # 0xf8
+ - "ℴ": [t: "⠈⠰⠕"]              # 0x2134
+ - "o": [t: "⠕"]                # 0x6f
+ - "ｏ": [t: "⠕"]                # 0xff4f
+ - "Ò": [t: "⠠⠈⠕"]              # 0xd2
+ - "Ó": [t: "⠠⠈⠕"]              # 0xd3
+ - "Ô": [t: "⠠⠈⠕"]              # 0xd4
+ - "Ö": [t: "⠠⠈⠕"]              # 0xd6
+ - "O": [t: "⠠⠕"]               # 0x4f
+ - "Ｏ": [t: "⠠⠕"]               # 0xff2f
+ - "ⓞ": [t: "⠫⠉⠸⠫⠕⠻"]           # 0x24de
+ - "Ⓞ": [t: "⠫⠉⠸⠫⠠⠕⠻"]          # 0x24c4
+ - "⒪": [t: "⠷⠕⠾"]              # 0x24aa
+ - "ℙ": [t: "⠈⠰⠠⠏"]             # 0x2119
+ - "p": [t: "⠏"]                # 0x70
+ - "ｐ": [t: "⠏"]                # 0xff50
+ - "P": [t: "⠠⠏"]               # 0x50
+ - "Ｐ": [t: "⠠⠏"]               # 0xff30
+ - "ⓟ": [t: "⠫⠉⠸⠫⠏⠻"]           # 0x24df
+ - "Ⓟ": [t: "⠫⠉⠸⠫⠠⠏⠻"]          # 0x24c5
+ - "⒫": [t: "⠷⠏⠾"]              # 0x24ab
+ - "ℚ": [t: "⠈⠰⠠⠟"]             # 0x211a
+ - "q": [t: "⠟"]                # 0x71
+ - "ｑ": [t: "⠟"]                # 0xff51
+ - "Q": [t: "⠠⠟"]               # 0x51
+ - "Ｑ": [t: "⠠⠟"]               # 0xff31
+ - "ⓠ": [t: "⠫⠉⠸⠫⠟⠻"]           # 0x24e0
+ - "Ⓠ": [t: "⠫⠉⠸⠫⠠⠟⠻"]          # 0x24c6
+ - "⒬": [t: "⠷⠟⠾"]              # 0x24ac
+ - "ℝ": [t: ""]                 # 0x211D (Double-struck capital R (no nemeth double struck))
+ - "ℛ": [t: "⠈⠰⠠⠗"]             # 0x211b
+ - "ℝ": [t: "⠈⠰⠠⠗"]             # 0x211d
+ - "r": [t: "⠗"]                # 0x72
+ - "ｒ": [t: "⠗"]                # 0xff52
+ - "R": [t: "⠠⠗"]               # 0x52
+ - "Ｒ": [t: "⠠⠗"]               # 0xff32
+ - "ⓡ": [t: "⠫⠉⠸⠫⠗⠻"]           # 0x24e1
+ - "Ⓡ": [t: "⠫⠉⠸⠫⠠⠗⠻"]          # 0x24c7
+ - "⒭": [t: "⠷⠗⠾"]              # 0x24ad
+ - "ℜ": [t: "⠸⠠⠗"]              # 0x211c
+ - "s": [t: "⠎"]                # 0x73
+ - "ｓ": [t: "⠎"]                # 0xff53
+ - "S": [t: "⠠⠎"]               # 0x53
+ - "Ｓ": [t: "⠠⠎"]               # 0xff33
+ - "ⓢ": [t: "⠫⠉⠸⠫⠎⠻"]           # 0x24e2
+ - "Ⓢ": [t: "⠫⠉⠸⠫⠠⠎⠻"]          # 0x24c8
+ - "⒮": [t: "⠷⠎⠾"]              # 0x24ae
+ - "t": [t: "⠞"]                # 0x74
+ - "ｔ": [t: "⠞"]                # 0xff54
+ - "T": [t: "⠠⠞"]               # 0x54
+ - "Ｔ": [t: "⠠⠞"]               # 0xff34
+ - "ⓣ": [t: "⠫⠉⠸⠫⠞⠻"]           # 0x24e3
+ - "Ⓣ": [t: "⠫⠉⠸⠫⠠⠞⠻"]          # 0x24c9
+ - "⒯": [t: "⠷⠞⠾"]              # 0x24af
+ - "™": [t: "⠘⠞"]               # 0x2122
+ - "ù": [t: "⠈⠥"]               # 0xf9
+ - "ú": [t: "⠈⠥"]               # 0xfa
+ - "û": [t: "⠈⠥"]               # 0xfb
+ - "ü": [t: "⠈⠥"]               # 0xfc
+ - "Ù": [t: "⠠⠈⠥"]              # 0xd9
+ - "Ú": [t: "⠠⠈⠥"]              # 0xda
+ - "Û": [t: "⠠⠈⠥"]              # 0xdb
+ - "Ü": [t: "⠠⠈⠥"]              # 0xdc
+ - "U": [t: "⠠⠥"]               # 0x55
+ - "Ｕ": [t: "⠠⠥"]               # 0xff35
+ - "u": [t: "⠥"]                # 0x75
+ - "ｕ": [t: "⠥"]                # 0xff55
+ - "Ⓤ": [t: "⠫⠉⠸⠫⠠⠥⠻"]          # 0x24ca
+ - "ⓤ": [t: "⠫⠉⠸⠫⠥⠻"]           # 0x24e4
+ - "⒰": [t: "⠷⠥⠾"]              # 0x24b0
+ - "V": [t: "⠠⠧"]               # 0x56
+ - "Ｖ": [t: "⠠⠧"]               # 0xff36
+ - "v": [t: "⠧"]                # 0x76
+ - "ｖ": [t: "⠧"]                # 0xff56
+ - "Ⓥ": [t: "⠫⠉⠸⠫⠠⠧⠻"]          # 0x24cb
+ - "ⓥ": [t: "⠫⠉⠸⠫⠧⠻"]           # 0x24e5
+ - "⒱": [t: "⠷⠧⠾"]              # 0x24b1
+ - "W": [t: "⠠⠺"]               # 0x57
+ - "Ｗ": [t: "⠠⠺"]               # 0xff37
+ - "Ⓦ": [t: "⠫⠉⠸⠫⠠⠺⠻"]          # 0x24cc
+ - "ⓦ": [t: "⠫⠉⠸⠫⠺⠻"]           # 0x24e6
+ - "⒲": [t: "⠷⠺⠾"]              # 0x24b2
+ - "w": [t: "⠺"]                # 0x77
+ - "ｗ": [t: "⠺"]                # 0xff57
+ - "X": [t: "⠠⠭"]               # 0x58
+ - "Ｘ": [t: "⠠⠭"]               # 0xff38
+ - "Ⓧ": [t: "⠫⠉⠸⠫⠠⠭⠻"]          # 0x24cd
+ - "ⓧ": [t: "⠫⠉⠸⠫⠭⠻"]           # 0x24e7
+ - "x": [t: "⠭"]                # 0x78
+ - "ｘ": [t: "⠭"]                # 0xff58
+ - "⒳": [t: "⠷⠭⠾"]              # 0x24b3
+ - "ý": [t: "⠈⠽"]               # 0xfd
+ - "ÿ": [t: "⠈⠽"]               # 0xff
+ - "Ý": [t: "⠠⠈⠽"]              # 0xdd
+ - "Y": [t: "⠠⠽"]               # 0x59
+ - "Ｙ": [t: "⠠⠽"]               # 0xff39
+ - "Ⓨ": [t: "⠫⠉⠸⠫⠠⠽⠻"]          # 0x24ce
+ - "ⓨ": [t: "⠫⠉⠸⠫⠽⠻"]           # 0x24e8
+ - "⒴": [t: "⠷⠽⠾"]              # 0x24b4
+ - "y": [t: "⠽"]                # 0x79
+ - "ｙ": [t: "⠽"]                # 0xff59
+ - "ℤ": [t: "⠈⠰⠠⠵"]             # 0x2124
+ - "Z": [t: "⠠⠵"]               # 0x5a
+ - "Ｚ": [t: "⠠⠵"]               # 0xff3a
+ - "Ⓩ": [t: "⠫⠉⠸⠫⠠⠵⠻"]          # 0x24cf
+ - "ⓩ": [t: "⠫⠉⠸⠫⠵⠻"]           # 0x24e9
+ - "z": [t: "⠵"]                # 0x7a
+ - "ｚ": [t: "⠵"]                # 0xff5a
+ - "⒵": [t: "⠷⠵⠾"]              # 0x24b5
+ - "ℨ": [t: "⠸⠠⠵"]              # 0x2128
+ - "α": [t: "⠨⠁"]               # 0x03B1 (Greek small letter alpha)
+ - "α": [t: "⠨⠁"]               # 0x3b1
+ - "Α": [t: "⠨⠠⠁"]              # 0x391 (Greek capital letter alpha)
+ - "Α": [t: "⠨⠠⠁"]              # 0x391
+ - "β": [t: "⠨⠃"]               # 0x03B2 (Greek small letter beta)
+ - "β": [t: "⠨⠃"]               # 0x3b2
+ - "Β": [t: "⠨⠠⠃"]              # 0x392 (Greek capital letter beta )
+ - "Β": [t: "⠨⠠⠃"]              # 0x392
+ - "γ": [t: "⠨⠛"]               # 0x03B3 (Greek small letter gamma)
+ - "γ": [t: "⠨⠛"]               # 0x3b3
+ - "Γ": [t: "⠨⠠⠛"]              # 0x393 (Greek capital letter gamma)
+ - "Γ": [t: "⠨⠠⠛"]              # 0x393
+ - "δ": [t: "⠨⠙"]               # 0x03B4 (Greek small letter delta)
+ - "δ": [t: "⠨⠙"]               # 0x3b4
+ - "Δ": [t: "⠨⠠⠙"]              # 0x394 (Greek capital letter delta)
+ - "Δ": [t: "⠨⠠⠙"]              # 0x394
+ - "ε": [t: "⠨⠈⠑"]              # 0x03B5 (Greek small letter epsilon (alternative epsilon))
+ - "ϵ": [t: "⠨⠑"]               # 0x03F5 (Greek lunate epsilon symbol)
+ - "ε": [t: "⠨⠑"]               # 0x3b5
+ - "ϵ": [t: "⠨⠑"]               # 0x3f5
+ - "Ε": [t: "⠨⠠⠑"]              # 0x395 (Greek capital letter epsilon)
+ - "Ε": [t: "⠨⠠⠑"]              # 0x395
+ - "Ζ": [t: "⠨⠠⠵"]              # 0x396 (Greek capital letter zeta)
+ - "Ζ": [t: "⠨⠠⠵"]              # 0x396
+ - "ζ": [t: "⠨⠵"]               # 0x03B6 (Greek small letter zeta)
+ - "ζ": [t: "⠨⠵"]               # 0x3b6
+ - "Η": [t: "⠨⠠⠱"]              # 0x397 (Greek capital letter eta)
+ - "Η": [t: "⠨⠠⠱"]              # 0x397
+ - "η": [t: "⠨⠱"]               # 0x03B7 (Greek small letter eta)
+ - "η": [t: "⠨⠱"]               # 0x3b7
+ - "ϑ": [t: "⠨⠈⠹"]              # 0x03D1 (Greek theta symbol)
+ - "ϑ": [t: "⠨⠈⠹"]              # 0x3d1
+ - "Θ": [t: "⠨⠠⠹"]              # 0x398 (Greek capital letter theta)
+ - "Θ": [t: "⠨⠠⠹"]              # 0x398
+ - "ϴ": [t: "⠨⠠⠹"]              # 0x3f4
+ - "θ": [t: "⠨⠹"]               # 0x03B8 (Greek small letter theta)
+ - "θ": [t: "⠨⠹"]               # 0x3b8
+ - "ι": [t: "⠨⠊"]               # 0x03B9 (Greek small letter iota)
+ - "ι": [t: "⠨⠊"]               # 0x3b9
+ - "Ι": [t: "⠨⠠⠊"]              # 0x399 (Greek capital letter iota)
+ - "Ι": [t: "⠨⠠⠊"]              # 0x399
+ - "κ": [t: "⠨⠅"]               # 0x03BA (Greek small letter kappa)
+ - "κ": [t: "⠨⠅"]               # 0x3ba
+ - "ϰ": [t: "⠨⠅"]               # 0x3f0
+ - "ϰ": [t: "⠨⠈⠅"]              # 0x03F0 (Greek kappa symbol)
+ - "Κ": [t: "⠨⠠⠅"]              # 0x039A (Greek capital letter kappa)
+ - "Κ": [t: "⠨⠠⠅"]              # 0x39a
+ - "λ": [t: "⠨⠇"]               # 0x03BB (Greek small letter lambda)
+ - "λ": [t: "⠨⠇"]               # 0x3bb
+ - "Λ": [t: "⠨⠠⠇"]              # 0x039B (Greek capital letter lambda)
+ - "Λ": [t: "⠨⠠⠇"]              # 0x39b
+ - "μ": [t: "⠨⠍"]               # 0x03BC (Greek small letter mu)
+ - "μ": [t: "⠨⠍"]               # 0x3bc
+ - "Μ": [t: "⠨⠠⠍"]              # 0x039C (Greek capital letter mu)
+ - "Μ": [t: "⠨⠠⠍"]              # 0x39c
+ - "ν": [t: "⠨⠝"]               # 0x03BD (Greek small letter nu)
+ - "ν": [t: "⠨⠝"]               # 0x3bd
+ - "Ν": [t: "⠨⠠⠝"]              # 0x039D (Greek capital letter nu)
+ - "Ν": [t: "⠨⠠⠝"]              # 0x39d
+ - "Ξ": [t: "⠨⠠⠭"]              # 0x039E (Greek capital letter xi)
+ - "Ξ": [t: "⠨⠠⠭"]              # 0x39e
+ - "ξ": [t: "⠨⠭"]               # 0x03BE (Greek small letter xi)
+ - "ξ": [t: "⠨⠭"]               # 0x3be
+ - "ο": [t: "⠨⠕"]               # 0x03BF (Greek small letter omicron)
+ - "ο": [t: "⠨⠕"]               # 0x3bf
+ - "Ο": [t: "⠨⠠⠕"]              # 0x039F (Greek capital letter omicron)
+ - "Ο": [t: "⠨⠠⠕"]              # 0x39f
+ - "ϖ": [t: "⠨⠈⠏"]              # 0x03D6 (Greek pi symbol)
+ - "π": [t: "⠨⠏"]               # 0x03C0 (Greek small letter pi)
+ - "π": [t: "⠨⠏"]               # 0x3c0
+ - "ϖ": [t: "⠨⠏"]               # 0x3d6
+ - "Π": [t: "⠨⠠⠏"]              # 0x03A0 (Greek capital letter pi)
+ - "Π": [t: "⠨⠠⠏"]              # 0x3a0
+ - "ρ": [t: "⠨⠗"]               # 0x03C1 (Greek small letter rho)
+ - "ρ": [t: "⠨⠗"]               # 0x3c1
+ - "ϱ": [t: "⠨⠗"]               # 0x3f1
+ - "Ρ": [t: "⠨⠠⠗"]              # 0x03A1 (Greek capital letter rho)
+ - "Ρ": [t: "⠨⠠⠗"]              # 0x3a1
+ - "ς": [t: "⠨⠈⠎"]              # 0x3c2
+ - "σ": [t: "⠨⠎"]               # 0x03C3 (Greek small letter sigma)
+ - "σ": [t: "⠨⠎"]               # 0x3c3
+ - "ς": [t: "⠨⠒"]               # 0x03C2 (Greek small letter final sigma)
+ - "Σ": [t: "⠨⠠⠎"]              # 0x03A3 (Greek capital letter sigma)
+ - "Σ": [t: "⠨⠠⠎"]              # 0x3a3
+ - "τ": [t: "⠨⠞"]               # 0x03C4 (Greek small letter tau)
+ - "τ": [t: "⠨⠞"]               # 0x3c4
+ - "Τ": [t: "⠨⠠⠞"]              # 0x03A4 (Greek capital letter tau)
+ - "Τ": [t: "⠨⠠⠞"]              # 0x3a4
+ - "Υ": [t: "⠨⠠⠥"]              # 0x03A5 (Greek capital letter upsilon)
+ - "Υ": [t: "⠨⠠⠥"]              # 0x3a5
+ - "υ": [t: "⠨⠥"]               # 0x03C5 (Greek small letter upsilon)
+ - "υ": [t: "⠨⠥"]               # 0x3c5
+ - "φ": [t: "⠨⠈⠋"]              # 0x03C6 (Greek small letter phi (alternative phi))
+ - "φ": [t: "⠨⠈⠋"]              # 0x3c6
+ - "ϕ": [t: "⠨⠋"]               # 0x03D5 (Greek phi symbol)
+ - "ϕ": [t: "⠨⠋"]               # 0x3d5
+ - "Φ": [t: "⠨⠠⠋"]              # 0x03A6 (Greek capital letter phi)
+ - "Φ": [t: "⠨⠠⠋"]              # 0x3a6
+ - "Χ": [t: "⠨⠠⠯"]              # 0x03A7 (Greek capital letter chi)
+ - "Χ": [t: "⠨⠠⠯"]              # 0x3a7
+ - "χ": [t: "⠨⠯"]               # 0x03C7 (Greek small letter chi)
+ - "χ": [t: "⠨⠯"]               # 0x3c7
+ - "Ψ": [t: "⠨⠠⠽"]              # 0x03A8 (Greek capital letter psi)
+ - "Ψ": [t: "⠨⠠⠽"]              # 0x3a8
+ - "ψ": [t: "⠨⠽"]               # 0x03C8 (Greek small letter psi)
+ - "ψ": [t: "⠨⠽"]               # 0x3c8
+ - "Ω": [t: "⠨⠠⠺"]              # 0x03A9 (Greek capital letter omega)
+ - "Ω": [t: "⠨⠠⠺"]              # 0x3a9
+ - "ω": [t: "⠨⠺"]               # 0x03C9 (Greek small letter omega)
+ - "ω": [t: "⠨⠺"]               # 0x3c9
+ - "ℵ": [t: "⠠⠠⠁"]              # 0x2135
+ - "ℶ": [t: "⠠⠠⠃"]              # 0x2136
+ - "ℷ": [t: "⠠⠠⠉"]              # 0x2137
+ - "ℸ": [t: "⠠⠠⠙"]              # 0x2138
+ - "𝐀": [t: "⠸⠰⠠⠁"]             # 0x1d400
+ - "𝐁": [t: "⠸⠰⠠⠃"]             # 0x1d401
+ - "𝐂": [t: "⠸⠰⠠⠉"]             # 0x1d402
+ - "𝐃": [t: "⠸⠰⠠⠙"]             # 0x1d403
+ - "𝐄": [t: "⠸⠰⠠⠑"]             # 0x1d404
+ - "𝐅": [t: "⠸⠰⠠⠋"]             # 0x1d405
+ - "𝐆": [t: "⠸⠰⠠⠛"]             # 0x1d406
+ - "𝐇": [t: "⠸⠰⠠⠓"]             # 0x1d407
+ - "𝐈": [t: "⠸⠰⠠⠊"]             # 0x1d408
+ - "𝐉": [t: "⠸⠰⠠⠚"]             # 0x1d409
+ - "𝐊": [t: "⠸⠰⠠⠅"]             # 0x1d40a
+ - "𝐋": [t: "⠸⠰⠠⠇"]             # 0x1d40b
+ - "𝐌": [t: "⠸⠰⠠⠍"]             # 0x1d40c
+ - "𝐍": [t: "⠸⠰⠠⠝"]             # 0x1d40d
+ - "𝐎": [t: "⠸⠰⠠⠕"]             # 0x1d40e
+ - "𝐏": [t: "⠸⠰⠠⠏"]             # 0x1d40f
+ - "𝐐": [t: "⠸⠰⠠⠟"]             # 0x1d410
+ - "𝐑": [t: "⠸⠰⠠⠗"]             # 0x1d411
+ - "𝐒": [t: "⠸⠰⠠⠎"]             # 0x1d412
+ - "𝐓": [t: "⠸⠰⠠⠞"]             # 0x1d413
+ - "𝐔": [t: "⠸⠰⠠⠥"]             # 0x1d414
+ - "𝐕": [t: "⠸⠰⠠⠧"]             # 0x1d415
+ - "𝐖": [t: "⠸⠰⠠⠺"]             # 0x1d416
+ - "𝐗": [t: "⠸⠰⠠⠭"]             # 0x1d417
+ - "𝐘": [t: "⠸⠰⠠⠽"]             # 0x1d418
+ - "𝐙": [t: "⠸⠰⠠⠵"]             # 0x1d419
+ - "𝐚": [t: "⠸⠰⠁"]              # 0x1d41a
+ - "𝐛": [t: "⠸⠰⠃"]              # 0x1d41b
+ - "𝐜": [t: "⠸⠰⠉"]              # 0x1d41c
+ - "𝐝": [t: "⠸⠰⠙"]              # 0x1d41d
+ - "𝐞": [t: "⠸⠰⠑"]              # 0x1d41e
+ - "𝐟": [t: "⠸⠰⠋"]              # 0x1d41f
+ - "𝐠": [t: "⠸⠰⠛"]              # 0x1d420
+ - "𝐡": [t: "⠸⠰⠓"]              # 0x1d421
+ - "𝐢": [t: "⠸⠰⠊"]              # 0x1d422
+ - "𝐣": [t: "⠸⠰⠚"]              # 0x1d423
+ - "𝐤": [t: "⠸⠰⠅"]              # 0x1d424
+ - "𝐥": [t: "⠸⠰⠇"]              # 0x1d425
+ - "𝐦": [t: "⠸⠰⠍"]              # 0x1d426
+ - "𝐧": [t: "⠸⠰⠝"]              # 0x1d427
+ - "𝐨": [t: "⠸⠰⠕"]              # 0x1d428
+ - "𝐩": [t: "⠸⠰⠏"]              # 0x1d429
+ - "𝐪": [t: "⠸⠰⠟"]              # 0x1d42a
+ - "𝐫": [t: "⠸⠰⠗"]              # 0x1d42b
+ - "𝐬": [t: "⠸⠰⠎"]              # 0x1d42c
+ - "𝐭": [t: "⠸⠰⠞"]              # 0x1d42d
+ - "𝐮": [t: "⠸⠰⠥"]              # 0x1d42e
+ - "𝐯": [t: "⠸⠰⠧"]              # 0x1d42f
+ - "𝐰": [t: "⠸⠰⠺"]              # 0x1d430
+ - "𝐱": [t: "⠸⠰⠭"]              # 0x1d431
+ - "𝐲": [t: "⠸⠰⠽"]              # 0x1d432
+ - "𝐳": [t: "⠸⠰⠵"]              # 0x1d433
+ - "𝐴": [t: "⠨⠰⠠⠁"]             # 0x1d434
+ - "𝐵": [t: "⠨⠰⠠⠃"]             # 0x1d435
+ - "𝐶": [t: "⠨⠰⠠⠉"]             # 0x1d436
+ - "𝐷": [t: "⠨⠰⠠⠙"]             # 0x1d437
+ - "𝐸": [t: "⠨⠰⠠⠑"]             # 0x1d438
+ - "𝐹": [t: "⠨⠰⠠⠋"]             # 0x1d439
+ - "𝐺": [t: "⠨⠰⠠⠛"]             # 0x1d43a
+ - "𝐻": [t: "⠨⠰⠠⠓"]             # 0x1d43b
+ - "𝐼": [t: "⠨⠰⠠⠊"]             # 0x1d43c
+ - "𝐽": [t: "⠨⠰⠠⠚"]             # 0x1d43d
+ - "𝐾": [t: "⠨⠰⠠⠅"]             # 0x1d43e
+ - "𝐿": [t: "⠨⠰⠠⠇"]             # 0x1d43f
+ - "𝑀": [t: "⠨⠰⠠⠍"]             # 0x1d440
+ - "𝑁": [t: "⠨⠰⠠⠝"]             # 0x1d441
+ - "𝑂": [t: "⠨⠰⠠⠕"]             # 0x1d442
+ - "𝑃": [t: "⠨⠰⠠⠏"]             # 0x1d443
+ - "𝑄": [t: "⠨⠰⠠⠟"]             # 0x1d444
+ - "𝑅": [t: "⠨⠰⠠⠗"]             # 0x1d445
+ - "𝑆": [t: "⠨⠰⠠⠎"]             # 0x1d446
+ - "𝑇": [t: "⠨⠰⠠⠞"]             # 0x1d447
+ - "𝑈": [t: "⠨⠰⠠⠥"]             # 0x1d448
+ - "𝑉": [t: "⠨⠰⠠⠧"]             # 0x1d449
+ - "𝑊": [t: "⠨⠰⠠⠺"]             # 0x1d44a
+ - "𝑋": [t: "⠨⠰⠠⠭"]             # 0x1d44b
+ - "𝑌": [t: "⠨⠰⠠⠽"]             # 0x1d44c
+ - "𝑍": [t: "⠨⠰⠠⠵"]             # 0x1d44d
+ - "𝑎": [t: "⠨⠰⠁"]              # 0x1d44e
+ - "𝑏": [t: "⠨⠰⠃"]              # 0x1d44f
+ - "𝑐": [t: "⠨⠰⠉"]              # 0x1d450
+ - "𝑑": [t: "⠨⠰⠙"]              # 0x1d451
+ - "𝑒": [t: "⠨⠰⠑"]              # 0x1d452
+ - "𝑓": [t: "⠨⠰⠋"]              # 0x1d453
+ - "𝑔": [t: "⠨⠰⠛"]              # 0x1d454
+ - "𝑖": [t: "⠨⠰⠊"]              # 0x1d456
+ - "𝑗": [t: "⠨⠰⠚"]              # 0x1d457
+ - "𝑘": [t: "⠨⠰⠅"]              # 0x1d458
+ - "𝑙": [t: "⠨⠰⠇"]              # 0x1d459
+ - "𝑚": [t: "⠨⠰⠍"]              # 0x1d45a
+ - "𝑛": [t: "⠨⠰⠝"]              # 0x1d45b
+ - "𝑜": [t: "⠨⠰⠕"]              # 0x1d45c
+ - "𝑝": [t: "⠨⠰⠏"]              # 0x1d45d
+ - "𝑞": [t: "⠨⠰⠟"]              # 0x1d45e
+ - "𝑟": [t: "⠨⠰⠗"]              # 0x1d45f
+ - "𝑠": [t: "⠨⠰⠎"]              # 0x1d460
+ - "𝑡": [t: "⠨⠰⠞"]              # 0x1d461
+ - "𝑢": [t: "⠨⠰⠥"]              # 0x1d462
+ - "𝑣": [t: "⠨⠰⠧"]              # 0x1d463
+ - "𝑤": [t: "⠨⠰⠺"]              # 0x1d464
+ - "𝑥": [t: "⠨⠰⠭"]              # 0x1d465
+ - "𝑦": [t: "⠨⠰⠽"]              # 0x1d466
+ - "𝑧": [t: "⠨⠰⠵"]              # 0x1d467
+ - "𝑨": [t: "⠸⠨⠰⠠⠁"]            # 0x1d468
+ - "𝑩": [t: "⠸⠨⠰⠠⠃"]            # 0x1d469
+ - "𝑪": [t: "⠸⠨⠰⠠⠉"]            # 0x1d46a
+ - "𝑫": [t: "⠸⠨⠰⠠⠙"]            # 0x1d46b
+ - "𝑬": [t: "⠸⠨⠰⠠⠑"]            # 0x1d46c
+ - "𝑭": [t: "⠸⠨⠰⠠⠋"]            # 0x1d46d
+ - "𝑮": [t: "⠸⠨⠰⠠⠛"]            # 0x1d46e
+ - "𝑯": [t: "⠸⠨⠰⠠⠓"]            # 0x1d46f
+ - "𝑰": [t: "⠸⠨⠰⠠⠊"]            # 0x1d470
+ - "𝑱": [t: "⠸⠨⠰⠠⠚"]            # 0x1d471
+ - "𝑲": [t: "⠸⠨⠰⠠⠅"]            # 0x1d472
+ - "𝑳": [t: "⠸⠨⠰⠠⠇"]            # 0x1d473
+ - "𝑴": [t: "⠸⠨⠰⠠⠍"]            # 0x1d474
+ - "𝑵": [t: "⠸⠨⠰⠠⠝"]            # 0x1d475
+ - "𝑶": [t: "⠸⠨⠰⠠⠕"]            # 0x1d476
+ - "𝑷": [t: "⠸⠨⠰⠠⠏"]            # 0x1d477
+ - "𝑸": [t: "⠸⠨⠰⠠⠟"]            # 0x1d478
+ - "𝑹": [t: "⠸⠨⠰⠠⠗"]            # 0x1d479
+ - "𝑺": [t: "⠸⠨⠰⠠⠎"]            # 0x1d47a
+ - "𝑻": [t: "⠸⠨⠰⠠⠞"]            # 0x1d47b
+ - "𝑼": [t: "⠸⠨⠰⠠⠥"]            # 0x1d47c
+ - "𝑽": [t: "⠸⠨⠰⠠⠧"]            # 0x1d47d
+ - "𝑾": [t: "⠸⠨⠰⠠⠺"]            # 0x1d47e
+ - "𝑿": [t: "⠸⠨⠰⠠⠭"]            # 0x1d47f
+ - "𝒀": [t: "⠸⠨⠰⠠⠽"]            # 0x1d480
+ - "𝒁": [t: "⠸⠨⠰⠠⠵"]            # 0x1d481
+ - "𝒂": [t: "⠸⠨⠰⠁"]             # 0x1d482
+ - "𝒃": [t: "⠸⠨⠰⠃"]             # 0x1d483
+ - "𝒄": [t: "⠸⠨⠰⠉"]             # 0x1d484
+ - "𝒅": [t: "⠸⠨⠰⠙"]             # 0x1d485
+ - "𝒆": [t: "⠸⠨⠰⠑"]             # 0x1d486
+ - "𝒇": [t: "⠸⠨⠰⠋"]             # 0x1d487
+ - "𝒈": [t: "⠸⠨⠰⠛"]             # 0x1d488
+ - "𝒉": [t: "⠸⠨⠰⠓"]             # 0x1d489
+ - "𝒊": [t: "⠸⠨⠰⠊"]             # 0x1d48a
+ - "𝒋": [t: "⠸⠨⠰⠚"]             # 0x1d48b
+ - "𝒌": [t: "⠸⠨⠰⠅"]             # 0x1d48c
+ - "𝒍": [t: "⠸⠨⠰⠇"]             # 0x1d48d
+ - "𝒎": [t: "⠸⠨⠰⠍"]             # 0x1d48e
+ - "𝒏": [t: "⠸⠨⠰⠝"]             # 0x1d48f
+ - "𝒐": [t: "⠸⠨⠰⠕"]             # 0x1d490
+ - "𝒑": [t: "⠸⠨⠰⠏"]             # 0x1d491
+ - "𝒒": [t: "⠸⠨⠰⠟"]             # 0x1d492
+ - "𝒓": [t: "⠸⠨⠰⠗"]             # 0x1d493
+ - "𝒔": [t: "⠸⠨⠰⠎"]             # 0x1d494
+ - "𝒕": [t: "⠸⠨⠰⠞"]             # 0x1d495
+ - "𝒖": [t: "⠸⠨⠰⠥"]             # 0x1d496
+ - "𝒗": [t: "⠸⠨⠰⠧"]             # 0x1d497
+ - "𝒘": [t: "⠸⠨⠰⠺"]             # 0x1d498
+ - "𝒙": [t: "⠸⠨⠰⠭"]             # 0x1d499
+ - "𝒚": [t: "⠸⠨⠰⠽"]             # 0x1d49a
+ - "𝒛": [t: "⠸⠨⠰⠵"]             # 0x1d49b
+ - "𝒜": [t: "⠈⠰⠠⠁"]             # 0x1d49c
+ - "𝒞": [t: "⠈⠰⠠⠉"]             # 0x1d49e
+ - "𝒟": [t: "⠈⠰⠠⠙"]             # 0x1d49f
+ - "𝒢": [t: "⠈⠰⠠⠛"]             # 0x1d4a2
+ - "𝒥": [t: "⠈⠰⠠⠚"]             # 0x1d4a5
+ - "𝒦": [t: "⠈⠰⠠⠅"]             # 0x1d4a6
+ - "𝒩": [t: "⠈⠰⠠⠝"]             # 0x1d4a9
+ - "𝒪": [t: "⠈⠰⠠⠕"]             # 0x1d4aa
+ - "𝒫": [t: "⠈⠰⠠⠏"]             # 0x1d4ab
+ - "𝒬": [t: "⠈⠰⠠⠟"]             # 0x1d4ac
+ - "𝒮": [t: "⠈⠰⠠⠎"]             # 0x1d4ae
+ - "𝒯": [t: "⠈⠰⠠⠞"]             # 0x1d4af
+ - "𝒰": [t: "⠈⠰⠠⠥"]             # 0x1d4b0
+ - "𝒱": [t: "⠈⠰⠠⠧"]             # 0x1d4b1
+ - "𝒲": [t: "⠈⠰⠠⠺"]             # 0x1d4b2
+ - "𝒳": [t: "⠈⠰⠠⠭"]             # 0x1d4b3
+ - "𝒴": [t: "⠈⠰⠠⠽"]             # 0x1d4b4
+ - "𝒵": [t: "⠈⠰⠠⠵"]             # 0x1d4b5
+ - "𝒶": [t: "⠈⠰⠁"]              # 0x1d4b6
+ - "𝒷": [t: "⠈⠰⠃"]              # 0x1d4b7
+ - "𝒸": [t: "⠈⠰⠉"]              # 0x1d4b8
+ - "𝒹": [t: "⠈⠰⠙"]              # 0x1d4b9
+ - "𝒻": [t: "⠈⠰⠋"]              # 0x1d4bb
+ - "𝒽": [t: "⠈⠰⠓"]              # 0x1d4bd
+ - "𝒾": [t: "⠈⠰⠊"]              # 0x1d4be
+ - "𝒿": [t: "⠈⠰⠚"]              # 0x1d4bf
+ - "𝓀": [t: "⠈⠰⠅"]              # 0x1d4c0
+ - "𝓁": [t: "⠈⠰⠇"]              # 0x1d4c1
+ - "𝓂": [t: "⠈⠰⠍"]              # 0x1d4c2
+ - "𝓃": [t: "⠈⠰⠝"]              # 0x1d4c3
+ - "𝓅": [t: "⠈⠰⠏"]              # 0x1d4c5
+ - "𝓆": [t: "⠈⠰⠟"]              # 0x1d4c6
+ - "𝓇": [t: "⠈⠰⠗"]              # 0x1d4c7
+ - "𝓈": [t: "⠈⠰⠎"]              # 0x1d4c8
+ - "𝓉": [t: "⠈⠰⠞"]              # 0x1d4c9
+ - "𝓊": [t: "⠈⠰⠥"]              # 0x1d4ca
+ - "𝓋": [t: "⠈⠰⠧"]              # 0x1d4cb
+ - "𝓌": [t: "⠈⠰⠺"]              # 0x1d4cc
+ - "𝓍": [t: "⠈⠰⠭"]              # 0x1d4cd
+ - "𝓎": [t: "⠈⠰⠽"]              # 0x1d4ce
+ - "𝓏": [t: "⠈⠰⠵"]              # 0x1d4cf
+ - "𝓐": [t: "⠸⠈⠰⠠⠁"]            # 0x1d4d0
+ - "𝓑": [t: "⠸⠈⠰⠠⠃"]            # 0x1d4d1
+ - "𝓒": [t: "⠸⠈⠰⠠⠉"]            # 0x1d4d2
+ - "𝓓": [t: "⠸⠈⠰⠠⠙"]            # 0x1d4d3
+ - "𝓔": [t: "⠸⠈⠰⠠⠑"]            # 0x1d4d4
+ - "𝓕": [t: "⠸⠈⠰⠠⠋"]            # 0x1d4d5
+ - "𝓖": [t: "⠸⠈⠰⠠⠛"]            # 0x1d4d6
+ - "𝓗": [t: "⠸⠈⠰⠠⠓"]            # 0x1d4d7
+ - "𝓘": [t: "⠸⠈⠰⠠⠊"]            # 0x1d4d8
+ - "𝓙": [t: "⠸⠈⠰⠠⠚"]            # 0x1d4d9
+ - "𝓚": [t: "⠸⠈⠰⠠⠅"]            # 0x1d4da
+ - "𝓛": [t: "⠸⠈⠰⠠⠇"]            # 0x1d4db
+ - "𝓜": [t: "⠸⠈⠰⠠⠍"]            # 0x1d4dc
+ - "𝓝": [t: "⠸⠈⠰⠠⠝"]            # 0x1d4dd
+ - "𝓞": [t: "⠸⠈⠰⠠⠕"]            # 0x1d4de
+ - "𝓟": [t: "⠸⠈⠰⠠⠏"]            # 0x1d4df
+ - "𝓠": [t: "⠸⠈⠰⠠⠟"]            # 0x1d4e0
+ - "𝓡": [t: "⠸⠈⠰⠠⠗"]            # 0x1d4e1
+ - "𝓢": [t: "⠸⠈⠰⠠⠎"]            # 0x1d4e2
+ - "𝓣": [t: "⠸⠈⠰⠠⠞"]            # 0x1d4e3
+ - "𝓤": [t: "⠸⠈⠰⠠⠥"]            # 0x1d4e4
+ - "𝓥": [t: "⠸⠈⠰⠠⠧"]            # 0x1d4e5
+ - "𝓦": [t: "⠸⠈⠰⠠⠺"]            # 0x1d4e6
+ - "𝓧": [t: "⠸⠈⠰⠠⠭"]            # 0x1d4e7
+ - "𝓨": [t: "⠸⠈⠰⠠⠽"]            # 0x1d4e8
+ - "𝓩": [t: "⠸⠈⠰⠠⠵"]            # 0x1d4e9
+ - "𝓪": [t: "⠸⠈⠰⠁"]             # 0x1d4ea
+ - "𝓫": [t: "⠸⠈⠰⠃"]             # 0x1d4eb
+ - "𝓬": [t: "⠸⠈⠰⠉"]             # 0x1d4ec
+ - "𝓭": [t: "⠸⠈⠰⠙"]             # 0x1d4ed
+ - "𝓮": [t: "⠸⠈⠰⠑"]             # 0x1d4ee
+ - "𝓯": [t: "⠸⠈⠰⠋"]             # 0x1d4ef
+ - "𝓰": [t: "⠸⠈⠰⠛"]             # 0x1d4f0
+ - "𝓱": [t: "⠸⠈⠰⠓"]             # 0x1d4f1
+ - "𝓲": [t: "⠸⠈⠰⠊"]             # 0x1d4f2
+ - "𝓳": [t: "⠸⠈⠰⠚"]             # 0x1d4f3
+ - "𝓴": [t: "⠸⠈⠰⠅"]             # 0x1d4f4
+ - "𝓵": [t: "⠸⠈⠰⠇"]             # 0x1d4f5
+ - "𝓶": [t: "⠸⠈⠰⠍"]             # 0x1d4f6
+ - "𝓷": [t: "⠸⠈⠰⠝"]             # 0x1d4f7
+ - "𝓸": [t: "⠸⠈⠰⠕"]             # 0x1d4f8
+ - "𝓹": [t: "⠸⠈⠰⠏"]             # 0x1d4f9
+ - "𝓺": [t: "⠸⠈⠰⠟"]             # 0x1d4fa
+ - "𝓻": [t: "⠸⠈⠰⠗"]             # 0x1d4fb
+ - "𝓼": [t: "⠸⠈⠰⠎"]             # 0x1d4fc
+ - "𝓽": [t: "⠸⠈⠰⠞"]             # 0x1d4fd
+ - "𝓾": [t: "⠸⠈⠰⠥"]             # 0x1d4fe
+ - "𝓿": [t: "⠸⠈⠰⠧"]             # 0x1d4ff
+ - "𝔀": [t: "⠸⠈⠰⠺"]             # 0x1d500
+ - "𝔁": [t: "⠸⠈⠰⠭"]             # 0x1d501
+ - "𝔂": [t: "⠸⠈⠰⠽"]             # 0x1d502
+ - "𝔃": [t: "⠸⠈⠰⠵"]             # 0x1d503
+ - "𝔄": [t: "⠸⠠⠁"]              # 0x1d504
+ - "𝔅": [t: "⠸⠠⠃"]              # 0x1d505
+ - "𝔇": [t: "⠸⠠⠙"]              # 0x1d507
+ - "𝔈": [t: "⠸⠠⠑"]              # 0x1d508
+ - "𝔉": [t: "⠸⠠⠋"]              # 0x1d509
+ - "𝔊": [t: "⠸⠠⠛"]              # 0x1d50a
+ - "𝔍": [t: "⠸⠠⠚"]              # 0x1d50d
+ - "𝔎": [t: "⠸⠠⠅"]              # 0x1d50e
+ - "𝔏": [t: "⠸⠠⠇"]              # 0x1d50f
+ - "𝔐": [t: "⠸⠠⠍"]              # 0x1d510
+ - "𝔑": [t: "⠸⠠⠝"]              # 0x1d511
+ - "𝔒": [t: "⠸⠠⠕"]              # 0x1d512
+ - "𝔓": [t: "⠸⠠⠏"]              # 0x1d513
+ - "𝔔": [t: "⠸⠠⠟"]              # 0x1d514
+ - "𝔖": [t: "⠸⠠⠎"]              # 0x1d516
+ - "𝔗": [t: "⠸⠠⠞"]              # 0x1d517
+ - "𝔘": [t: "⠸⠠⠥"]              # 0x1d518
+ - "𝔙": [t: "⠸⠠⠧"]              # 0x1d519
+ - "𝔚": [t: "⠸⠠⠺"]              # 0x1d51a
+ - "𝔛": [t: "⠸⠠⠭"]              # 0x1d51b
+ - "𝔜": [t: "⠸⠠⠽"]              # 0x1d51c
+ - "𝔞": [t: "⠸⠁"]               # 0x1d51e
+ - "𝔟": [t: "⠸⠃"]               # 0x1d51f
+ - "𝔠": [t: "⠸⠉"]               # 0x1d520
+ - "𝔡": [t: "⠸⠙"]               # 0x1d521
+ - "𝔢": [t: "⠸⠑"]               # 0x1d522
+ - "𝔣": [t: "⠸⠋"]               # 0x1d523
+ - "𝔤": [t: "⠸⠛"]               # 0x1d524
+ - "𝔥": [t: "⠸⠓"]               # 0x1d525
+ - "𝔦": [t: "⠸⠊"]               # 0x1d526
+ - "𝔧": [t: "⠸⠚"]               # 0x1d527
+ - "𝔨": [t: "⠸⠅"]               # 0x1d528
+ - "𝔩": [t: "⠸⠇"]               # 0x1d529
+ - "𝔪": [t: "⠸⠍"]               # 0x1d52a
+ - "𝔫": [t: "⠸⠝"]               # 0x1d52b
+ - "𝔬": [t: "⠸⠕"]               # 0x1d52c
+ - "𝔭": [t: "⠸⠏"]               # 0x1d52d
+ - "𝔮": [t: "⠸⠟"]               # 0x1d52e
+ - "𝔯": [t: "⠸⠗"]               # 0x1d52f
+ - "𝔰": [t: "⠸⠎"]               # 0x1d530
+ - "𝔱": [t: "⠸⠞"]               # 0x1d531
+ - "𝔲": [t: "⠸⠥"]               # 0x1d532
+ - "𝔳": [t: "⠸⠧"]               # 0x1d533
+ - "𝔴": [t: "⠸⠺"]               # 0x1d534
+ - "𝔵": [t: "⠸⠭"]               # 0x1d535
+ - "𝔶": [t: "⠸⠽"]               # 0x1d536
+ - "𝔷": [t: "⠸⠵"]               # 0x1d537
+ - "𝔸": [t: "⠈⠰⠠⠁"]             # 0x1d538
+ - "𝔹": [t: "⠈⠰⠠⠃"]             # 0x1d539
+ - "𝔻": [t: "⠈⠰⠠⠙"]             # 0x1d53b
+ - "𝔼": [t: "⠈⠰⠠⠑"]             # 0x1d53c
+ - "𝔽": [t: "⠈⠰⠠⠋"]             # 0x1d53d
+ - "𝔾": [t: "⠈⠰⠠⠛"]             # 0x1d53e
+ - "𝕀": [t: "⠈⠰⠠⠊"]             # 0x1d540
+ - "𝕁": [t: "⠈⠰⠠⠚"]             # 0x1d541
+ - "𝕂": [t: "⠈⠰⠠⠅"]             # 0x1d542
+ - "𝕃": [t: "⠈⠰⠠⠇"]             # 0x1d543
+ - "𝕄": [t: "⠈⠰⠠⠍"]             # 0x1d544
+ - "𝕆": [t: "⠈⠰⠠⠕"]             # 0x1d546
+ - "𝕊": [t: "⠈⠰⠠⠎"]             # 0x1d54a
+ - "𝕋": [t: "⠈⠰⠠⠞"]             # 0x1d54b
+ - "𝕌": [t: "⠈⠰⠠⠥"]             # 0x1d54c
+ - "𝕍": [t: "⠈⠰⠠⠧"]             # 0x1d54d
+ - "𝕎": [t: "⠈⠰⠠⠺"]             # 0x1d54e
+ - "𝕏": [t: "⠈⠰⠠⠭"]             # 0x1d54f
+ - "𝕐": [t: "⠈⠰⠠⠽"]             # 0x1d550
+ - "𝕒": [t: "⠈⠰⠁"]              # 0x1d552
+ - "𝕓": [t: "⠈⠰⠃"]              # 0x1d553
+ - "𝕔": [t: "⠈⠰⠉"]              # 0x1d554
+ - "𝕕": [t: "⠈⠰⠙"]              # 0x1d555
+ - "𝕖": [t: "⠈⠰⠑"]              # 0x1d556
+ - "𝕗": [t: "⠈⠰⠋"]              # 0x1d557
+ - "𝕘": [t: "⠈⠰⠛"]              # 0x1d558
+ - "𝕙": [t: "⠈⠰⠓"]              # 0x1d559
+ - "𝕚": [t: "⠈⠰⠊"]              # 0x1d55a
+ - "𝕛": [t: "⠈⠰⠚"]              # 0x1d55b
+ - "𝕜": [t: "⠈⠰⠅"]              # 0x1d55c
+ - "𝕝": [t: "⠈⠰⠇"]              # 0x1d55d
+ - "𝕞": [t: "⠈⠰⠍"]              # 0x1d55e
+ - "𝕟": [t: "⠈⠰⠝"]              # 0x1d55f
+ - "𝕠": [t: "⠈⠰⠕"]              # 0x1d560
+ - "𝕡": [t: "⠈⠰⠏"]              # 0x1d561
+ - "𝕢": [t: "⠈⠰⠟"]              # 0x1d562
+ - "𝕣": [t: "⠈⠰⠗"]              # 0x1d563
+ - "𝕤": [t: "⠈⠰⠎"]              # 0x1d564
+ - "𝕥": [t: "⠈⠰⠞"]              # 0x1d565
+ - "𝕦": [t: "⠈⠰⠥"]              # 0x1d566
+ - "𝕧": [t: "⠈⠰⠧"]              # 0x1d567
+ - "𝕨": [t: "⠈⠰⠺"]              # 0x1d568
+ - "𝕩": [t: "⠈⠰⠭"]              # 0x1d569
+ - "𝕪": [t: "⠈⠰⠽"]              # 0x1d56a
+ - "𝕫": [t: "⠈⠰⠵"]              # 0x1d56b
+ - "𝕬": [t: "⠸⠸⠠⠁"]             # 0x1d56c
+ - "𝕭": [t: "⠸⠸⠠⠃"]             # 0x1d56d
+ - "𝕮": [t: "⠸⠸⠠⠉"]             # 0x1d56e
+ - "𝕯": [t: "⠸⠸⠠⠙"]             # 0x1d56f
+ - "𝕰": [t: "⠸⠸⠠⠑"]             # 0x1d570
+ - "𝕱": [t: "⠸⠸⠠⠋"]             # 0x1d571
+ - "𝕲": [t: "⠸⠸⠠⠛"]             # 0x1d572
+ - "𝕳": [t: "⠸⠸⠠⠓"]             # 0x1d573
+ - "𝕴": [t: "⠸⠸⠠⠊"]             # 0x1d574
+ - "𝕵": [t: "⠸⠸⠠⠚"]             # 0x1d575
+ - "𝕶": [t: "⠸⠸⠠⠅"]             # 0x1d576
+ - "𝕷": [t: "⠸⠸⠠⠇"]             # 0x1d577
+ - "𝕸": [t: "⠸⠸⠠⠍"]             # 0x1d578
+ - "𝕹": [t: "⠸⠸⠠⠝"]             # 0x1d579
+ - "𝕺": [t: "⠸⠸⠠⠕"]             # 0x1d57a
+ - "𝕻": [t: "⠸⠸⠠⠏"]             # 0x1d57b
+ - "𝕼": [t: "⠸⠸⠠⠟"]             # 0x1d57c
+ - "𝕽": [t: "⠸⠸⠠⠗"]             # 0x1d57d
+ - "𝕾": [t: "⠸⠸⠠⠎"]             # 0x1d57e
+ - "𝕿": [t: "⠸⠸⠠⠞"]             # 0x1d57f
+ - "𝖀": [t: "⠸⠸⠠⠥"]             # 0x1d580
+ - "𝖁": [t: "⠸⠸⠠⠧"]             # 0x1d581
+ - "𝖂": [t: "⠸⠸⠠⠺"]             # 0x1d582
+ - "𝖃": [t: "⠸⠸⠠⠭"]             # 0x1d583
+ - "𝖄": [t: "⠸⠸⠠⠽"]             # 0x1d584
+ - "𝖅": [t: "⠸⠸⠠⠵"]             # 0x1d585
+ - "𝖆": [t: "⠸⠸⠁"]              # 0x1d586
+ - "𝖇": [t: "⠸⠸⠃"]              # 0x1d587
+ - "𝖈": [t: "⠸⠸⠉"]              # 0x1d588
+ - "𝖉": [t: "⠸⠸⠙"]              # 0x1d589
+ - "𝖊": [t: "⠸⠸⠑"]              # 0x1d58a
+ - "𝖋": [t: "⠸⠸⠋"]              # 0x1d58b
+ - "𝖌": [t: "⠸⠸⠛"]              # 0x1d58c
+ - "𝖍": [t: "⠸⠸⠓"]              # 0x1d58d
+ - "𝖎": [t: "⠸⠸⠊"]              # 0x1d58e
+ - "𝖏": [t: "⠸⠸⠚"]              # 0x1d58f
+ - "𝖐": [t: "⠸⠸⠅"]              # 0x1d590
+ - "𝖑": [t: "⠸⠸⠇"]              # 0x1d591
+ - "𝖒": [t: "⠸⠸⠍"]              # 0x1d592
+ - "𝖓": [t: "⠸⠸⠝"]              # 0x1d593
+ - "𝖔": [t: "⠸⠸⠕"]              # 0x1d594
+ - "𝖕": [t: "⠸⠸⠏"]              # 0x1d595
+ - "𝖖": [t: "⠸⠸⠟"]              # 0x1d596
+ - "𝖗": [t: "⠸⠸⠗"]              # 0x1d597
+ - "𝖘": [t: "⠸⠸⠎"]              # 0x1d598
+ - "𝖙": [t: "⠸⠸⠞"]              # 0x1d599
+ - "𝖚": [t: "⠸⠸⠥"]              # 0x1d59a
+ - "𝖛": [t: "⠸⠸⠧"]              # 0x1d59b
+ - "𝖜": [t: "⠸⠸⠺"]              # 0x1d59c
+ - "𝖝": [t: "⠸⠸⠭"]              # 0x1d59d
+ - "𝖞": [t: "⠸⠸⠽"]              # 0x1d59e
+ - "𝖟": [t: "⠸⠸⠵"]              # 0x1d59f
+ - "𝖠": [t: "⠠⠨⠰⠠⠁"]            # 0x1d5a0
+ - "𝖡": [t: "⠠⠨⠰⠠⠃"]            # 0x1d5a1
+ - "𝖢": [t: "⠠⠨⠰⠠⠉"]            # 0x1d5a2
+ - "𝖣": [t: "⠠⠨⠰⠠⠙"]            # 0x1d5a3
+ - "𝖤": [t: "⠠⠨⠰⠠⠑"]            # 0x1d5a4
+ - "𝖥": [t: "⠠⠨⠰⠠⠋"]            # 0x1d5a5
+ - "𝖦": [t: "⠠⠨⠰⠠⠛"]            # 0x1d5a6
+ - "𝖧": [t: "⠠⠨⠰⠠⠓"]            # 0x1d5a7
+ - "𝖨": [t: "⠠⠨⠰⠠⠊"]            # 0x1d5a8
+ - "𝖩": [t: "⠠⠨⠰⠠⠚"]            # 0x1d5a9
+ - "𝖪": [t: "⠠⠨⠰⠠⠅"]            # 0x1d5aa
+ - "𝖫": [t: "⠠⠨⠰⠠⠇"]            # 0x1d5ab
+ - "𝖬": [t: "⠠⠨⠰⠠⠍"]            # 0x1d5ac
+ - "𝖭": [t: "⠠⠨⠰⠠⠝"]            # 0x1d5ad
+ - "𝖮": [t: "⠠⠨⠰⠠⠕"]            # 0x1d5ae
+ - "𝖯": [t: "⠠⠨⠰⠠⠏"]            # 0x1d5af
+ - "𝖰": [t: "⠠⠨⠰⠠⠟"]            # 0x1d5b0
+ - "𝖱": [t: "⠠⠨⠰⠠⠗"]            # 0x1d5b1
+ - "𝖲": [t: "⠠⠨⠰⠠⠎"]            # 0x1d5b2
+ - "𝖳": [t: "⠠⠨⠰⠠⠞"]            # 0x1d5b3
+ - "𝖴": [t: "⠠⠨⠰⠠⠥"]            # 0x1d5b4
+ - "𝖵": [t: "⠠⠨⠰⠠⠧"]            # 0x1d5b5
+ - "𝖶": [t: "⠠⠨⠰⠠⠺"]            # 0x1d5b6
+ - "𝖷": [t: "⠠⠨⠰⠠⠭"]            # 0x1d5b7
+ - "𝖸": [t: "⠠⠨⠰⠠⠽"]            # 0x1d5b8
+ - "𝖹": [t: "⠠⠨⠰⠠⠵"]            # 0x1d5b9
+ - "𝖺": [t: "⠠⠨⠰⠁"]             # 0x1d5ba
+ - "𝖻": [t: "⠠⠨⠰⠃"]             # 0x1d5bb
+ - "𝖼": [t: "⠠⠨⠰⠉"]             # 0x1d5bc
+ - "𝖽": [t: "⠠⠨⠰⠙"]             # 0x1d5bd
+ - "𝖾": [t: "⠠⠨⠰⠑"]             # 0x1d5be
+ - "𝖿": [t: "⠠⠨⠰⠋"]             # 0x1d5bf
+ - "𝗀": [t: "⠠⠨⠰⠛"]             # 0x1d5c0
+ - "𝗁": [t: "⠠⠨⠰⠓"]             # 0x1d5c1
+ - "𝗂": [t: "⠠⠨⠰⠊"]             # 0x1d5c2
+ - "𝗃": [t: "⠠⠨⠰⠚"]             # 0x1d5c3
+ - "𝗄": [t: "⠠⠨⠰⠅"]             # 0x1d5c4
+ - "𝗅": [t: "⠠⠨⠰⠇"]             # 0x1d5c5
+ - "𝗆": [t: "⠠⠨⠰⠍"]             # 0x1d5c6
+ - "𝗇": [t: "⠠⠨⠰⠝"]             # 0x1d5c7
+ - "𝗈": [t: "⠠⠨⠰⠕"]             # 0x1d5c8
+ - "𝗉": [t: "⠠⠨⠰⠏"]             # 0x1d5c9
+ - "𝗊": [t: "⠠⠨⠰⠟"]             # 0x1d5ca
+ - "𝗋": [t: "⠠⠨⠰⠗"]             # 0x1d5cb
+ - "𝗌": [t: "⠠⠨⠰⠎"]             # 0x1d5cc
+ - "𝗍": [t: "⠠⠨⠰⠞"]             # 0x1d5cd
+ - "𝗎": [t: "⠠⠨⠰⠥"]             # 0x1d5ce
+ - "𝗏": [t: "⠠⠨⠰⠧"]             # 0x1d5cf
+ - "𝗐": [t: "⠠⠨⠰⠺"]             # 0x1d5d0
+ - "𝗑": [t: "⠠⠨⠰⠭"]             # 0x1d5d1
+ - "𝗒": [t: "⠠⠨⠰⠽"]             # 0x1d5d2
+ - "𝗓": [t: "⠠⠨⠰⠵"]             # 0x1d5d3
+ - "𝗔": [t: "⠠⠨⠸⠰⠠⠁"]           # 0x1d5d4
+ - "𝗕": [t: "⠠⠨⠸⠰⠠⠃"]           # 0x1d5d5
+ - "𝗖": [t: "⠠⠨⠸⠰⠠⠉"]           # 0x1d5d6
+ - "𝗗": [t: "⠠⠨⠸⠰⠠⠙"]           # 0x1d5d7
+ - "𝗘": [t: "⠠⠨⠸⠰⠠⠑"]           # 0x1d5d8
+ - "𝗙": [t: "⠠⠨⠸⠰⠠⠋"]           # 0x1d5d9
+ - "𝗚": [t: "⠠⠨⠸⠰⠠⠛"]           # 0x1d5da
+ - "𝗛": [t: "⠠⠨⠸⠰⠠⠓"]           # 0x1d5db
+ - "𝗜": [t: "⠠⠨⠸⠰⠠⠊"]           # 0x1d5dc
+ - "𝗝": [t: "⠠⠨⠸⠰⠠⠚"]           # 0x1d5dd
+ - "𝗞": [t: "⠠⠨⠸⠰⠠⠅"]           # 0x1d5de
+ - "𝗟": [t: "⠠⠨⠸⠰⠠⠇"]           # 0x1d5df
+ - "𝗠": [t: "⠠⠨⠸⠰⠠⠍"]           # 0x1d5e0
+ - "𝗡": [t: "⠠⠨⠸⠰⠠⠝"]           # 0x1d5e1
+ - "𝗢": [t: "⠠⠨⠸⠰⠠⠕"]           # 0x1d5e2
+ - "𝗣": [t: "⠠⠨⠸⠰⠠⠏"]           # 0x1d5e3
+ - "𝗤": [t: "⠠⠨⠸⠰⠠⠟"]           # 0x1d5e4
+ - "𝗥": [t: "⠠⠨⠸⠰⠠⠗"]           # 0x1d5e5
+ - "𝗦": [t: "⠠⠨⠸⠰⠠⠎"]           # 0x1d5e6
+ - "𝗧": [t: "⠠⠨⠸⠰⠠⠞"]           # 0x1d5e7
+ - "𝗨": [t: "⠠⠨⠸⠰⠠⠥"]           # 0x1d5e8
+ - "𝗩": [t: "⠠⠨⠸⠰⠠⠧"]           # 0x1d5e9
+ - "𝗪": [t: "⠠⠨⠸⠰⠠⠺"]           # 0x1d5ea
+ - "𝗫": [t: "⠠⠨⠸⠰⠠⠭"]           # 0x1d5eb
+ - "𝗬": [t: "⠠⠨⠸⠰⠠⠽"]           # 0x1d5ec
+ - "𝗭": [t: "⠠⠨⠸⠰⠠⠵"]           # 0x1d5ed
+ - "𝗮": [t: "⠠⠨⠸⠰⠁"]            # 0x1d5ee
+ - "𝗯": [t: "⠠⠨⠸⠰⠃"]            # 0x1d5ef
+ - "𝗰": [t: "⠠⠨⠸⠰⠉"]            # 0x1d5f0
+ - "𝗱": [t: "⠠⠨⠸⠰⠙"]            # 0x1d5f1
+ - "𝗲": [t: "⠠⠨⠸⠰⠑"]            # 0x1d5f2
+ - "𝗳": [t: "⠠⠨⠸⠰⠋"]            # 0x1d5f3
+ - "𝗴": [t: "⠠⠨⠸⠰⠛"]            # 0x1d5f4
+ - "𝗵": [t: "⠠⠨⠸⠰⠓"]            # 0x1d5f5
+ - "𝗶": [t: "⠠⠨⠸⠰⠊"]            # 0x1d5f6
+ - "𝗷": [t: "⠠⠨⠸⠰⠚"]            # 0x1d5f7
+ - "𝗸": [t: "⠠⠨⠸⠰⠅"]            # 0x1d5f8
+ - "𝗹": [t: "⠠⠨⠸⠰⠇"]            # 0x1d5f9
+ - "𝗺": [t: "⠠⠨⠸⠰⠍"]            # 0x1d5fa
+ - "𝗻": [t: "⠠⠨⠸⠰⠝"]            # 0x1d5fb
+ - "𝗼": [t: "⠠⠨⠸⠰⠕"]            # 0x1d5fc
+ - "𝗽": [t: "⠠⠨⠸⠰⠏"]            # 0x1d5fd
+ - "𝗾": [t: "⠠⠨⠸⠰⠟"]            # 0x1d5fe
+ - "𝗿": [t: "⠠⠨⠸⠰⠗"]            # 0x1d5ff
+ - "𝘀": [t: "⠠⠨⠸⠰⠎"]            # 0x1d600
+ - "𝘁": [t: "⠠⠨⠸⠰⠞"]            # 0x1d601
+ - "𝘂": [t: "⠠⠨⠸⠰⠥"]            # 0x1d602
+ - "𝘃": [t: "⠠⠨⠸⠰⠧"]            # 0x1d603
+ - "𝘄": [t: "⠠⠨⠸⠰⠺"]            # 0x1d604
+ - "𝘅": [t: "⠠⠨⠸⠰⠭"]            # 0x1d605
+ - "𝘆": [t: "⠠⠨⠸⠰⠽"]            # 0x1d606
+ - "𝘇": [t: "⠠⠨⠸⠰⠵"]            # 0x1d607
+ - "𝘈": [t: "⠠⠨⠨⠰⠠⠁"]           # 0x1d608
+ - "𝘉": [t: "⠠⠨⠨⠰⠠⠃"]           # 0x1d609
+ - "𝘊": [t: "⠠⠨⠨⠰⠠⠉"]           # 0x1d60a
+ - "𝘋": [t: "⠠⠨⠨⠰⠠⠙"]           # 0x1d60b
+ - "𝘌": [t: "⠠⠨⠨⠰⠠⠑"]           # 0x1d60c
+ - "𝘍": [t: "⠠⠨⠨⠰⠠⠋"]           # 0x1d60d
+ - "𝘎": [t: "⠠⠨⠨⠰⠠⠛"]           # 0x1d60e
+ - "𝘏": [t: "⠠⠨⠨⠰⠠⠓"]           # 0x1d60f
+ - "𝘐": [t: "⠠⠨⠨⠰⠠⠊"]           # 0x1d610
+ - "𝘑": [t: "⠠⠨⠨⠰⠠⠚"]           # 0x1d611
+ - "𝘒": [t: "⠠⠨⠨⠰⠠⠅"]           # 0x1d612
+ - "𝘓": [t: "⠠⠨⠨⠰⠠⠇"]           # 0x1d613
+ - "𝘔": [t: "⠠⠨⠨⠰⠠⠍"]           # 0x1d614
+ - "𝘕": [t: "⠠⠨⠨⠰⠠⠝"]           # 0x1d615
+ - "𝘖": [t: "⠠⠨⠨⠰⠠⠕"]           # 0x1d616
+ - "𝘗": [t: "⠠⠨⠨⠰⠠⠏"]           # 0x1d617
+ - "𝘘": [t: "⠠⠨⠨⠰⠠⠟"]           # 0x1d618
+ - "𝘙": [t: "⠠⠨⠨⠰⠠⠗"]           # 0x1d619
+ - "𝘚": [t: "⠠⠨⠨⠰⠠⠎"]           # 0x1d61a
+ - "𝘛": [t: "⠠⠨⠨⠰⠠⠞"]           # 0x1d61b
+ - "𝘜": [t: "⠠⠨⠨⠰⠠⠥"]           # 0x1d61c
+ - "𝘝": [t: "⠠⠨⠨⠰⠠⠧"]           # 0x1d61d
+ - "𝘞": [t: "⠠⠨⠨⠰⠠⠺"]           # 0x1d61e
+ - "𝘟": [t: "⠠⠨⠨⠰⠠⠭"]           # 0x1d61f
+ - "𝘠": [t: "⠠⠨⠨⠰⠠⠽"]           # 0x1d620
+ - "𝘡": [t: "⠠⠨⠨⠰⠠⠵"]           # 0x1d621
+ - "𝘢": [t: "⠠⠨⠨⠰⠁"]            # 0x1d622
+ - "𝘣": [t: "⠠⠨⠨⠰⠃"]            # 0x1d623
+ - "𝘤": [t: "⠠⠨⠨⠰⠉"]            # 0x1d624
+ - "𝘥": [t: "⠠⠨⠨⠰⠙"]            # 0x1d625
+ - "𝘦": [t: "⠠⠨⠨⠰⠑"]            # 0x1d626
+ - "𝘧": [t: "⠠⠨⠨⠰⠋"]            # 0x1d627
+ - "𝘨": [t: "⠠⠨⠨⠰⠛"]            # 0x1d628
+ - "𝘩": [t: "⠠⠨⠨⠰⠓"]            # 0x1d629
+ - "𝘪": [t: "⠠⠨⠨⠰⠊"]            # 0x1d62a
+ - "𝘫": [t: "⠠⠨⠨⠰⠚"]            # 0x1d62b
+ - "𝘬": [t: "⠠⠨⠨⠰⠅"]            # 0x1d62c
+ - "𝘭": [t: "⠠⠨⠨⠰⠇"]            # 0x1d62d
+ - "𝘮": [t: "⠠⠨⠨⠰⠍"]            # 0x1d62e
+ - "𝘯": [t: "⠠⠨⠨⠰⠝"]            # 0x1d62f
+ - "𝘰": [t: "⠠⠨⠨⠰⠕"]            # 0x1d630
+ - "𝘱": [t: "⠠⠨⠨⠰⠏"]            # 0x1d631
+ - "𝘲": [t: "⠠⠨⠨⠰⠟"]            # 0x1d632
+ - "𝘳": [t: "⠠⠨⠨⠰⠗"]            # 0x1d633
+ - "𝘴": [t: "⠠⠨⠨⠰⠎"]            # 0x1d634
+ - "𝘵": [t: "⠠⠨⠨⠰⠞"]            # 0x1d635
+ - "𝘶": [t: "⠠⠨⠨⠰⠥"]            # 0x1d636
+ - "𝘷": [t: "⠠⠨⠨⠰⠧"]            # 0x1d637
+ - "𝘸": [t: "⠠⠨⠨⠰⠺"]            # 0x1d638
+ - "𝘹": [t: "⠠⠨⠨⠰⠭"]            # 0x1d639
+ - "𝘺": [t: "⠠⠨⠨⠰⠽"]            # 0x1d63a
+ - "𝘻": [t: "⠠⠨⠨⠰⠵"]            # 0x1d63b
+ - "𝘼": [t: "⠠⠨⠸⠨⠰⠠⠁"]          # 0x1d63c
+ - "𝘽": [t: "⠠⠨⠸⠨⠰⠠⠃"]          # 0x1d63d
+ - "𝘾": [t: "⠠⠨⠸⠨⠰⠠⠉"]          # 0x1d63e
+ - "𝘿": [t: "⠠⠨⠸⠨⠰⠠⠙"]          # 0x1d63f
+ - "𝙀": [t: "⠠⠨⠸⠨⠰⠠⠑"]          # 0x1d640
+ - "𝙁": [t: "⠠⠨⠸⠨⠰⠠⠋"]          # 0x1d641
+ - "𝙂": [t: "⠠⠨⠸⠨⠰⠠⠛"]          # 0x1d642
+ - "𝙃": [t: "⠠⠨⠸⠨⠰⠠⠓"]          # 0x1d643
+ - "𝙄": [t: "⠠⠨⠸⠨⠰⠠⠊"]          # 0x1d644
+ - "𝙅": [t: "⠠⠨⠸⠨⠰⠠⠚"]          # 0x1d645
+ - "𝙆": [t: "⠠⠨⠸⠨⠰⠠⠅"]          # 0x1d646
+ - "𝙇": [t: "⠠⠨⠸⠨⠰⠠⠇"]          # 0x1d647
+ - "𝙈": [t: "⠠⠨⠸⠨⠰⠠⠍"]          # 0x1d648
+ - "𝙉": [t: "⠠⠨⠸⠨⠰⠠⠝"]          # 0x1d649
+ - "𝙊": [t: "⠠⠨⠸⠨⠰⠠⠕"]          # 0x1d64a
+ - "𝙋": [t: "⠠⠨⠸⠨⠰⠠⠏"]          # 0x1d64b
+ - "𝙌": [t: "⠠⠨⠸⠨⠰⠠⠟"]          # 0x1d64c
+ - "𝙍": [t: "⠠⠨⠸⠨⠰⠠⠗"]          # 0x1d64d
+ - "𝙎": [t: "⠠⠨⠸⠨⠰⠠⠎"]          # 0x1d64e
+ - "𝙏": [t: "⠠⠨⠸⠨⠰⠠⠞"]          # 0x1d64f
+ - "𝙐": [t: "⠠⠨⠸⠨⠰⠠⠥"]          # 0x1d650
+ - "𝙑": [t: "⠠⠨⠸⠨⠰⠠⠧"]          # 0x1d651
+ - "𝙒": [t: "⠠⠨⠸⠨⠰⠠⠺"]          # 0x1d652
+ - "𝙓": [t: "⠠⠨⠸⠨⠰⠠⠭"]          # 0x1d653
+ - "𝙔": [t: "⠠⠨⠸⠨⠰⠠⠽"]          # 0x1d654
+ - "𝙕": [t: "⠠⠨⠸⠨⠰⠠⠵"]          # 0x1d655
+ - "𝙖": [t: "⠠⠨⠸⠨⠰⠁"]           # 0x1d656
+ - "𝙗": [t: "⠠⠨⠸⠨⠰⠃"]           # 0x1d657
+ - "𝙘": [t: "⠠⠨⠸⠨⠰⠉"]           # 0x1d658
+ - "𝙙": [t: "⠠⠨⠸⠨⠰⠙"]           # 0x1d659
+ - "𝙚": [t: "⠠⠨⠸⠨⠰⠑"]           # 0x1d65a
+ - "𝙛": [t: "⠠⠨⠸⠨⠰⠋"]           # 0x1d65b
+ - "𝙜": [t: "⠠⠨⠸⠨⠰⠛"]           # 0x1d65c
+ - "𝙝": [t: "⠠⠨⠸⠨⠰⠓"]           # 0x1d65d
+ - "𝙞": [t: "⠠⠨⠸⠨⠰⠊"]           # 0x1d65e
+ - "𝙟": [t: "⠠⠨⠸⠨⠰⠚"]           # 0x1d65f
+ - "𝙠": [t: "⠠⠨⠸⠨⠰⠅"]           # 0x1d660
+ - "𝙡": [t: "⠠⠨⠸⠨⠰⠇"]           # 0x1d661
+ - "𝙢": [t: "⠠⠨⠸⠨⠰⠍"]           # 0x1d662
+ - "𝙣": [t: "⠠⠨⠸⠨⠰⠝"]           # 0x1d663
+ - "𝙤": [t: "⠠⠨⠸⠨⠰⠕"]           # 0x1d664
+ - "𝙥": [t: "⠠⠨⠸⠨⠰⠏"]           # 0x1d665
+ - "𝙦": [t: "⠠⠨⠸⠨⠰⠟"]           # 0x1d666
+ - "𝙧": [t: "⠠⠨⠸⠨⠰⠗"]           # 0x1d667
+ - "𝙨": [t: "⠠⠨⠸⠨⠰⠎"]           # 0x1d668
+ - "𝙩": [t: "⠠⠨⠸⠨⠰⠞"]           # 0x1d669
+ - "𝙪": [t: "⠠⠨⠸⠨⠰⠥"]           # 0x1d66a
+ - "𝙫": [t: "⠠⠨⠸⠨⠰⠧"]           # 0x1d66b
+ - "𝙬": [t: "⠠⠨⠸⠨⠰⠺"]           # 0x1d66c
+ - "𝙭": [t: "⠠⠨⠸⠨⠰⠭"]           # 0x1d66d
+ - "𝙮": [t: "⠠⠨⠸⠨⠰⠽"]           # 0x1d66e
+ - "𝙯": [t: "⠠⠨⠸⠨⠰⠵"]           # 0x1d66f
+ - "𝙰": [t: "⠠⠁"]               # 0x1d670
+ - "𝙱": [t: "⠠⠃"]               # 0x1d671
+ - "𝙲": [t: "⠠⠉"]               # 0x1d672
+ - "𝙳": [t: "⠠⠙"]               # 0x1d673
+ - "𝙴": [t: "⠠⠑"]               # 0x1d674
+ - "𝙵": [t: "⠠⠋"]               # 0x1d675
+ - "𝙶": [t: "⠠⠛"]               # 0x1d676
+ - "𝙷": [t: "⠠⠓"]               # 0x1d677
+ - "𝙸": [t: "⠠⠊"]               # 0x1d678
+ - "𝙹": [t: "⠠⠚"]               # 0x1d679
+ - "𝙺": [t: "⠠⠅"]               # 0x1d67a
+ - "𝙻": [t: "⠠⠇"]               # 0x1d67b
+ - "𝙼": [t: "⠠⠍"]               # 0x1d67c
+ - "𝙽": [t: "⠠⠝"]               # 0x1d67d
+ - "𝙾": [t: "⠠⠕"]               # 0x1d67e
+ - "𝙿": [t: "⠠⠏"]               # 0x1d67f
+ - "𝚀": [t: "⠠⠟"]               # 0x1d680
+ - "𝚁": [t: "⠠⠗"]               # 0x1d681
+ - "𝚂": [t: "⠠⠎"]               # 0x1d682
+ - "𝚃": [t: "⠠⠞"]               # 0x1d683
+ - "𝚄": [t: "⠠⠥"]               # 0x1d684
+ - "𝚅": [t: "⠠⠧"]               # 0x1d685
+ - "𝚆": [t: "⠠⠺"]               # 0x1d686
+ - "𝚇": [t: "⠠⠭"]               # 0x1d687
+ - "𝚈": [t: "⠠⠽"]               # 0x1d688
+ - "𝚉": [t: "⠠⠵"]               # 0x1d689
+ - "𝚊": [t: "⠁"]                # 0x1d68a
+ - "𝚋": [t: "⠃"]                # 0x1d68b
+ - "𝚌": [t: "⠉"]                # 0x1d68c
+ - "𝚍": [t: "⠙"]                # 0x1d68d
+ - "𝚎": [t: "⠑"]                # 0x1d68e
+ - "𝚏": [t: "⠋"]                # 0x1d68f
+ - "𝚐": [t: "⠛"]                # 0x1d690
+ - "𝚑": [t: "⠓"]                # 0x1d691
+ - "𝚒": [t: "⠊"]                # 0x1d692
+ - "𝚓": [t: "⠚"]                # 0x1d693
+ - "𝚔": [t: "⠅"]                # 0x1d694
+ - "𝚕": [t: "⠇"]                # 0x1d695
+ - "𝚖": [t: "⠍"]                # 0x1d696
+ - "𝚗": [t: "⠝"]                # 0x1d697
+ - "𝚘": [t: "⠕"]                # 0x1d698
+ - "𝚙": [t: "⠏"]                # 0x1d699
+ - "𝚚": [t: "⠟"]                # 0x1d69a
+ - "𝚛": [t: "⠗"]                # 0x1d69b
+ - "𝚜": [t: "⠎"]                # 0x1d69c
+ - "𝚝": [t: "⠞"]                # 0x1d69d
+ - "𝚞": [t: "⠥"]                # 0x1d69e
+ - "𝚟": [t: "⠧"]                # 0x1d69f
+ - "𝚠": [t: "⠺"]                # 0x1d6a0
+ - "𝚡": [t: "⠭"]                # 0x1d6a1
+ - "𝚢": [t: "⠽"]                # 0x1d6a2
+ - "𝚣": [t: "⠵"]                # 0x1d6a3
+ - "𝚨": [t: "⠸⠨⠠⠁"]             # 0x1d6a8
+ - "𝚩": [t: "⠸⠨⠠⠃"]             # 0x1d6a9
+ - "𝚪": [t: "⠸⠨⠠⠛"]             # 0x1d6aa
+ - "𝚫": [t: "⠸⠨⠠⠙"]             # 0x1d6ab
+ - "𝚬": [t: "⠸⠨⠠⠑"]             # 0x1d6ac
+ - "𝚭": [t: "⠸⠨⠠⠵"]             # 0x1d6ad
+ - "𝚮": [t: "⠸⠨⠠⠱"]             # 0x1d6ae
+ - "𝚯": [t: "⠸⠨⠠⠹"]             # 0x1d6af
+ - "𝚰": [t: "⠸⠨⠠⠊"]             # 0x1d6b0
+ - "𝚱": [t: "⠸⠨⠠⠅"]             # 0x1d6b1
+ - "𝚲": [t: "⠸⠨⠠⠇"]             # 0x1d6b2
+ - "𝚳": [t: "⠸⠨⠠⠍"]             # 0x1d6b3
+ - "𝚴": [t: "⠸⠨⠠⠝"]             # 0x1d6b4
+ - "𝚵": [t: "⠸⠨⠠⠭"]             # 0x1d6b5
+ - "𝚶": [t: "⠸⠨⠠⠕"]             # 0x1d6b6
+ - "𝚷": [t: "⠸⠨⠠⠏"]             # 0x1d6b7
+ - "𝚸": [t: "⠸⠨⠠⠗"]             # 0x1d6b8
+ - "𝚹": [t: "⠸⠨⠠⠹"]             # 0x1d6b9
+ - "𝚺": [t: "⠸⠨⠠⠎"]             # 0x1d6ba
+ - "𝚻": [t: "⠸⠨⠠⠞"]             # 0x1d6bb
+ - "𝚼": [t: "⠸⠨⠠⠥"]             # 0x1d6bc
+ - "𝚽": [t: "⠸⠨⠠⠋"]             # 0x1d6bd
+ - "𝚾": [t: "⠸⠨⠠⠯"]             # 0x1d6be
+ - "𝚿": [t: "⠸⠨⠠⠽"]             # 0x1d6bf
+ - "𝛀": [t: "⠸⠨⠠⠺"]             # 0x1d6c0
+ - "𝛁": [t: "⠸⠨⠫"]              # 0x1d6c1
+ - "𝛂": [t: "⠸⠨⠁"]              # 0x1d6c2
+ - "𝛃": [t: "⠸⠨⠃"]              # 0x1d6c3
+ - "𝛄": [t: "⠸⠨⠛"]              # 0x1d6c4
+ - "𝛅": [t: "⠸⠨⠙"]              # 0x1d6c5
+ - "𝛆": [t: "⠸⠨⠑"]              # 0x1d6c6
+ - "𝛇": [t: "⠸⠨⠵"]              # 0x1d6c7
+ - "𝛈": [t: "⠸⠨⠱"]              # 0x1d6c8
+ - "𝛉": [t: "⠸⠨⠹"]              # 0x1d6c9
+ - "𝛊": [t: "⠸⠨⠊"]              # 0x1d6ca
+ - "𝛋": [t: "⠸⠨⠅"]              # 0x1d6cb
+ - "𝛌": [t: "⠸⠨⠇"]              # 0x1d6cc
+ - "𝛍": [t: "⠸⠨⠍"]              # 0x1d6cd
+ - "𝛎": [t: "⠸⠨⠝"]              # 0x1d6ce
+ - "𝛏": [t: "⠸⠨⠭"]              # 0x1d6cf
+ - "𝛐": [t: "⠸⠨⠕"]              # 0x1d6d0
+ - "𝛑": [t: "⠸⠨⠏"]              # 0x1d6d1
+ - "𝛒": [t: "⠸⠨⠗"]              # 0x1d6d2
+ - "𝛓": [t: "⠸⠨⠈⠎"]             # 0x1d6d3
+ - "𝛔": [t: "⠸⠨⠎"]              # 0x1d6d4
+ - "𝛕": [t: "⠸⠨⠞"]              # 0x1d6d5
+ - "𝛖": [t: "⠸⠨⠥"]              # 0x1d6d6
+ - "𝛗": [t: "⠸⠨⠈⠋"]             # 0x1d6d7
+ - "𝛘": [t: "⠸⠨⠯"]              # 0x1d6d8
+ - "𝛙": [t: "⠸⠨⠽"]              # 0x1d6d9
+ - "𝛚": [t: "⠸⠨⠺"]              # 0x1d6da
+ - "𝛛": [t: "⠸⠈⠙"]              # 0x1d6db
+ - "𝛜": [t: "⠸⠨⠑"]              # 0x1d6dc
+ - "𝛝": [t: "⠸⠨⠈⠹"]             # 0x1d6dd
+ - "𝛞": [t: "⠸⠨⠅"]              # 0x1d6de
+ - "𝛟": [t: "⠸⠨⠋"]              # 0x1d6df
+ - "𝛠": [t: "⠸⠨⠗"]              # 0x1d6e0
+ - "𝛡": [t: "⠸⠨⠏"]              # 0x1d6e1
+ - "𝛢": [t: "⠨⠨⠠⠁"]             # 0x1d6e2
+ - "𝛣": [t: "⠨⠨⠠⠃"]             # 0x1d6e3
+ - "𝛤": [t: "⠨⠨⠠⠛"]             # 0x1d6e4
+ - "𝛥": [t: "⠨⠨⠠⠙"]             # 0x1d6e5
+ - "𝛦": [t: "⠨⠨⠠⠑"]             # 0x1d6e6
+ - "𝛧": [t: "⠨⠨⠠⠵"]             # 0x1d6e7
+ - "𝛨": [t: "⠨⠨⠠⠱"]             # 0x1d6e8
+ - "𝛩": [t: "⠨⠨⠠⠹"]             # 0x1d6e9
+ - "𝛪": [t: "⠨⠨⠠⠊"]             # 0x1d6ea
+ - "𝛫": [t: "⠨⠨⠠⠅"]             # 0x1d6eb
+ - "𝛬": [t: "⠨⠨⠠⠇"]             # 0x1d6ec
+ - "𝛭": [t: "⠨⠨⠠⠍"]             # 0x1d6ed
+ - "𝛮": [t: "⠨⠨⠠⠝"]             # 0x1d6ee
+ - "𝛯": [t: "⠨⠨⠠⠭"]             # 0x1d6ef
+ - "𝛰": [t: "⠨⠨⠠⠕"]             # 0x1d6f0
+ - "𝛱": [t: "⠨⠨⠠⠏"]             # 0x1d6f1
+ - "𝛲": [t: "⠨⠨⠠⠗"]             # 0x1d6f2
+ - "𝛳": [t: "⠨⠨⠠⠹"]             # 0x1d6f3
+ - "𝛴": [t: "⠨⠨⠠⠎"]             # 0x1d6f4
+ - "𝛵": [t: "⠨⠨⠠⠞"]             # 0x1d6f5
+ - "𝛶": [t: "⠨⠨⠠⠥"]             # 0x1d6f6
+ - "𝛷": [t: "⠨⠨⠠⠋"]             # 0x1d6f7
+ - "𝛸": [t: "⠨⠨⠠⠯"]             # 0x1d6f8
+ - "𝛹": [t: "⠨⠨⠠⠽"]             # 0x1d6f9
+ - "𝛺": [t: "⠨⠨⠠⠺"]             # 0x1d6fa
+ - "𝛻": [t: "⠨⠨⠫"]              # 0x1d6fb
+ - "𝛼": [t: "⠨⠨⠁"]              # 0x1d6fc
+ - "𝛽": [t: "⠨⠨⠃"]              # 0x1d6fd
+ - "𝛾": [t: "⠨⠨⠛"]              # 0x1d6fe
+ - "𝛿": [t: "⠨⠨⠙"]              # 0x1d6ff
+ - "𝜀": [t: "⠨⠨⠑"]              # 0x1d700
+ - "𝜁": [t: "⠨⠨⠵"]              # 0x1d701
+ - "𝜂": [t: "⠨⠨⠱"]              # 0x1d702
+ - "𝜃": [t: "⠨⠨⠹"]              # 0x1d703
+ - "𝜄": [t: "⠨⠨⠊"]              # 0x1d704
+ - "𝜅": [t: "⠨⠨⠅"]              # 0x1d705
+ - "𝜆": [t: "⠨⠨⠇"]              # 0x1d706
+ - "𝜇": [t: "⠨⠨⠍"]              # 0x1d707
+ - "𝜈": [t: "⠨⠨⠝"]              # 0x1d708
+ - "𝜉": [t: "⠨⠨⠭"]              # 0x1d709
+ - "𝜊": [t: "⠨⠨⠕"]              # 0x1d70a
+ - "𝜋": [t: "⠨⠨⠏"]              # 0x1d70b
+ - "𝜌": [t: "⠨⠨⠗"]              # 0x1d70c
+ - "𝜍": [t: "⠨⠨⠈⠎"]             # 0x1d70d
+ - "𝜎": [t: "⠨⠨⠎"]              # 0x1d70e
+ - "𝜏": [t: "⠨⠨⠞"]              # 0x1d70f
+ - "𝜐": [t: "⠨⠨⠥"]              # 0x1d710
+ - "𝜑": [t: "⠨⠨⠈⠋"]             # 0x1d711
+ - "𝜒": [t: "⠨⠨⠯"]              # 0x1d712
+ - "𝜓": [t: "⠨⠨⠽"]              # 0x1d713
+ - "𝜔": [t: "⠨⠨⠺"]              # 0x1d714
+ - "𝜕": [t: "⠨⠈⠙"]              # 0x1d715
+ - "𝜖": [t: "⠨⠨⠑"]              # 0x1d716
+ - "𝜗": [t: "⠨⠨⠈⠹"]             # 0x1d717
+ - "𝜘": [t: "⠨⠨⠅"]              # 0x1d718
+ - "𝜙": [t: "⠨⠨⠋"]              # 0x1d719
+ - "𝜚": [t: "⠨⠨⠗"]              # 0x1d71a
+ - "𝜛": [t: "⠨⠨⠏"]              # 0x1d71b
+ - "𝜜": [t: "⠸⠨⠨⠠⠁"]            # 0x1d71c
+ - "𝜝": [t: "⠸⠨⠨⠠⠃"]            # 0x1d71d
+ - "𝜞": [t: "⠸⠨⠨⠠⠛"]            # 0x1d71e
+ - "𝜟": [t: "⠸⠨⠨⠠⠙"]            # 0x1d71f
+ - "𝜠": [t: "⠸⠨⠨⠠⠑"]            # 0x1d720
+ - "𝜡": [t: "⠸⠨⠨⠠⠵"]            # 0x1d721
+ - "𝜢": [t: "⠸⠨⠨⠠⠱"]            # 0x1d722
+ - "𝜣": [t: "⠸⠨⠨⠠⠹"]            # 0x1d723
+ - "𝜤": [t: "⠸⠨⠨⠠⠊"]            # 0x1d724
+ - "𝜥": [t: "⠸⠨⠨⠠⠅"]            # 0x1d725
+ - "𝜦": [t: "⠸⠨⠨⠠⠇"]            # 0x1d726
+ - "𝜧": [t: "⠸⠨⠨⠠⠍"]            # 0x1d727
+ - "𝜨": [t: "⠸⠨⠨⠠⠝"]            # 0x1d728
+ - "𝜩": [t: "⠸⠨⠨⠠⠭"]            # 0x1d729
+ - "𝜪": [t: "⠸⠨⠨⠠⠕"]            # 0x1d72a
+ - "𝜫": [t: "⠸⠨⠨⠠⠏"]            # 0x1d72b
+ - "𝜬": [t: "⠸⠨⠨⠠⠗"]            # 0x1d72c
+ - "𝜭": [t: "⠸⠨⠨⠠⠹"]            # 0x1d72d
+ - "𝜮": [t: "⠸⠨⠨⠠⠎"]            # 0x1d72e
+ - "𝜯": [t: "⠸⠨⠨⠠⠞"]            # 0x1d72f
+ - "𝜰": [t: "⠸⠨⠨⠠⠥"]            # 0x1d730
+ - "𝜱": [t: "⠸⠨⠨⠠⠋"]            # 0x1d731
+ - "𝜲": [t: "⠸⠨⠨⠠⠯"]            # 0x1d732
+ - "𝜳": [t: "⠸⠨⠨⠠⠽"]            # 0x1d733
+ - "𝜴": [t: "⠸⠨⠨⠠⠺"]            # 0x1d734
+ - "𝜵": [t: "⠸⠨⠨⠫"]             # 0x1d735
+ - "𝜶": [t: "⠸⠨⠨⠁"]             # 0x1d736
+ - "𝜷": [t: "⠸⠨⠨⠃"]             # 0x1d737
+ - "𝜸": [t: "⠸⠨⠨⠛"]             # 0x1d738
+ - "𝜹": [t: "⠸⠨⠨⠙"]             # 0x1d739
+ - "𝜺": [t: "⠸⠨⠨⠑"]             # 0x1d73a
+ - "𝜻": [t: "⠸⠨⠨⠵"]             # 0x1d73b
+ - "𝜼": [t: "⠸⠨⠨⠱"]             # 0x1d73c
+ - "𝜽": [t: "⠸⠨⠨⠹"]             # 0x1d73d
+ - "𝜾": [t: "⠸⠨⠨⠊"]             # 0x1d73e
+ - "𝜿": [t: "⠸⠨⠨⠅"]             # 0x1d73f
+ - "𝝀": [t: "⠸⠨⠨⠇"]             # 0x1d740
+ - "𝝁": [t: "⠸⠨⠨⠍"]             # 0x1d741
+ - "𝝂": [t: "⠸⠨⠨⠝"]             # 0x1d742
+ - "𝝃": [t: "⠸⠨⠨⠭"]             # 0x1d743
+ - "𝝄": [t: "⠸⠨⠨⠕"]             # 0x1d744
+ - "𝝅": [t: "⠸⠨⠨⠏"]             # 0x1d745
+ - "𝝆": [t: "⠸⠨⠨⠗"]             # 0x1d746
+ - "𝝇": [t: "⠸⠨⠨⠈⠎"]            # 0x1d747
+ - "𝝈": [t: "⠸⠨⠨⠎"]             # 0x1d748
+ - "𝝉": [t: "⠸⠨⠨⠞"]             # 0x1d749
+ - "𝝊": [t: "⠸⠨⠨⠥"]             # 0x1d74a
+ - "𝝋": [t: "⠸⠨⠨⠈⠋"]            # 0x1d74b
+ - "𝝌": [t: "⠸⠨⠨⠯"]             # 0x1d74c
+ - "𝝍": [t: "⠸⠨⠨⠽"]             # 0x1d74d
+ - "𝝎": [t: "⠸⠨⠨⠺"]             # 0x1d74e
+ - "𝝏": [t: "⠸⠨⠈⠙"]             # 0x1d74f
+ - "𝝐": [t: "⠸⠨⠨⠑"]             # 0x1d750
+ - "𝝑": [t: "⠸⠨⠨⠈⠹"]            # 0x1d751
+ - "𝝒": [t: "⠸⠨⠨⠅"]             # 0x1d752
+ - "𝝓": [t: "⠸⠨⠨⠋"]             # 0x1d753
+ - "𝝔": [t: "⠸⠨⠨⠗"]             # 0x1d754
+ - "𝝕": [t: "⠸⠨⠨⠏"]             # 0x1d755
+ - "𝝖": [t: "⠠⠨⠸⠨⠠⠁"]           # 0x1d756
+ - "𝝗": [t: "⠠⠨⠸⠨⠠⠃"]           # 0x1d757
+ - "𝝘": [t: "⠠⠨⠸⠨⠠⠛"]           # 0x1d758
+ - "𝝙": [t: "⠠⠨⠸⠨⠠⠙"]           # 0x1d759
+ - "𝝚": [t: "⠠⠨⠸⠨⠠⠑"]           # 0x1d75a
+ - "𝝛": [t: "⠠⠨⠸⠨⠠⠵"]           # 0x1d75b
+ - "𝝜": [t: "⠠⠨⠸⠨⠠⠱"]           # 0x1d75c
+ - "𝝝": [t: "⠠⠨⠸⠨⠠⠹"]           # 0x1d75d
+ - "𝝞": [t: "⠠⠨⠸⠨⠠⠊"]           # 0x1d75e
+ - "𝝟": [t: "⠠⠨⠸⠨⠠⠅"]           # 0x1d75f
+ - "𝝠": [t: "⠠⠨⠸⠨⠠⠇"]           # 0x1d760
+ - "𝝡": [t: "⠠⠨⠸⠨⠠⠍"]           # 0x1d761
+ - "𝝢": [t: "⠠⠨⠸⠨⠠⠝"]           # 0x1d762
+ - "𝝣": [t: "⠠⠨⠸⠨⠠⠭"]           # 0x1d763
+ - "𝝤": [t: "⠠⠨⠸⠨⠠⠕"]           # 0x1d764
+ - "𝝥": [t: "⠠⠨⠸⠨⠠⠏"]           # 0x1d765
+ - "𝝦": [t: "⠠⠨⠸⠨⠠⠗"]           # 0x1d766
+ - "𝝧": [t: "⠠⠨⠸⠨⠠⠹"]           # 0x1d767
+ - "𝝨": [t: "⠠⠨⠸⠨⠠⠎"]           # 0x1d768
+ - "𝝩": [t: "⠠⠨⠸⠨⠠⠞"]           # 0x1d769
+ - "𝝪": [t: "⠠⠨⠸⠨⠠⠥"]           # 0x1d76a
+ - "𝝫": [t: "⠠⠨⠸⠨⠠⠋"]           # 0x1d76b
+ - "𝝬": [t: "⠠⠨⠸⠨⠠⠯"]           # 0x1d76c
+ - "𝝭": [t: "⠠⠨⠸⠨⠠⠽"]           # 0x1d76d
+ - "𝝮": [t: "⠠⠨⠸⠨⠠⠺"]           # 0x1d76e
+ - "𝝯": [t: "⠠⠨⠸⠨⠫"]            # 0x1d76f
+ - "𝝰": [t: "⠠⠨⠸⠨⠁"]            # 0x1d770
+ - "𝝱": [t: "⠠⠨⠸⠨⠃"]            # 0x1d771
+ - "𝝲": [t: "⠠⠨⠸⠨⠛"]            # 0x1d772
+ - "𝝳": [t: "⠠⠨⠸⠨⠙"]            # 0x1d773
+ - "𝝴": [t: "⠠⠨⠸⠨⠑"]            # 0x1d774
+ - "𝝵": [t: "⠠⠨⠸⠨⠵"]            # 0x1d775
+ - "𝝶": [t: "⠠⠨⠸⠨⠱"]            # 0x1d776
+ - "𝝷": [t: "⠠⠨⠸⠨⠹"]            # 0x1d777
+ - "𝝸": [t: "⠠⠨⠸⠨⠊"]            # 0x1d778
+ - "𝝹": [t: "⠠⠨⠸⠨⠅"]            # 0x1d779
+ - "𝝺": [t: "⠠⠨⠸⠨⠇"]            # 0x1d77a
+ - "𝝻": [t: "⠠⠨⠸⠨⠍"]            # 0x1d77b
+ - "𝝼": [t: "⠠⠨⠸⠨⠝"]            # 0x1d77c
+ - "𝝽": [t: "⠠⠨⠸⠨⠭"]            # 0x1d77d
+ - "𝝾": [t: "⠠⠨⠸⠨⠕"]            # 0x1d77e
+ - "𝝿": [t: "⠠⠨⠸⠨⠏"]            # 0x1d77f
+ - "𝞀": [t: "⠠⠨⠸⠨⠗"]            # 0x1d780
+ - "𝞁": [t: "⠠⠨⠸⠨⠈⠎"]           # 0x1d781
+ - "𝞂": [t: "⠠⠨⠸⠨⠎"]            # 0x1d782
+ - "𝞃": [t: "⠠⠨⠸⠨⠞"]            # 0x1d783
+ - "𝞄": [t: "⠠⠨⠸⠨⠥"]            # 0x1d784
+ - "𝞅": [t: "⠠⠨⠸⠨⠈⠋"]           # 0x1d785
+ - "𝞆": [t: "⠠⠨⠸⠨⠯"]            # 0x1d786
+ - "𝞇": [t: "⠠⠨⠸⠨⠽"]            # 0x1d787
+ - "𝞈": [t: "⠠⠨⠸⠨⠺"]            # 0x1d788
+ - "𝞉": [t: "⠠⠨⠸⠈⠙"]            # 0x1d789
+ - "𝞊": [t: "⠠⠨⠸⠨⠑"]            # 0x1d78a
+ - "𝞋": [t: "⠠⠨⠸⠨⠈⠹"]           # 0x1d78b
+ - "𝞌": [t: "⠠⠨⠸⠨⠅"]            # 0x1d78c
+ - "𝞍": [t: "⠠⠨⠸⠨⠋"]            # 0x1d78d
+ - "𝞎": [t: "⠠⠨⠸⠨⠗"]            # 0x1d78e
+ - "𝞏": [t: "⠠⠨⠸⠨⠏"]            # 0x1d78f
+ - "𝞐": [t: "⠠⠨⠸⠨⠨⠠⠁"]          # 0x1d790
+ - "𝞑": [t: "⠠⠨⠸⠨⠨⠠⠃"]          # 0x1d791
+ - "𝞒": [t: "⠠⠨⠸⠨⠨⠠⠛"]          # 0x1d792
+ - "𝞓": [t: "⠠⠨⠸⠨⠨⠠⠙"]          # 0x1d793
+ - "𝞔": [t: "⠠⠨⠸⠨⠨⠠⠑"]          # 0x1d794
+ - "𝞕": [t: "⠠⠨⠸⠨⠨⠠⠵"]          # 0x1d795
+ - "𝞖": [t: "⠠⠨⠸⠨⠨⠠⠱"]          # 0x1d796
+ - "𝞗": [t: "⠠⠨⠸⠨⠨⠠⠹"]          # 0x1d797
+ - "𝞘": [t: "⠠⠨⠸⠨⠨⠠⠊"]          # 0x1d798
+ - "𝞙": [t: "⠠⠨⠸⠨⠨⠠⠅"]          # 0x1d799
+ - "𝞚": [t: "⠠⠨⠸⠨⠨⠠⠇"]          # 0x1d79a
+ - "𝞛": [t: "⠠⠨⠸⠨⠨⠠⠍"]          # 0x1d79b
+ - "𝞜": [t: "⠠⠨⠸⠨⠨⠠⠝"]          # 0x1d79c
+ - "𝞝": [t: "⠠⠨⠸⠨⠨⠠⠭"]          # 0x1d79d
+ - "𝞞": [t: "⠠⠨⠸⠨⠨⠠⠕"]          # 0x1d79e
+ - "𝞟": [t: "⠠⠨⠸⠨⠨⠠⠏"]          # 0x1d79f
+ - "𝞠": [t: "⠠⠨⠸⠨⠨⠠⠗"]          # 0x1d7a0
+ - "𝞡": [t: "⠠⠨⠸⠨⠨⠠⠹"]          # 0x1d7a1
+ - "𝞢": [t: "⠠⠨⠸⠨⠨⠠⠎"]          # 0x1d7a2
+ - "𝞣": [t: "⠠⠨⠸⠨⠨⠠⠞"]          # 0x1d7a3
+ - "𝞤": [t: "⠠⠨⠸⠨⠨⠠⠥"]          # 0x1d7a4
+ - "𝞥": [t: "⠠⠨⠸⠨⠨⠠⠋"]          # 0x1d7a5
+ - "𝞦": [t: "⠠⠨⠸⠨⠨⠠⠯"]          # 0x1d7a6
+ - "𝞧": [t: "⠠⠨⠸⠨⠨⠠⠽"]          # 0x1d7a7
+ - "𝞨": [t: "⠠⠨⠸⠨⠨⠠⠺"]          # 0x1d7a8
+ - "𝞩": [t: "⠠⠨⠸⠨⠨⠫"]           # 0x1d7a9
+ - "𝞪": [t: "⠠⠨⠸⠨⠨⠁"]           # 0x1d7aa
+ - "𝞫": [t: "⠠⠨⠸⠨⠨⠃"]           # 0x1d7ab
+ - "𝞬": [t: "⠠⠨⠸⠨⠨⠛"]           # 0x1d7ac
+ - "𝞭": [t: "⠠⠨⠸⠨⠨⠙"]           # 0x1d7ad
+ - "𝞮": [t: "⠠⠨⠸⠨⠨⠑"]           # 0x1d7ae
+ - "𝞯": [t: "⠠⠨⠸⠨⠨⠵"]           # 0x1d7af
+ - "𝞰": [t: "⠠⠨⠸⠨⠨⠱"]           # 0x1d7b0
+ - "𝞱": [t: "⠠⠨⠸⠨⠨⠹"]           # 0x1d7b1
+ - "𝞲": [t: "⠠⠨⠸⠨⠨⠊"]           # 0x1d7b2
+ - "𝞳": [t: "⠠⠨⠸⠨⠨⠅"]           # 0x1d7b3
+ - "𝞴": [t: "⠠⠨⠸⠨⠨⠇"]           # 0x1d7b4
+ - "𝞵": [t: "⠠⠨⠸⠨⠨⠍"]           # 0x1d7b5
+ - "𝞶": [t: "⠠⠨⠸⠨⠨⠝"]           # 0x1d7b6
+ - "𝞷": [t: "⠠⠨⠸⠨⠨⠭"]           # 0x1d7b7
+ - "𝞸": [t: "⠠⠨⠸⠨⠨⠕"]           # 0x1d7b8
+ - "𝞹": [t: "⠠⠨⠸⠨⠨⠏"]           # 0x1d7b9
+ - "𝞺": [t: "⠠⠨⠸⠨⠨⠗"]           # 0x1d7ba
+ - "𝞻": [t: "⠠⠨⠸⠨⠨⠈⠎"]          # 0x1d7bb
+ - "𝞼": [t: "⠠⠨⠸⠨⠨⠎"]           # 0x1d7bc
+ - "𝞽": [t: "⠠⠨⠸⠨⠨⠞"]           # 0x1d7bd
+ - "𝞾": [t: "⠠⠨⠸⠨⠨⠥"]           # 0x1d7be
+ - "𝞿": [t: "⠠⠨⠸⠨⠨⠈⠋"]          # 0x1d7bf
+ - "𝟀": [t: "⠠⠨⠸⠨⠨⠯"]           # 0x1d7c0
+ - "𝟁": [t: "⠠⠨⠸⠨⠨⠽"]           # 0x1d7c1
+ - "𝟂": [t: "⠠⠨⠸⠨⠨⠺"]           # 0x1d7c2
+ - "𝟃": [t: "⠠⠨⠸⠨⠈⠙"]           # 0x1d7c3
+ - "𝟄": [t: "⠠⠨⠸⠨⠨⠑"]           # 0x1d7c4
+ - "𝟅": [t: "⠠⠨⠸⠨⠨⠈⠹"]          # 0x1d7c5
+ - "𝟆": [t: "⠠⠨⠸⠨⠨⠅"]           # 0x1d7c6
+ - "𝟇": [t: "⠠⠨⠸⠨⠨⠋"]           # 0x1d7c7
+ - "𝟈": [t: "⠠⠨⠸⠨⠨⠗"]           # 0x1d7c8
+ - "𝟉": [t: "⠠⠨⠸⠨⠨⠏"]           # 0x1d7c9
+ - "𝟎": [t: "⠸⠼⠴"]              # 0x1d7ce
+ - "𝟏": [t: "⠸⠼⠂"]              # 0x1d7cf
+ - "𝟐": [t: "⠸⠼⠆"]              # 0x1d7d0
+ - "𝟑": [t: "⠸⠼⠒"]              # 0x1d7d1
+ - "𝟒": [t: "⠸⠼⠲"]              # 0x1d7d2
+ - "𝟓": [t: "⠸⠼⠢"]              # 0x1d7d3
+ - "𝟔": [t: "⠸⠼⠖"]              # 0x1d7d4
+ - "𝟕": [t: "⠸⠼⠶"]              # 0x1d7d5
+ - "𝟖": [t: "⠸⠼⠦"]              # 0x1d7d6
+ - "𝟗": [t: "⠸⠼⠔"]              # 0x1d7d7
+ - "𝟘": [t: "⠈⠼⠴"]              # 0x1d7d8
+ - "𝟙": [t: "⠈⠼⠂"]              # 0x1d7d9
+ - "𝟚": [t: "⠈⠼⠆"]              # 0x1d7da
+ - "𝟛": [t: "⠈⠼⠒"]              # 0x1d7db
+ - "𝟜": [t: "⠈⠼⠲"]              # 0x1d7dc
+ - "𝟝": [t: "⠈⠼⠢"]              # 0x1d7dd
+ - "𝟞": [t: "⠈⠼⠖"]              # 0x1d7de
+ - "𝟟": [t: "⠈⠼⠶"]              # 0x1d7df
+ - "𝟠": [t: "⠈⠼⠦"]              # 0x1d7e0
+ - "𝟡": [t: "⠈⠼⠔"]              # 0x1d7e1
+ - "𝟢": [t: "⠠⠨⠼⠴"]             # 0x1d7e2
+ - "𝟣": [t: "⠠⠨⠼⠂"]             # 0x1d7e3
+ - "𝟤": [t: "⠠⠨⠼⠆"]             # 0x1d7e4
+ - "𝟥": [t: "⠠⠨⠼⠒"]             # 0x1d7e5
+ - "𝟦": [t: "⠠⠨⠼⠲"]             # 0x1d7e6
+ - "𝟧": [t: "⠠⠨⠼⠢"]             # 0x1d7e7
+ - "𝟨": [t: "⠠⠨⠼⠖"]             # 0x1d7e8
+ - "𝟩": [t: "⠠⠨⠼⠶"]             # 0x1d7e9
+ - "𝟪": [t: "⠠⠨⠼⠦"]             # 0x1d7ea
+ - "𝟫": [t: "⠠⠨⠼⠔"]             # 0x1d7eb
+ - "𝟬": [t: "⠠⠨⠸⠼⠴"]            # 0x1d7ec
+ - "𝟭": [t: "⠠⠨⠸⠼⠂"]            # 0x1d7ed
+ - "𝟮": [t: "⠠⠨⠸⠼⠆"]            # 0x1d7ee
+ - "𝟯": [t: "⠠⠨⠸⠼⠒"]            # 0x1d7ef
+ - "𝟰": [t: "⠠⠨⠸⠼⠲"]            # 0x1d7f0
+ - "𝟱": [t: "⠠⠨⠸⠼⠢"]            # 0x1d7f1
+ - "𝟲": [t: "⠠⠨⠸⠼⠖"]            # 0x1d7f2
+ - "𝟳": [t: "⠠⠨⠸⠼⠶"]            # 0x1d7f3
+ - "𝟴": [t: "⠠⠨⠸⠼⠦"]            # 0x1d7f4
+ - "𝟵": [t: "⠠⠨⠸⠼⠔"]            # 0x1d7f5
+ - "𝟶": [t: "⠴"]                # 0x1d7f6
+ - "𝟷": [t: "⠂"]                # 0x1d7f7
+ - "𝟸": [t: "⠆"]                # 0x1d7f8
+ - "𝟹": [t: "⠒"]                # 0x1d7f9
+ - "𝟺": [t: "⠲"]                # 0x1d7fa
+ - "𝟻": [t: "⠢"]                # 0x1d7fb
+ - "𝟼": [t: "⠖"]                # 0x1d7fc
+ - "𝟽": [t: "⠶"]                # 0x1d7fd
+ - "𝟾": [t: "⠦"]                # 0x1d7fe
+ - "𝟿": [t: "⠔"]                # 0x1d7ff
+ - "🄀": [t: "⠴⠸⠲"]              # 0x1f100
+ - "🄁": [t: "⠴⠠"]               # 0x1f101
+ - "🄂": [t: "⠂⠠"]               # 0x1f102
+ - "🄃": [t: "⠆⠠"]               # 0x1f103
+ - "🄄": [t: "⠒⠠"]               # 0x1f104
+ - "🄅": [t: "⠲⠠"]               # 0x1f105
+ - "🄆": [t: "⠢⠠"]               # 0x1f106
+ - "🄇": [t: "⠖⠠"]               # 0x1f107
+ - "🄈": [t: "⠶⠠"]               # 0x1f108
+ - "🄉": [t: "⠦⠠"]               # 0x1f109
+ - "🄊": [t: "⠔⠠"]               # 0x1f10a
+ - "🄋": [t: "⠫⠉⠸⠫⠠⠨⠼⠴⠻"]        # 0x1f10b
+ - "🄌": [t: "⠫⠸⠉⠸⠫⠠⠨⠼⠴⠻"]       # 0x1f10c
+ - "🄐": [t: "⠷⠠⠁⠾"]             # 0x1f110
+ - "🄑": [t: "⠷⠠⠃⠾"]             # 0x1f111
+ - "🄒": [t: "⠷⠠⠉⠾"]             # 0x1f112
+ - "🄓": [t: "⠷⠠⠙⠾"]             # 0x1f113
+ - "🄔": [t: "⠷⠠⠑⠾"]             # 0x1f114
+ - "🄕": [t: "⠷⠠⠋⠾"]             # 0x1f115
+ - "🄖": [t: "⠷⠠⠛⠾"]             # 0x1f116
+ - "🄗": [t: "⠷⠠⠓⠾"]             # 0x1f117
+ - "🄘": [t: "⠷⠠⠊⠾"]             # 0x1f118
+ - "🄙": [t: "⠷⠠⠚⠾"]             # 0x1f119
+ - "🄚": [t: "⠷⠠⠅⠾"]             # 0x1f11a
+ - "🄛": [t: "⠷⠠⠇⠾"]             # 0x1f11b
+ - "🄜": [t: "⠷⠠⠍⠾"]             # 0x1f11c
+ - "🄝": [t: "⠷⠠⠝⠾"]             # 0x1f11d
+ - "🄞": [t: "⠷⠠⠕⠾"]             # 0x1f11e
+ - "🄟": [t: "⠷⠠⠏⠾"]             # 0x1f11f
+ - "🄠": [t: "⠷⠠⠟⠾"]             # 0x1f120
+ - "🄡": [t: "⠷⠠⠗⠾"]             # 0x1f121
+ - "🄢": [t: "⠷⠠⠎⠾"]             # 0x1f122
+ - "🄣": [t: "⠷⠠⠞⠾"]             # 0x1f123
+ - "🄤": [t: "⠷⠠⠥⠾"]             # 0x1f124
+ - "🄥": [t: "⠷⠠⠧⠾"]             # 0x1f125
+ - "🄦": [t: "⠷⠠⠺⠾"]             # 0x1f126
+ - "🄧": [t: "⠷⠠⠭⠾"]             # 0x1f127
+ - "🄨": [t: "⠷⠠⠽⠾"]             # 0x1f128
+ - "🄩": [t: "⠷⠠⠵⠾"]             # 0x1f129
+ - "🄰": [t: "⠫⠲⠸⠫⠠⠁⠻"]          # 0x1f130
+ - "🄱": [t: "⠫⠲⠸⠫⠠⠃⠻"]          # 0x1f131
+ - "🄲": [t: "⠫⠲⠸⠫⠠⠉⠻"]          # 0x1f132
+ - "🄳": [t: "⠫⠲⠸⠫⠠⠙⠻"]          # 0x1f133
+ - "🄴": [t: "⠫⠲⠸⠫⠠⠑⠻"]          # 0x1f134
+ - "🄵": [t: "⠫⠲⠸⠫⠠⠋⠻"]          # 0x1f135
+ - "🄶": [t: "⠫⠲⠸⠫⠠⠛⠻"]          # 0x1f136
+ - "🄷": [t: "⠫⠲⠸⠫⠠⠓⠻"]          # 0x1f137
+ - "🄸": [t: "⠫⠲⠸⠫⠠⠊⠻"]          # 0x1f138
+ - "🄹": [t: "⠫⠲⠸⠫⠠⠚⠻"]          # 0x1f139
+ - "🄺": [t: "⠫⠲⠸⠫⠠⠅⠻"]          # 0x1f13a
+ - "🄻": [t: "⠫⠲⠸⠫⠠⠇⠻"]          # 0x1f13b
+ - "🄼": [t: "⠫⠲⠸⠫⠠⠍⠻"]          # 0x1f13c
+ - "🄽": [t: "⠫⠲⠸⠫⠠⠝⠻"]          # 0x1f13d
+ - "🄾": [t: "⠫⠲⠸⠫⠠⠕⠻"]          # 0x1f13e
+ - "🄿": [t: "⠫⠲⠸⠫⠠⠏⠻"]          # 0x1f13f
+ - "🅀": [t: "⠫⠲⠸⠫⠠⠟⠻"]          # 0x1f140
+ - "🅁": [t: "⠫⠲⠸⠫⠠⠗⠻"]          # 0x1f141
+ - "🅂": [t: "⠫⠲⠸⠫⠠⠎⠻"]          # 0x1f142
+ - "🅃": [t: "⠫⠲⠸⠫⠠⠞⠻"]          # 0x1f143
+ - "🅄": [t: "⠫⠲⠸⠫⠠⠥⠻"]          # 0x1f144
+ - "🅅": [t: "⠫⠲⠸⠫⠠⠧⠻"]          # 0x1f145
+ - "🅆": [t: "⠫⠲⠸⠫⠠⠺⠻"]          # 0x1f146
+ - "🅇": [t: "⠫⠲⠸⠫⠠⠭⠻"]          # 0x1f147
+ - "🅈": [t: "⠫⠲⠸⠫⠠⠽⠻"]          # 0x1f148
+ - "🅉": [t: "⠫⠲⠸⠫⠠⠵⠻"]          # 0x1f149
+ - "🅐": [t: "⠫⠸⠉⠸⠫⠠⠁⠻"]         # 0x1f150
+ - "🅑": [t: "⠫⠸⠉⠸⠫⠠⠃⠻"]         # 0x1f151
+ - "🅒": [t: "⠫⠸⠉⠸⠫⠠⠉⠻"]         # 0x1f152
+ - "🅓": [t: "⠫⠸⠉⠸⠫⠠⠙⠻"]         # 0x1f153
+ - "🅔": [t: "⠫⠸⠉⠸⠫⠠⠑⠻"]         # 0x1f154
+ - "🅕": [t: "⠫⠸⠉⠸⠫⠠⠋⠻"]         # 0x1f155
+ - "🅖": [t: "⠫⠸⠉⠸⠫⠠⠛⠻"]         # 0x1f156
+ - "🅗": [t: "⠫⠸⠉⠸⠫⠠⠓⠻"]         # 0x1f157
+ - "🅘": [t: "⠫⠸⠉⠸⠫⠠⠊⠻"]         # 0x1f158
+ - "🅙": [t: "⠫⠸⠉⠸⠫⠠⠚⠻"]         # 0x1f159
+ - "🅚": [t: "⠫⠸⠉⠸⠫⠠⠅⠻"]         # 0x1f15a
+ - "🅛": [t: "⠫⠸⠉⠸⠫⠠⠇⠻"]         # 0x1f15b
+ - "🅜": [t: "⠫⠸⠉⠸⠫⠠⠍⠻"]         # 0x1f15c
+ - "🅝": [t: "⠫⠸⠉⠸⠫⠠⠝⠻"]         # 0x1f15d
+ - "🅞": [t: "⠫⠸⠉⠸⠫⠠⠕⠻"]         # 0x1f15e
+ - "🅟": [t: "⠫⠸⠉⠸⠫⠠⠏⠻"]         # 0x1f15f
+ - "🅠": [t: "⠫⠸⠉⠸⠫⠠⠟⠻"]         # 0x1f160
+ - "🅡": [t: "⠫⠸⠉⠸⠫⠠⠗⠻"]         # 0x1f161
+ - "🅢": [t: "⠫⠸⠉⠸⠫⠠⠎⠻"]         # 0x1f162
+ - "🅣": [t: "⠫⠸⠉⠸⠫⠠⠞⠻"]         # 0x1f163
+ - "🅤": [t: "⠫⠸⠉⠸⠫⠠⠥⠻"]         # 0x1f164
+ - "🅥": [t: "⠫⠸⠉⠸⠫⠠⠧⠻"]         # 0x1f165
+ - "🅦": [t: "⠫⠸⠉⠸⠫⠠⠺⠻"]         # 0x1f166
+ - "🅧": [t: "⠫⠸⠉⠸⠫⠠⠭⠻"]         # 0x1f167
+ - "🅨": [t: "⠫⠸⠉⠸⠫⠠⠽⠻"]         # 0x1f168
+ - "🅩": [t: "⠫⠸⠉⠸⠫⠠⠵⠻"]         # 0x1f169
+ - "🅰": [t: "⠫⠸⠲⠸⠫⠠⠁⠻"]         # 0x1f170
+ - "🅱": [t: "⠫⠸⠲⠸⠫⠠⠃⠻"]         # 0x1f171
+ - "🅲": [t: "⠫⠸⠲⠸⠫⠠⠉⠻"]         # 0x1f172
+ - "🅳": [t: "⠫⠸⠲⠸⠫⠠⠙⠻"]         # 0x1f173
+ - "🅴": [t: "⠫⠸⠲⠸⠫⠠⠑⠻"]         # 0x1f174
+ - "🅵": [t: "⠫⠸⠲⠸⠫⠠⠋⠻"]         # 0x1f175
+ - "🅶": [t: "⠫⠸⠲⠸⠫⠠⠛⠻"]         # 0x1f176
+ - "🅷": [t: "⠫⠸⠲⠸⠫⠠⠓⠻"]         # 0x1f177
+ - "🅸": [t: "⠫⠸⠲⠸⠫⠠⠊⠻"]         # 0x1f178
+ - "🅹": [t: "⠫⠸⠲⠸⠫⠠⠚⠻"]         # 0x1f179
+ - "🅺": [t: "⠫⠸⠲⠸⠫⠠⠅⠻"]         # 0x1f17a
+ - "🅻": [t: "⠫⠸⠲⠸⠫⠠⠇⠻"]         # 0x1f17b
+ - "🅼": [t: "⠫⠸⠲⠸⠫⠠⠍⠻"]         # 0x1f17c
+ - "🅽": [t: "⠫⠸⠲⠸⠫⠠⠝⠻"]         # 0x1f17d
+ - "🅾": [t: "⠫⠸⠲⠸⠫⠠⠕⠻"]         # 0x1f17e
+ - "🅿": [t: "⠫⠸⠲⠸⠫⠠⠏⠻"]         # 0x1f17f
+ - "🆀": [t: "⠫⠸⠲⠸⠫⠠⠟⠻"]         # 0x1f180
+ - "🆁": [t: "⠫⠸⠲⠸⠫⠠⠗⠻"]         # 0x1f181
+ - "🆂": [t: "⠫⠸⠲⠸⠫⠠⠎⠻"]         # 0x1f182
+ - "🆃": [t: "⠫⠸⠲⠸⠫⠠⠞⠻"]         # 0x1f183
+ - "🆄": [t: "⠫⠸⠲⠸⠫⠠⠥⠻"]         # 0x1f184
+ - "🆅": [t: "⠫⠸⠲⠸⠫⠠⠧⠻"]         # 0x1f185
+ - "🆆": [t: "⠫⠸⠲⠸⠫⠠⠺⠻"]         # 0x1f186
+ - "🆇": [t: "⠫⠸⠲⠸⠫⠠⠭⠻"]         # 0x1f187
+ - "🆈": [t: "⠫⠸⠲⠸⠫⠠⠽⠻"]         # 0x1f188
+ - "🆉": [t: "⠫⠸⠲⠸⠫⠠⠵⠻"]         # 0x1f189
+  # --- Nemeth Default Alphabet bold chars. ---
+  # --- Nemeth Default Alphabet bold-fraktur chars. ---
+  # --- Nemeth Default Alphabet bold-italic chars. ---
+  # --- Nemeth Default Alphabet bold-script chars. ---
+  # --- Nemeth Default Alphabet circled chars. ---
+  # --- Nemeth Default Alphabet circled-sans-serif chars. ---
+  # --- Nemeth Default Alphabet comma chars. ---
+  # --- Nemeth Default Alphabet double-circled chars. ---
+  # --- Nemeth Default Alphabet double-struck chars. ---
+  # --- Nemeth Default Alphabet fraktur chars. ---
+  # --- Nemeth Default Alphabet fullwidth chars. ---
+  # --- Nemeth Default Alphabet italic chars. ---
+  # --- Nemeth Default Alphabet monospace chars. ---
+  # --- Nemeth Default Alphabet negative-circled chars. ---
+  # --- Nemeth Default Alphabet negative-circled-sans-serif chars. ---
+  # --- Nemeth Default Alphabet negative-squared chars. ---
+  # --- Nemeth Default Alphabet normal chars. ---
+  # --- Nemeth Default Alphabet parenthesized chars. ---
+  # --- Nemeth Default Alphabet period chars. ---
+  # --- Nemeth Default Alphabet sans-serif chars. ---
+  # --- Nemeth Default Alphabet sans-serif-bold chars. ---
+  # --- Nemeth Default Alphabet sans-serif-bold-italic chars. ---
+  # --- Nemeth Default Alphabet sans-serif-italic chars. ---
+  # --- Nemeth Default Alphabet script chars. ---
+  # --- Nemeth Default Alphabet squared chars. ---
+  # --- Nemeth Default Alphabet sub chars. ---
+  # --- Nemeth Default Alphabet super chars. ---
+  # --- Nemeth Default Characters latin-lower-phonetic chars. ---
+  # --- Nemeth Default Characters math_geometry chars. ---
+  # --- Nemeth Default Characters math_symbols chars. ---
+  # --- Nemeth Default Characters rest chars. ---
+ # overwrites from Murray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
