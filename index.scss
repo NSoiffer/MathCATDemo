@@ -34,6 +34,11 @@ h2:first-child {
     padding: .25em;
     min-height: 3em;
     width: 100%;
+    white-space: pre;
+  }
+
+textarea {
+  word-wrap: normal;
 }
 
 #speech, #braille {
@@ -43,5 +48,8 @@ h2:first-child {
   background-color: #F8F8F8;
   padding: .5em .5em .5em 1.5em;
   overflow: auto;
-  white-space: pre;
+}
+
+#braille {
+  font-size: 150%;
 }

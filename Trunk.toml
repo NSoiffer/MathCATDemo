@@ -6,3 +6,7 @@ open = true		# changed from default
 # Disable auto-reload of the web app.
 no_autoreload = false
 
+[[hooks]]
+stage = "post_build"
+command = "sh"
+command_arguments = ["-c", "cp -r ../MathCAT/Rules dist"]

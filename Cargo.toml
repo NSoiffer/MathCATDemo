@@ -5,11 +5,41 @@ edition = "2018"
 
 
 [dependencies]
-yew = "0.18"
-wasm-bindgen = "0.2"
+yew = "0.18.0"
+wasm-bindgen = "0.2.78"
+wasm-bindgen-futures = "0.4.28"
+js-sys = "0.3.35"
+futures = "0.3.15"
+
+anyhow = "1"    # dependency in yew was removed 11/11/21, so it will show up one of these days and this can be deleted
+error-chain = "0.12.4"
 lazy_static = "1.4.0"
-regex = "1.5"
+regex = "1.5.4"
+log = "0.4.0"
+console_log = { version = "0.2.0", optional = true }
+cfg-if = "1.0"
+
+[dependencies.getrandom]
+version = "0.2"
+features = ["js"]
+
+[features]
+default = ["console_log"]
+wasm = []
+
+[dependencies.MathCAT]
+path = "../MathCAT/"
 
 [dependencies.web-sys]
-version = "0.3"
-features = ["HtmlInputElement"]
+version = "0.3.35"
+features = [
+    "HtmlInputElement",
+    "HtmlImageElement", # remove after testing example code
+    # probably not all of these are needed -- copied from an example
+    "Headers",
+    "Request",
+    "RequestInit",
+    "RequestMode",
+    "Response",
+    "Window",
+]

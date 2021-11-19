@@ -22,7 +22,7 @@
       } else {  // should be "MathML"
         mathml = MathJax.mathml2mml(math_str, options);
       };
-      console.log("ConvertToMathML:\n" + mathml.toString());
+      // console.log("ConvertToMathML:\n" + mathml.toString());
       return mathml;
     }
 
@@ -37,6 +37,22 @@
     //   MathJax.startup.document.clear();
     //   MathJax.startup.document.updateDocument();
     // }
+    function GetFile(name) {
+      console.log("in GetFile: " + name);
+      fetch(name)
+        .then(response => {
+          if (response.status >= 200 && response.status <= 299) {
+            console.log("response");
+            return response.text()
+          } else {
+            throw Error(response.statusText);
+          }
+        })
+        .then(text => {console.log("text: " + text); return text})
+        .catch(err => {console.log("GetFile error: " + err); return err});
+        console.log("result: ", result);
+        return result;
+    }
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js"></script>
     <link data-trunk rel="sass" href="index.scss" />

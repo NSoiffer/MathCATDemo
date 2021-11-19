@@ -1,13 +1,28 @@
+
 use yew::prelude::*;
 use yew::web_sys::Element;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement};
-use yew::services::ConsoleService;
 use regex::Regex;
 #[macro_use]
 extern crate lazy_static;
 
+use wasm_bindgen::prelude::*;
+use cfg_if::cfg_if;
 
+cfg_if! {
+    if #[cfg(feature = "console_log")] {
+        fn init_log() {
+            use log::Level;
+            console_log::init_with_level(Level::Trace).expect("error initializing log");
+        }
+    } else {
+        fn init_log() {}
+    }
+}
+
+#[macro_use]
+extern crate log;
 
 #[derive(Debug)]
 enum Msg {
@@ -17,12 +32,15 @@ enum Msg {
     SpeechVerbosity(&'static str),
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
+    // MakeReq(String),
+    // Resp(Result<String, anyhow::Error>),
 }
 
 struct Model {
     // `ComponentLink` is like a reference to a component.
     // It can be used to send messages to the component
     link: ComponentLink<Self>,
+    math_string: String,
     mathml: String,
     display: Html,
     speech_style: &'static str,
@@ -31,20 +49,51 @@ struct Model {
     braille_code: &'static str,
     braille_display_as: &'static str,
     braille: String,
+    // fetch_task: Option<FetchTask>,  // testing fetch
 }
 
 static INPUT_MESSAGE: &'static str = "Enter math: use $...$ for TeX, `...` for ASCIIMath, <math>...</math> for MathML\n";
 static QUADRATIC_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
+
+fn update_speech_and_braille(component: &mut Model) {
+    use libmathcat::interface::*;
+    debug!("In update: SpeechStyle='{}', Verbosity='{}'", component.speech_style, component.verbosity);
+    SetMathML(component.mathml.to_string()).unwrap();
+    SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.to_string())).unwrap();
+    SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.to_string())).unwrap();
+    let speech = GetSpokenText().unwrap();
+    debug!("  speech: {}", speech);
+    component.speech = speech;
+    let mut braille = GetBraille().unwrap();
+    debug!("  braille: {}", braille);
+    debug!("view as: {}", component.braille_display_as);
+    if component.braille_display_as == "ASCIIBraille" {
+        lazy_static! {
+            static ref UNICODE_TO_ASCII: Vec<char> =
+                " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=".chars().collect();
+        };
+
+        let mut result = String::with_capacity(braille.len());
+        for ch in braille.chars() {
+            let i = (ch as usize - 0x2800) &0x3F;     // eliminate dots 7 and 8 if present 
+            result.push(UNICODE_TO_ASCII[i]);
+        }
+        braille = result;
+    }
+    component.braille = braille;
+}
 
 impl Component for Model {
     type Message = Msg;
     type Properties = ();
 
     fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        ConsoleService::info(format!("In Create").as_ref());
+        debug!("In Create");
+        // link.send_message(Msg::MakeReq("Rules/prefs.yaml".to_string()));
         Self {
             link,
-            mathml: INPUT_MESSAGE.to_string() + QUADRATIC_FORMULA,
+            math_string: INPUT_MESSAGE.to_string() + QUADRATIC_FORMULA,
+            mathml: String::default(),
             display: Html::VRef(yew::utils::document().create_element("div").unwrap().into()),
             speech_style: "ClearSpeak",
             verbosity: "Verbose",
@@ -52,15 +101,16 @@ impl Component for Model {
             braille_code: "Nemeth",
             braille_display_as: "Dots",
             braille: String::default(),
+            // fetch_task: None,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        ConsoleService::info(format!("In update: msg: {:?}", msg).as_ref());
+        debug!("In update: msg: {:?}", msg);
         match msg {
             Msg::SetMathML(value) => {
-                ConsoleService::info(format!("setting mathml\n{}`", value).as_ref());
-                self.mathml = value;
+                debug!("setting mathml\n{}`", value);
+                self.math_string = value;
                 true
             },
             Msg::NewMathML => {
@@ -72,7 +122,7 @@ impl Component for Model {
 
                 // Get the MathML input string, and clear any previous output
                 if let Html::VRef(node) = &self.display {
-                    let math_str = self.mathml.replace(INPUT_MESSAGE, "").trim().to_string();
+                    let math_str = self.math_string.replace(INPUT_MESSAGE, "").trim().to_string();
                     let mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
@@ -85,7 +135,10 @@ impl Component for Model {
                     };
                 
                     let mathjax_html = match mathml {
-                        Some(math) => mathml_to_chtml(math),
+                        Some(math) => {
+                            self.mathml = math.clone();
+                            mathml_to_chtml(math)
+                        },
                         None => {
                             let span = yew::utils::document().create_element("span").unwrap();
                             span.set_text_content(Some("Unrecognized Math -- use $...$ for TeX, `...` for ASCIIMath, or enter MathML"));
@@ -96,9 +149,7 @@ impl Component for Model {
                     let result = node.append_child(&mathjax_html);
                     if let Err(e) = result {
                         panic!("append_child returned error '{:?}'", e);
-                    }
-                    // update the output to include the new MathML
-                    // mathjax_update();
+                    };
                 };
                 true
             },
@@ -118,11 +169,13 @@ impl Component for Model {
                 self.braille_display_as = text;
                 true
             },
-        }
+        };
+        update_speech_and_braille(self);
+        return true;
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        ConsoleService::info(format!("In change").as_ref());
+        debug!("In change");
         // Should only return "true" if new properties are different to
         // previously received properties.
         // This component has no properties so we will always return "false".
@@ -175,7 +228,7 @@ impl Component for Model {
                             onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
                         <label for="Verbose">{"Verbose"}</label></td>
                 </tr></table>
-                <textarea id="speech" readonly=true rows="3" cols="80" data-hint=""  autocorrect="off">
+                <textarea id="speech" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
                     {&self.speech}
                 </textarea>
                 <h2>{"Braille"}</h2>
@@ -206,7 +259,6 @@ impl Component for Model {
     }
 }
 
-use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_name = "ConvertToMathML")]
@@ -215,10 +267,11 @@ extern "C" {
     #[wasm_bindgen(js_name = "ConvertToCHTML")]
     pub fn mathml_to_chtml(mathml: String) -> Element;
 
-    #[wasm_bindgen(js_name = "UpdateDocument")]
-    pub fn mathjax_update();
+    // #[wasm_bindgen(js_name = "GetFile")]
+    // pub fn get_file(name: String) -> String;
 }
 
 fn main() {
+    init_log();
     yew::start_app::<Model>();
 }
