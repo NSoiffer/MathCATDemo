@@ -1,0 +1,215 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <title>MathCAT Demo</title>
+
+    <!-- MathJax-related stuff -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+    MathJax = {
+      loader: {load: ['input/tex', 'input/asciimath']}
+    };
+
+    // Convert MathML, TeX (properly delimitated), and ASCIIMath (properly delimitated)
+    function ConvertToMathML(math_str, math_format) {
+      MathJax.startup.defaultReady();
+      let options = {display: true};
+      let mathml;
+      if (math_format == 'ASCIIMath') {
+        mathml = MathJax.asciimath2mml(math_str, options);
+      } else if (math_format == 'TeX') {
+        mathml = MathJax.tex2mml(math_str, options);
+      } else {  // should be "MathML"
+        mathml = MathJax.mathml2mml(math_str, options);
+      };
+      // console.log("ConvertToMathML:\n" + mathml.toString());
+      return mathml;
+    }
+
+    // Get the MathJax version of the MathML
+    function ConvertToCHTML(mathml) {
+      MathJax.startup.defaultReady();
+      return MathJax.mathml2chtml(mathml);
+    }
+
+    // helper function because Rust-side wasn't working per docs
+    function GetTextOfElement(id) {
+      let element = document.getElementById(id);
+      if (element) {
+        return element.value;
+      } else {
+        return "";
+      }
+    }
+
+    function RustInit(str) {
+      eval(str);
+    }
+    </script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
+
+    <!-- AWS Poly speech/sync highlighting stuff -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1033.0.min.js"></script>
+    <script type="text/javascript">
+      window['MathCAT'] = {};
+
+      // Function invoked by button click
+      function SpeakText(text) {
+        if (window['MathCAT'].readAloudAudio) {
+          // pause current playback to allow new playback
+          window['MathCAT'].readAloudAudio.pause();
+          removeHighlight(window['MathCAT'].readAloudCurrentMark);
+          console.warn("paused playback");
+        }
+
+        // Create the JSON parameters for getSynthesizeSpeechUrl
+        var speechParams = {
+            OutputFormat: "json",
+            Text: "<speak>" + text + "</speak>",
+            TextType: "ssml",
+            SpeechMarkTypes: ["ssml"],
+            VoiceId: "Joanna",
+            Engine: "standard",     // The neural engine currently does not support ssml marks
+        };
+
+        // Create the Polly service object and presigner object
+        speakTextWithPolly(speechParams);
+      }
+
+      // the following is adapted from https://github.com/arnog/mathlive/blob/master/src/editor/speech-read-aloud.ts
+      function speakTextWithPolly(speechParams) {
+        var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+        var signer = new AWS.Polly.Presigner(speechParams, polly);
+        polly.synthesizeSpeech(speechParams, (err, data) => {
+            if (err) {
+                console.warn('speakTextWithPolly error:', err, err.stack);
+                return;
+            }
+            if (!data || !data.AudioStream) {
+                return;
+            }
+            const response = new TextDecoder('utf-8').decode(
+                new Uint8Array(data.AudioStream)
+            );
+            window['MathCAT'] = {};
+            window['MathCAT'].readAloudMarks = response
+                .split('\n')
+                .map((x) => (x ? JSON.parse(x) : {}));
+            window['MathCAT'].readAloudTokens = [];
+            for (const mark of window['MathCAT'].readAloudMarks) {
+                if (mark.value) {
+                    window['MathCAT'].readAloudTokens.push(mark.value);
+                }
+            }
+            window['MathCAT'].readAloudCurrentMark = '';
+
+            // Request the audio
+            speechParams.OutputFormat = 'mp3';
+            speechParams.SpeechMarkTypes = [];
+            polly.synthesizeSpeech(speechParams, function (err, data) {
+                if (err) {
+                    console.warn('signer.synthesizeSpeech(' ,text, ') error:', err, err.stack);
+                    return;
+                }
+                if (!data || !data.AudioStream) {
+                    return;
+                }
+                const uInt8Array = new Uint8Array(data.AudioStream);
+                const blob = new Blob([uInt8Array.buffer], {
+                    type: 'audio/mpeg',
+                });
+                const url = URL.createObjectURL(blob);
+
+                if (!window['MathCAT'].readAloudAudio) {
+
+                    window['MathCAT'].readAloudAudio = new Audio();
+                    window['MathCAT'].readAloudAudio.addEventListener(
+                        'ended',
+                        () => {
+                          removeHighlight(window['MathCAT'].readAloudCurrentMark);
+                          window['MathCAT'] = {}; // flag indicate not currently speaking
+                        }
+                    );
+                    window['MathCAT'].readAloudAudio.addEventListener(
+                        'timeupdate',
+                        () => {
+                            let value = '';
+                            // The target, the atom we're looking for, is the one matching the current audio
+                            // plus 100 ms. By anticipating it a little bit, it feels more natural, otherwise it
+                            // feels like the highlighting is trailing the audio.
+                            const target =
+                                window['MathCAT'].readAloudAudio.currentTime *
+                                    1000 +
+                                100;
+
+                            // Find the smallest element which is bigger than the target time
+                            for (const mark of window['MathCAT'].readAloudMarks) {
+                                if (mark.time < target) {
+                                    value = mark.value;
+                                }
+                            }
+                            if (window['MathCAT'].readAloudCurrentMark !== value) {
+                                removeHighlight(window['MathCAT'].readAloudCurrentMark);
+                                window['MathCAT'].readAloudCurrentMark = value;
+                                highlightID( window['MathCAT'].readAloudCurrentMark);
+                            }
+                        }
+                    );
+                } else {
+                    window['MathCAT'].readAloudAudio.pause();
+                }
+
+                // finally, set up the audio source and play it, trigging the 'timeupdate' events.
+                window['MathCAT'].readAloudAudio.src = url;
+                window['MathCAT'].readAloudAudio.play();
+            });
+        });
+      }
+
+      function removeHighlight(id) {
+        if (id) {
+          let element = document.getElementById(id);
+          if (element) {
+            element.classList.remove('sync-highlight');
+          }
+        }
+      }
+
+      function highlightID(id) {
+        let element = document.getElementById(id);
+        if (element) {
+          element.classList.add('sync-highlight');
+        }
+      }
+    </script>
+
+    <link rel="stylesheet" href="/MathCATDemo/index-94cffb331b3b022c.css">
+
+<link rel="preload" href="/MathCATDemo/index-3a5754cb878a09e8_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-3a5754cb878a09e8.js"></head>
+<body><script type="module">import init from '/MathCATDemo/index-3a5754cb878a09e8.js';init('/MathCATDemo/index-3a5754cb878a09e8_bg.wasm');</script><script>(function () {
+    var url = 'ws://' + window.location.host + '/MathCATDemo/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
