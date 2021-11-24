@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
     <title>MathCAT Demo</title>
 
     <!-- MathJax-related stuff -->
@@ -47,7 +45,7 @@
       eval(str);
     }
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
 
     <!-- AWS Poly speech/sync highlighting stuff -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1033.0.min.js"></script>
@@ -184,6 +182,34 @@
       }
     </script>
 
-    <link data-trunk rel="sass" href="index.scss" />
-</head>
-</html>
+    <link rel="stylesheet" href="/MathCATDemo/index-94cffb331b3b022c.css">
+
+<link rel="preload" href="/MathCATDemo/index-3a5754cb878a09e8_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-3a5754cb878a09e8.js"></head>
+<body><script type="module">import init from '/MathCATDemo/index-3a5754cb878a09e8.js';init('/MathCATDemo/index-3a5754cb878a09e8_bg.wasm');</script><script>(function () {
+    var url = 'ws://' + window.location.host + '/MathCATDemo/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
