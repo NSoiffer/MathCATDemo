@@ -50,6 +50,17 @@ textarea {
   overflow: auto;
 }
 
+#outer-table {
+  width: 100%;
+}
+
 #braille {
   font-size: 150%;
+}
+
+.sync-highlight {
+  color: yellow;
+  background: blue;
+  padding: 1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
+  margin: -1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
 }

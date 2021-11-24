@@ -1,14 +1,16 @@
 
 use yew::prelude::*;
 use yew::web_sys::Element;
-use wasm_bindgen::JsCast;
-use web_sys::{HtmlInputElement};
+// use wasm_bindgen::JsCast;
+// use web_sys::{HtmlInputElement};
 use regex::Regex;
 #[macro_use]
 extern crate lazy_static;
 
 use wasm_bindgen::prelude::*;
 use cfg_if::cfg_if;
+use libmathcat::interface::*;
+
 
 cfg_if! {
     if #[cfg(feature = "console_log")] {
@@ -26,14 +28,12 @@ extern crate log;
 
 #[derive(Debug)]
 enum Msg {
-    SetMathML(String),
     NewMathML,
     SpeechStyle(&'static str),
     SpeechVerbosity(&'static str),
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
-    // MakeReq(String),
-    // Resp(Result<String, anyhow::Error>),
+    TTS(&'static str),
 }
 
 struct Model {
@@ -41,32 +41,38 @@ struct Model {
     // It can be used to send messages to the component
     link: ComponentLink<Self>,
     math_string: String,
-    mathml: String,
     display: Html,
     speech_style: &'static str,
     verbosity: &'static str,
     speech: String,
+    speak: bool,
     braille_code: &'static str,
     braille_display_as: &'static str,
     braille: String,
-    // fetch_task: Option<FetchTask>,  // testing fetch
+    tts: &'static str,
 }
 
 static INPUT_MESSAGE: &'static str = "Enter math: use $...$ for TeX, `...` for ASCIIMath, <math>...</math> for MathML\n";
-static QUADRATIC_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
+static START_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
+// static START_FORMULA: &'static str = r"$x = {t \over 2a}$";
 
 fn update_speech_and_braille(component: &mut Model) {
-    use libmathcat::interface::*;
-    debug!("In update: SpeechStyle='{}', Verbosity='{}'", component.speech_style, component.verbosity);
-    SetMathML(component.mathml.to_string()).unwrap();
+    if component.math_string.is_empty() {
+        return;
+    }
     SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.to_string())).unwrap();
     SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.to_string())).unwrap();
+    let tts = if component.tts == "Off" {"None"} else {component.tts};
+    SetPreference("TTS".to_string(), StringOrFloat::AsString(tts.to_string())).unwrap();
+    SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
     let speech = GetSpokenText().unwrap();
     debug!("  speech: {}", speech);
+    if component.speak && component.tts != "Off" {
+        speak_text(&speech);
+    }
     component.speech = speech;
+
     let mut braille = GetBraille().unwrap();
-    debug!("  braille: {}", braille);
-    debug!("view as: {}", component.braille_display_as);
     if component.braille_display_as == "ASCIIBraille" {
         lazy_static! {
             static ref UNICODE_TO_ASCII: Vec<char> =
@@ -81,6 +87,7 @@ fn update_speech_and_braille(component: &mut Model) {
         braille = result;
     }
     component.braille = braille;
+
 }
 
 impl Component for Model {
@@ -89,54 +96,58 @@ impl Component for Model {
 
     fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
         debug!("In Create");
-        // link.send_message(Msg::MakeReq("Rules/prefs.yaml".to_string()));
         Self {
             link,
-            math_string: INPUT_MESSAGE.to_string() + QUADRATIC_FORMULA,
-            mathml: String::default(),
+            math_string: String::default(),
             display: Html::VRef(yew::utils::document().create_element("div").unwrap().into()),
             speech_style: "ClearSpeak",
+            speak: true,
             verbosity: "Verbose",
             speech: String::default(),
             braille_code: "Nemeth",
             braille_display_as: "Dots",
             braille: String::default(),
-            // fetch_task: None,
+            tts: "SSML",
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        debug!("In update: msg: {:?}", msg);
-        match msg {
-            Msg::SetMathML(value) => {
-                debug!("setting mathml\n{}`", value);
-                self.math_string = value;
-                true
-            },
-            Msg::NewMathML => {
-                lazy_static! {
-                    static ref TEX: Regex = Regex::new("(?m)^(?P<start>\\$)(?P<math>.+?)(?P<end>\\$)$").unwrap();
-                    static ref ASCIIMATH: Regex = Regex::new("(?m)^(?P<start>`)(?P<math>.+?)(?P<end>`)$").unwrap();
-                    static ref MATHML: Regex = Regex::new("(?m)^(?P<start><)(?P<math>.+?)(?P<end>>)$").unwrap();
-                };
+        lazy_static! {
+            static ref TEX: Regex = Regex::new("(?m)^(?P<start>\\$)(?P<math>.+?)(?P<end>\\$)$").unwrap();
+            static ref ASCIIMATH: Regex = Regex::new("(?m)^(?P<start>`)(?P<math>.+?)(?P<end>`)$").unwrap();
+            static ref MATHML: Regex = Regex::new("(?m)^(?P<start><)(?P<math>.+?)(?P<end>>)$").unwrap();
+        };
 
+        debug!("In update: msg: {:?}", msg);
+        self.speak = true;      // most of the time we want to speak -- true off when we don't
+        match msg {
+            Msg::NewMathML => {
                 // Get the MathML input string, and clear any previous output
                 if let Html::VRef(node) = &self.display {
-                    let math_str = self.math_string.replace(INPUT_MESSAGE, "").trim().to_string();
-                    let mathml;
+                    let math_str = get_text_of_element("mathml-input");
+                    let math_str = math_str.replace(INPUT_MESSAGE, "").trim().to_string();
+                    let mut mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                     } else if let Some(caps) = ASCIIMATH.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "ASCIIMath"));
                     } else if MATHML.is_match(&math_str) {
-                        mathml = Some(string_to_mathml(&math_str, "MathML"));
+                        // Don't need to convert
+                        mathml = Some( math_str );
                     } else {
                         mathml = None;
                     };
-                
+
+                    // this adds ids and canonicalizes the MathML
+                    if let Some(math) = mathml {
+                        // MathJax bug https://github.com/mathjax/MathJax/issues/2805:  newline at end causes MathJaX to hang(!)
+                        mathml = Some( SetMathML(math).unwrap().trim_end().to_string() );
+                        debug!("MathML with ids: \n{}", mathml.as_ref().unwrap());
+                    }
+
                     let mathjax_html = match mathml {
                         Some(math) => {
-                            self.mathml = math.clone();
+                            self.math_string = math.clone();
                             mathml_to_chtml(math)
                         },
                         None => {
@@ -163,10 +174,16 @@ impl Component for Model {
             },
             Msg::BrailleCode(text) => {
                 self.braille_code = text;
+                self.speak = false;     // no change to speech when changing braille
                 true
             },
             Msg::BrailleDisplayAs(text) => {
                 self.braille_display_as = text;
+                self.speak = false;     // no change to speech when changing braille
+                true
+            },
+            Msg::TTS(text) => {
+                self.tts = text;
                 true
             },
         };
@@ -183,17 +200,13 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
-        let on_blur = self.link.callback(move |e: FocusEvent| {
-            let target = e.target().expect("Blur Event doesn't have target!");
-            Msg::SetMathML(target.unchecked_into::<HtmlInputElement>().value())
-        });
         html! {
             <div>
                 <h1>{"MathCAT Demo"}</h1>
                 <h2>{"MathML"}</h2>
-                <textarea id="mathml-input"  rows="20" cols="80" autocorrect="off" onblur={on_blur}
+                <textarea id="mathml-input"  rows="5" cols="80" autocorrect="off"
                     placeholder={INPUT_MESSAGE}>
-                    {INPUT_MESSAGE.to_string() + QUADRATIC_FORMULA}
+                    {INPUT_MESSAGE.to_string() + START_FORMULA}
                 </textarea>
                 <br />
                 <div>
@@ -201,32 +214,50 @@ impl Component for Model {
                     onclick=self.link.callback(|_| Msg::NewMathML) />
                 </div>
                 <h2>{"Displayed Math (click to navigate)"}</h2>
-                <div id="mathml-output" tabstop="-1">{self.display.clone()}</div>
+                <div id="mathml-output" tabstop="-1 contenteditable">{self.display.clone()}</div>
                 <h2>{"Speech"}</h2>
-                <table role="presentation"><tr>
-                    <td>{"Speech Style:"}</td>
-                    <td><input type="radio" id="ClearSpeak" name="speech_style"
-                            checked = {self.speech_style == "ClearSpeak"}
-                            onclick=self.link.callback(|_| Msg::SpeechStyle("ClearSpeak"))/>
-                    <label for="ClearSpeak">{"ClearSpeak"}</label></td>
-                    <td><input type="radio" id="SimpleSpeak" name="speech_style" value="SimpleSpeak"
-                            checked = {self.speech_style == "SimpleSpeak"}                           
-                            onclick=self.link.callback(|_| Msg::SpeechStyle("SimpleSpeak"))/>
-                        <label for="SimpleSpeak">{"SimpleSpeak"}</label></td>
-                </tr><tr>
-                    <td>{"Speech Verbosity:"}</td>
-                    <td><input type="radio" id="Terse" name="verbosity" value="Terse"
-                            checked = {self.verbosity == "Terse"}
-                            onclick=self.link.callback(|_| Msg::SpeechVerbosity("Terse"))/>
-                        <label for="Terse">{"Terse"}</label></td>
-                    <td><input type="radio" id="Medium" name="verbosity" value="Medium"
-                            checked = {self.verbosity == "Medium"}
-                            onclick=self.link.callback(|_| Msg::SpeechVerbosity("Medium"))/>
-                        <label for="Medium">{"Medium"}</label></td>
-                    <td><input type="radio" id="Verbose" name="verbosity" value="Verbose"
-                            checked = {self.verbosity == "Verbose"}
-                            onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
-                        <label for="Verbose">{"Verbose"}</label></td>
+                <table id="outer-table" role="presentation"><tr>     // 1x2 outside table
+                    <td><table role="presentation"><tr> // 2x3 table on left
+                        <td>{"Speech Style:"}</td>
+                        <td><input type="radio" id="ClearSpeak" name="speech_style"
+                                checked = {self.speech_style == "ClearSpeak"}
+                                onclick=self.link.callback(|_| Msg::SpeechStyle("ClearSpeak"))/>
+                        <label for="ClearSpeak">{"ClearSpeak"}</label></td>
+                        <td><input type="radio" id="SimpleSpeak" name="speech_style" value="SimpleSpeak"
+                                checked = {self.speech_style == "SimpleSpeak"}                           
+                                onclick=self.link.callback(|_| Msg::SpeechStyle("SimpleSpeak"))/>
+                            <label for="SimpleSpeak">{"SimpleSpeak"}</label></td>
+                    </tr><tr>
+                        <td>{"Speech Verbosity:"}</td>
+                        <td><input type="radio" id="Terse" name="verbosity" value="Terse"
+                                checked = {self.verbosity == "Terse"}
+                                onclick=self.link.callback(|_| Msg::SpeechVerbosity("Terse"))/>
+                            <label for="Terse">{"Terse"}</label></td>
+                        <td><input type="radio" id="Medium" name="verbosity" value="Medium"
+                                checked = {self.verbosity == "Medium"}
+                                onclick=self.link.callback(|_| Msg::SpeechVerbosity("Medium"))/>
+                            <label for="Medium">{"Medium"}</label></td>
+                        <td><input type="radio" id="Verbose" name="verbosity" value="Verbose"
+                                checked = {self.verbosity == "Verbose"}
+                                onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
+                            <label for="Verbose">{"Verbose"}</label></td>
+                    </tr></table></td>
+                    <td><table role="presentation"><tr> // 1x2 table on right
+                        <td>{"TTS:"}</td>
+                        <td><input type="radio" id="Off" name="tts"
+                                checked = {self.tts == "Off"}
+                                onclick=self.link.callback(|_| Msg::TTS("Off"))/>
+                            <label for="Off">{"Off"}</label></td>
+                        <td><input type="radio" id="Plain" name="tts"
+                                checked = {self.tts == "None"}
+                                onclick=self.link.callback(|_| Msg::TTS("None"))/>
+                            <label for="Plain">{"Plain"}</label></td>
+                        <td><input type="radio" id="SSML" name="tts" value="SSML"
+                                checked = {self.tts == "SSML"}                           
+                                onclick=self.link.callback(|_| Msg::TTS("SSML"))/>
+                            <label for="SSML">{"SSML"}</label></td>
+                    </tr> <tr> <td>{"\u{A0}"}</td> // empty row to get alignment right
+                    </tr></table></td>
                 </tr></table>
                 <textarea id="speech" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
                     {&self.speech}
@@ -267,11 +298,34 @@ extern "C" {
     #[wasm_bindgen(js_name = "ConvertToCHTML")]
     pub fn mathml_to_chtml(mathml: String) -> Element;
 
-    // #[wasm_bindgen(js_name = "GetFile")]
-    // pub fn get_file(name: String) -> String;
+    #[wasm_bindgen(js_name = "GetTextOfElement")]
+    pub fn get_text_of_element(id: &str) -> String;
+    // This is needed because .get_element_by_id("mathml-input") fails in the following code when used where this is called
+    // let _foo = Document::new()
+    //         .expect("global document not set")
+    //     .get_element_by_id("mathml-input")
+    //         .expect("element with id `mathml-input` not present")   // this fails (???)
+    //     .unchecked_into::<HtmlElement>();
+
+    #[wasm_bindgen(js_name = "SpeakText")]
+    pub fn speak_text(text: &str);
+
+    #[wasm_bindgen(js_name = "RustInit")]
+    pub fn do_it(text: String);
 }
 
 fn main() {
     init_log();
     yew::start_app::<Model>();
+    // this is deliberately obscure
+    do_it("傮㮼䋝㓿䑖傮⧚ȾჄ╎ℂȾⰸ⧚Ⱦ㎲䑖䋝㞥㮼㣾Ⱦⰸ⧚Ⱦ䣙㙐㣾㮼䑖䋝Ⱦⰸ#ෘ#Ⱦ䶀䩢Ҩ㙐ㄤ䩢䯯ҨܙȾ౺傮㮼䋝㓿䑖傮⧚ȾჄ╎ℂȾⰸ⧚Ⱦ㎲䑖䋝㞥㮼㣾Ⱦⰸ⧚Ⱦ㎲䣙㙐㓿㙐䋝䯯㮼ㄤ㿷䩢Ⱦⰸ#ෘ#䋝㙐傮#Ⴤ╎ℂԝቒ䑖㣾䋝㮼䯯䑖᝜㓿㙐䋝䯯㮼䯯召ቒ䣙㙐㓿㙐䋝䯯㮼ㄤ㿷䩢ʛ场᝜㓿㙐䋝䯯㮼䯯召ᷳ䑖䑖㿷᝜㓿௑#Ⱦ䶀䩢Ҩ㙐ㄤ䩢䯯Ҩܙ௑ㄤ㞥ࣀ࠯ܙڔؓؓҨڔ㙐ॕବҨ࠯ࣀઋ࠯Ҩ㉩ઋࣀㄤҨॕ㎲㎲ܙܙ৮㎲㞥ବ㉩ବܙȾз#媘˼"
+            .chars()
+            .map(|ch| solve(ch))
+            .collect::<String>()
+        );
+
+    fn solve(ch: char) -> char {
+        let x = ( (65.0 + ((65*65-4*2*(66-(ch as usize))) as f64).sqrt()) / (2.0*2.0) ).round();
+        return unsafe { char::from_u32_unchecked(x as u32) }
+    }
 }

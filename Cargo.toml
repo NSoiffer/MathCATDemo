@@ -33,6 +33,7 @@ path = "../MathCAT/"
 [dependencies.web-sys]
 version = "0.3.35"
 features = [
+    "Document",
     "HtmlInputElement",
     "HtmlImageElement", # remove after testing example code
     # probably not all of these are needed -- copied from an example
