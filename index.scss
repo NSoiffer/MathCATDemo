@@ -50,6 +50,12 @@ textarea {
   overflow: auto;
 }
 
+#mathml-output:focus-within {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: green;
+}
+
 #outer-table {
   width: 100%;
 }
@@ -61,6 +67,21 @@ textarea {
 .sync-highlight {
   color: yellow;
   background: blue;
-  padding: 1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
-  margin: -1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
+  outline-color: blue;
+  outline-style: solid;
+  outline-width: 1px;
+  outline-offset: 0px;
+  // padding: 1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
+  // margin: -1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
+}
+
+.nav-highlight {
+  // color: white;
+  // background: #0f1d68;
+  outline-color: orange;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 0px;
+  // padding: 1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
+  // margin: -1px;   // looks better with padding, but that sometimes causes shifts -- hmmm...
 }

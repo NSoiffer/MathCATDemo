@@ -26,6 +26,7 @@ cfg_if! {
 #[macro_use]
 extern crate log;
 
+
 #[derive(Debug)]
 enum Msg {
     NewMathML,
@@ -34,6 +35,7 @@ enum Msg {
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
     TTS(&'static str),
+    Navigate(KeyboardEvent),
 }
 
 struct Model {
@@ -72,7 +74,7 @@ fn update_speech_and_braille(component: &mut Model) {
     }
     component.speech = speech;
 
-    let mut braille = GetBraille().unwrap();
+    let mut braille = GetBraille("".to_string()).unwrap();
     if component.braille_display_as == "ASCIIBraille" {
         lazy_static! {
             static ref UNICODE_TO_ASCII: Vec<char> =
@@ -107,7 +109,7 @@ impl Component for Model {
             braille_code: "Nemeth",
             braille_display_as: "Dots",
             braille: String::default(),
-            tts: "SSML",
+            tts: "Off", // "SSML",
         }
     }
 
@@ -119,7 +121,8 @@ impl Component for Model {
         };
 
         debug!("In update: msg: {:?}", msg);
-        self.speak = true;      // most of the time we want to speak -- true off when we don't
+        self.speak = true;      // most of the time we want to speak -- turn off when we don't
+        let mut skip_update = false;    // for debugging navigate -- remove eventually
         match msg {
             Msg::NewMathML => {
                 // Get the MathML input string, and clear any previous output
@@ -186,8 +189,41 @@ impl Component for Model {
                 self.tts = text;
                 true
             },
+            Msg::Navigate(ev) => {
+                use phf::phf_set;
+                static VALID_NAV_KEYS: phf::Set<u32> = phf_set! {
+                    /*Enter*/0x0Du32, /*Space*/0x20u32, /*Home*/0x24u32, /*End*/0x23u32, /*Backspace*/0x08u32,
+                    /*ArrowDown*/0x28u32,  /*ArrowLeft*/0x25u32,  /*ArrowRight*/0x27u32,  /*ArrowUp*/0x26u32, 
+                    /*0-9*/0x30u32, 0x31u32, 0x32u32, 0x33u32, 0x34u32, 0x35u32, 0x36u32, 0x37u32, 0x38u32, 0x39u32, 
+                };
+                
+                debug!("  alt {}, ctrl {}, charCode {}, code {}, key {}, keyCode {}",
+                        ev.alt_key(), ev.ctrl_key(), ev.char_code(), ev.code(), ev.key(), ev.key_code());
+                // should use ev.code -- KeyJ, ArrowRight, etc
+                // however, MathPlayer defined values that match ev.key_code, so we use them
+                skip_update = true;
+                ev.stop_propagation();
+                ev.prevent_default();
+                if VALID_NAV_KEYS.contains(&ev.key_code()) {
+                    match DoNavigateKeyPress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
+                        Ok(speech) => {
+                            self.speech = speech;
+                            let id_and_offset = GetNavigationMathMLId().unwrap();
+                            highlight_nav_element(&id_and_offset.0);
+                            self.braille = GetBraille(id_and_offset.0).unwrap();
+                        },
+                        Err(e) => {
+                            libmathcat::speech::print_errors(&e.chain_err(|| "Navigation failure!"));
+                            self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
+                        },
+                    };    
+                }
+                true
+            },
         };
-        update_speech_and_braille(self);
+        if !skip_update {
+            update_speech_and_braille(self);
+        }
         return true;
     }
 
@@ -213,9 +249,16 @@ impl Component for Model {
                 <input type="button" value="Generate Speech and Braille" id="render-button"
                     onclick=self.link.callback(|_| Msg::NewMathML) />
                 </div>
-                <h2>{"Displayed Math (click to navigate)"}</h2>
-                <div id="mathml-output" tabstop="-1 contenteditable">{self.display.clone()}</div>
-                <h2>{"Speech"}</h2>
+                <h2>
+                    {"Displayed Math (click to navigate, ESC to exit ["}
+                    <a href="https://docs.wiris.com/en/mathplayer/navigation_commands" target="_blank">{"nav help"}</a>
+                    {"])"}
+                </h2>
+                <div id="mathml-output" tabindex="-1"
+                        onkeydown=self.link.callback(|ev| Msg::Navigate(ev))>
+                    {self.display.clone()}
+                </div>
+                <h2 id="speech-heading">{"Speech"}</h2>
                 <table id="outer-table" role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr> // 2x3 table on left
                         <td>{"Speech Style:"}</td>
@@ -259,10 +302,10 @@ impl Component for Model {
                     </tr> <tr> <td>{"\u{A0}"}</td> // empty row to get alignment right
                     </tr></table></td>
                 </tr></table>
-                <textarea id="speech" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
+                <textarea id="speech" aria-labelledby="braille-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
                     {&self.speech}
                 </textarea>
-                <h2>{"Braille"}</h2>
+                <h2 id="braille-heading">{"Braille"}</h2>
                 <table role="presentation"><tr>
                     <td>{"Braille Settings:"}</td>
                     <td><input type="radio" id="Nemeth" name="braille_setting" checked=true value="Nemeth"
@@ -280,9 +323,10 @@ impl Component for Model {
                     <td><input type="radio" id="ASCIIBraille" name="view_braille_as" value="ASCIIBraille"
                             checked = {self.braille_display_as == "ASCIIBraille"}
                             onclick=self.link.callback(|_| Msg::BrailleDisplayAs("ASCIIBraille"))/>
-                        <label for="ASCIIBraille">{"ASCIIBraille"}</label></td>
+                            <label for="ASCIIBraille">{"ASCIIBraille"}</label>
+                    </td>
                 </tr></table>
-                <textarea id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off">
+                <textarea aria-labelledby="braille-heading" id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off">
                     {&self.braille}
                 </textarea>
             </div>
@@ -309,6 +353,9 @@ extern "C" {
 
     #[wasm_bindgen(js_name = "SpeakText")]
     pub fn speak_text(text: &str);
+
+    #[wasm_bindgen(js_name = "HighlightNavigationElement")]
+    pub fn highlight_nav_element(text: &str);
 
     #[wasm_bindgen(js_name = "RustInit")]
     pub fn do_it(text: String);

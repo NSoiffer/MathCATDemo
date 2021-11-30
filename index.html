@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>MathCAT Demo</title>
@@ -8,7 +8,11 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', 'input/asciimath']}
+      loader: {load: ['input/tex', 'input/asciimath']},
+      options: {
+        enableMenu: false, // interferes with navigation
+        enableAssistiveMml: true,
+      }
     };
 
     // Convert MathML, TeX (properly delimitated), and ASCIIMath (properly delimitated)
@@ -41,6 +45,14 @@
       } else {
         return "";
       }
+    }
+
+    function HighlightNavigationElement(id) {
+      if (window['MathCAT'].navigationMark) {
+        removeHighlight(window['MathCAT'].navigationMark, 'nav-highlight');
+      };
+      window['MathCAT'].navigationMark = id
+      highlightID(id, 'nav-highlight');
     }
 
     function RustInit(str) {
@@ -152,7 +164,7 @@
                             if (window['MathCAT'].readAloudCurrentMark !== value) {
                                 removeHighlight(window['MathCAT'].readAloudCurrentMark);
                                 window['MathCAT'].readAloudCurrentMark = value;
-                                highlightID( window['MathCAT'].readAloudCurrentMark);
+                                highlightID( window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                             }
                         }
                     );
@@ -167,19 +179,19 @@
         });
       }
 
-      function removeHighlight(id) {
+      function removeHighlight(id, className) {
         if (id) {
           let element = document.getElementById(id);
           if (element) {
-            element.classList.remove('sync-highlight');
+            element.classList.remove(className);
           }
         }
       }
 
-      function highlightID(id) {
+      function highlightID(id, className) {
         let element = document.getElementById(id);
         if (element) {
-          element.classList.add('sync-highlight');
+          element.classList.add(className);
         }
       }
     </script>

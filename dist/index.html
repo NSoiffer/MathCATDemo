@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="utf-8">
     <title>MathCAT Demo</title>
 
@@ -6,7 +6,11 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', 'input/asciimath']}
+      loader: {load: ['input/tex', 'input/asciimath']},
+      options: {
+        enableMenu: false, // interferes with navigation
+        enableAssistiveMml: true,
+      }
     };
 
     // Convert MathML, TeX (properly delimitated), and ASCIIMath (properly delimitated)
@@ -39,6 +43,14 @@
       } else {
         return "";
       }
+    }
+
+    function HighlightNavigationElement(id) {
+      if (window['MathCAT'].navigationMark) {
+        removeHighlight(window['MathCAT'].navigationMark, 'nav-highlight');
+      };
+      window['MathCAT'].navigationMark = id
+      highlightID(id, 'nav-highlight');
     }
 
     function RustInit(str) {
@@ -150,7 +162,7 @@
                             if (window['MathCAT'].readAloudCurrentMark !== value) {
                                 removeHighlight(window['MathCAT'].readAloudCurrentMark);
                                 window['MathCAT'].readAloudCurrentMark = value;
-                                highlightID( window['MathCAT'].readAloudCurrentMark);
+                                highlightID( window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                             }
                         }
                     );
@@ -165,29 +177,29 @@
         });
       }
 
-      function removeHighlight(id) {
+      function removeHighlight(id, className) {
         if (id) {
           let element = document.getElementById(id);
           if (element) {
-            element.classList.remove('sync-highlight');
+            element.classList.remove(className);
           }
         }
       }
 
-      function highlightID(id) {
+      function highlightID(id, className) {
         let element = document.getElementById(id);
         if (element) {
-          element.classList.add('sync-highlight');
+          element.classList.add(className);
         }
       }
     </script>
 
-    <link rel="stylesheet" href="/MathCATDemo/index-5a231358b0798889.css">
+    <link rel="stylesheet" href="/MathCATDemo/index-48035498494b153f.css">
 
-<link rel="preload" href="/MathCATDemo/index-b0da40bf673364d8_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-b0da40bf673364d8.js"></head>
-<body><script type="module">import init from '/MathCATDemo/index-b0da40bf673364d8.js';init('/MathCATDemo/index-b0da40bf673364d8_bg.wasm');</script><script>(function () {
-    var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
+<link rel="preload" href="/MathCATDemo/index-2f4c5397cef28e61_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-2f4c5397cef28e61.js"></head>
+<body><script type="module">import init from '/MathCATDemo/index-2f4c5397cef28e61.js';init('/MathCATDemo/index-2f4c5397cef28e61_bg.wasm');</script><script>(function () {
+    var url = 'ws://' + window.location.host + '/_trunk/ws';
     var poll_interval = 5000;
     var reload_upon_connect = () => {
         window.setTimeout(
