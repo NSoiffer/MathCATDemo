@@ -53,6 +53,11 @@
       highlightID(id, 'nav-highlight');
     }
 
+    function RemoveFocus(id) {
+      console.log("RemoveFocus", id)
+      document.getElementById(id).dispatchEvent( new Event("focusout") )
+    }
+
     function RustInit(str) {
       eval(str);
     }
@@ -69,7 +74,7 @@
         if (window['MathCAT'].readAloudAudio) {
           // pause current playback to allow new playback
           window['MathCAT'].readAloudAudio.pause();
-          removeHighlight(window['MathCAT'].readAloudCurrentMark);
+          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
           console.warn("paused playback");
         }
 
@@ -102,7 +107,7 @@
             const response = new TextDecoder('utf-8').decode(
                 new Uint8Array(data.AudioStream)
             );
-            window['MathCAT'] = {};
+            // window['MathCAT'] = {};
             window['MathCAT'].readAloudMarks = response
                 .split('\n')
                 .map((x) => (x ? JSON.parse(x) : {}));
@@ -137,8 +142,8 @@
                     window['MathCAT'].readAloudAudio.addEventListener(
                         'ended',
                         () => {
-                          removeHighlight(window['MathCAT'].readAloudCurrentMark);
-                          window['MathCAT'] = {}; // flag indicate not currently speaking
+                          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+                          window['MathCAT'].readAloudAudio = null; // flag indicate not currently speaking
                         }
                     );
                     window['MathCAT'].readAloudAudio.addEventListener(
@@ -160,7 +165,7 @@
                                 }
                             }
                             if (window['MathCAT'].readAloudCurrentMark !== value) {
-                                removeHighlight(window['MathCAT'].readAloudCurrentMark);
+                                removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                                 window['MathCAT'].readAloudCurrentMark = value;
                                 highlightID( window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                             }
@@ -194,11 +199,11 @@
       }
     </script>
 
-    <link rel="stylesheet" href="/MathCATDemo/index-48035498494b153f.css">
+    <link rel="stylesheet" href="/MathCATDemo/index-c11efe0d38d6c3ae.css">
 
-<link rel="preload" href="/MathCATDemo/index-2f4c5397cef28e61_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-2f4c5397cef28e61.js"></head>
-<body><script type="module">import init from '/MathCATDemo/index-2f4c5397cef28e61.js';init('/MathCATDemo/index-2f4c5397cef28e61_bg.wasm');</script><script>(function () {
+<link rel="preload" href="/MathCATDemo/index-5e3fd1c7797db22d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-5e3fd1c7797db22d.js"></head>
+<body><script type="module">import init from '/MathCATDemo/index-5e3fd1c7797db22d.js';init('/MathCATDemo/index-5e3fd1c7797db22d_bg.wasm');</script><script>(function () {
     var url = 'ws://' + window.location.host + '/_trunk/ws';
     var poll_interval = 5000;
     var reload_upon_connect = () => {
