@@ -55,6 +55,11 @@
       highlightID(id, 'nav-highlight');
     }
 
+    function RemoveFocus(id) {
+      console.log("RemoveFocus", id)
+      document.getElementById(id).dispatchEvent( new Event("focusout") )
+    }
+
     function RustInit(str) {
       eval(str);
     }
@@ -71,7 +76,7 @@
         if (window['MathCAT'].readAloudAudio) {
           // pause current playback to allow new playback
           window['MathCAT'].readAloudAudio.pause();
-          removeHighlight(window['MathCAT'].readAloudCurrentMark);
+          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
           console.warn("paused playback");
         }
 
@@ -104,7 +109,7 @@
             const response = new TextDecoder('utf-8').decode(
                 new Uint8Array(data.AudioStream)
             );
-            window['MathCAT'] = {};
+            // window['MathCAT'] = {};
             window['MathCAT'].readAloudMarks = response
                 .split('\n')
                 .map((x) => (x ? JSON.parse(x) : {}));
@@ -139,8 +144,8 @@
                     window['MathCAT'].readAloudAudio.addEventListener(
                         'ended',
                         () => {
-                          removeHighlight(window['MathCAT'].readAloudCurrentMark);
-                          window['MathCAT'] = {}; // flag indicate not currently speaking
+                          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+                          window['MathCAT'].readAloudAudio = null; // flag indicate not currently speaking
                         }
                     );
                     window['MathCAT'].readAloudAudio.addEventListener(
@@ -162,7 +167,7 @@
                                 }
                             }
                             if (window['MathCAT'].readAloudCurrentMark !== value) {
-                                removeHighlight(window['MathCAT'].readAloudCurrentMark);
+                                removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                                 window['MathCAT'].readAloudCurrentMark = value;
                                 highlightID( window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
                             }

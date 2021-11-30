@@ -35,6 +35,7 @@ enum Msg {
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
     TTS(&'static str),
+    Dots(&'static str),
     Navigate(KeyboardEvent),
 }
 
@@ -48,10 +49,16 @@ struct Model {
     verbosity: &'static str,
     speech: String,
     speak: bool,
+    nav_id: String,
     braille_code: &'static str,
     braille_display_as: &'static str,
+    braille_dots78: &'static str,
     braille: String,
+    braille_node_ref: NodeRef,
     tts: &'static str,
+
+    update_speech: bool,
+    update_braille: bool,
 }
 
 static INPUT_MESSAGE: &'static str = "Enter math: use $...$ for TeX, `...` for ASCIIMath, <math>...</math> for MathML\n";
@@ -62,34 +69,47 @@ fn update_speech_and_braille(component: &mut Model) {
     if component.math_string.is_empty() {
         return;
     }
-    SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.to_string())).unwrap();
-    SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.to_string())).unwrap();
-    let tts = if component.tts == "Off" {"None"} else {component.tts};
-    SetPreference("TTS".to_string(), StringOrFloat::AsString(tts.to_string())).unwrap();
-    SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
-    let speech = GetSpokenText().unwrap();
-    debug!("  speech: {}", speech);
+
+    if component.update_speech {
+        SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.to_string())).unwrap();
+        SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.to_string())).unwrap();
+        let tts = if component.tts == "Off" {"None"} else {component.tts};
+        SetPreference("TTS".to_string(), StringOrFloat::AsString(tts.to_string())).unwrap();
+        SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
+        let speech = GetSpokenText().unwrap();
+        component.speech = speech;
+        component.speak = true;  
+        component.update_speech = false;  
+    }
+
     if component.speak && component.tts != "Off" {
-        speak_text(&speech);
+        speak_text(&component.speech);
+        component.speak = false;
     }
-    component.speech = speech;
 
-    let mut braille = GetBraille("".to_string()).unwrap();
-    if component.braille_display_as == "ASCIIBraille" {
-        lazy_static! {
-            static ref UNICODE_TO_ASCII: Vec<char> =
-                " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=".chars().collect();
-        };
-
-        let mut result = String::with_capacity(braille.len());
-        for ch in braille.chars() {
-            let i = (ch as usize - 0x2800) &0x3F;     // eliminate dots 7 and 8 if present 
-            result.push(UNICODE_TO_ASCII[i]);
+    if component.update_braille {
+        SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.to_string())).unwrap();
+        let mut braille = GetBraille(component.nav_id.clone()).unwrap();
+        if component.braille_display_as == "ASCIIBraille" {
+            lazy_static! {
+                static ref UNICODE_TO_ASCII: Vec<char> =
+                    " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=".chars().collect();
+            };
+    
+            let mut result = String::with_capacity(braille.len());
+            for ch in braille.chars() {
+                let i = (ch as usize - 0x2800) &0x3F;     // eliminate dots 7 and 8 if present 
+                let mut ascii_str = UNICODE_TO_ASCII[i].to_string();
+                if ch as usize > 0x283F {
+                    ascii_str = format!("<span style='font-weight:bold'>{}</span>", &ascii_str);
+                }
+                result.push_str(&ascii_str);
+            }
+            braille = result;
         }
-        braille = result;
+        component.braille = braille;    
+        component.update_braille = false;
     }
-    component.braille = braille;
-
 }
 
 impl Component for Model {
@@ -106,10 +126,16 @@ impl Component for Model {
             speak: true,
             verbosity: "Verbose",
             speech: String::default(),
+            nav_id: String::default(),
+            braille_dots78: "EndPoints",
             braille_code: "Nemeth",
             braille_display_as: "Dots",
             braille: String::default(),
+            braille_node_ref: NodeRef::default(),
             tts: "Off", // "SSML",
+
+            update_speech: true,
+            update_braille: true,
         }
     }
 
@@ -121,8 +147,8 @@ impl Component for Model {
         };
 
         debug!("In update: msg: {:?}", msg);
-        self.speak = true;      // most of the time we want to speak -- turn off when we don't
-        let mut skip_update = false;    // for debugging navigate -- remove eventually
+        self.update_braille = false;    // turn on when appropriate
+        self.update_speech = false;     // turn on when appropriate
         match msg {
             Msg::NewMathML => {
                 // Get the MathML input string, and clear any previous output
@@ -164,29 +190,40 @@ impl Component for Model {
                     if let Err(e) = result {
                         panic!("append_child returned error '{:?}'", e);
                     };
+                    self.nav_id = "".to_string();
+                    self.update_braille = true;
+                    self.update_speech = true;
                 };
                 true
             },
             Msg::SpeechStyle(text) => {
                 self.speech_style = text;
+                self.update_speech = true;
                 true
             },
             Msg::SpeechVerbosity(text) => {
                 self.verbosity = text;
+                self.update_speech = true;
                 true
             },
             Msg::BrailleCode(text) => {
                 self.braille_code = text;
-                self.speak = false;     // no change to speech when changing braille
+                self.update_braille = true;
                 true
             },
             Msg::BrailleDisplayAs(text) => {
                 self.braille_display_as = text;
-                self.speak = false;     // no change to speech when changing braille
+                self.update_braille = true;
                 true
             },
             Msg::TTS(text) => {
                 self.tts = text;
+                self.update_speech = true;
+                true
+            },
+            Msg::Dots(text) => {
+                self.braille_dots78 = text;
+                self.update_braille = true;
                 true
             },
             Msg::Navigate(ev) => {
@@ -201,16 +238,19 @@ impl Component for Model {
                         ev.alt_key(), ev.ctrl_key(), ev.char_code(), ev.code(), ev.key(), ev.key_code());
                 // should use ev.code -- KeyJ, ArrowRight, etc
                 // however, MathPlayer defined values that match ev.key_code, so we use them
-                skip_update = true;
-                ev.stop_propagation();
-                ev.prevent_default();
-                if VALID_NAV_KEYS.contains(&ev.key_code()) {
+                if ev.key() == "Escape" {
+                    remove_focus("mathml-output");
+                } else if VALID_NAV_KEYS.contains(&ev.key_code()) {
+                    ev.stop_propagation();
+                    ev.prevent_default();    
                     match DoNavigateKeyPress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
                         Ok(speech) => {
                             self.speech = speech;
                             let id_and_offset = GetNavigationMathMLId().unwrap();
-                            highlight_nav_element(&id_and_offset.0);
-                            self.braille = GetBraille(id_and_offset.0).unwrap();
+                            self.nav_id = id_and_offset.0;
+                            highlight_nav_element(&self.nav_id);
+                            self.speak = true;
+                            self.update_braille = true;
                         },
                         Err(e) => {
                             libmathcat::speech::print_errors(&e.chain_err(|| "Navigation failure!"));
@@ -221,9 +261,7 @@ impl Component for Model {
                 true
             },
         };
-        if !skip_update {
-            update_speech_and_braille(self);
-        }
+        update_speech_and_braille(self);
         return true;
     }
 
@@ -254,12 +292,12 @@ impl Component for Model {
                     <a href="https://docs.wiris.com/en/mathplayer/navigation_commands" target="_blank">{"nav help"}</a>
                     {"])"}
                 </h2>
-                <div id="mathml-output" tabindex="-1"
+                <div role="application" id="mathml-output" tabindex="0" aria-roledescription="navigable displayed math"
                         onkeydown=self.link.callback(|ev| Msg::Navigate(ev))>
                     {self.display.clone()}
                 </div>
                 <h2 id="speech-heading">{"Speech"}</h2>
-                <table id="outer-table" role="presentation"><tr>     // 1x2 outside table
+                <table role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr> // 2x3 table on left
                         <td>{"Speech Style:"}</td>
                         <td><input type="radio" id="ClearSpeak" name="speech_style"
@@ -302,35 +340,64 @@ impl Component for Model {
                     </tr> <tr> <td>{"\u{A0}"}</td> // empty row to get alignment right
                     </tr></table></td>
                 </tr></table>
-                <textarea id="speech" aria-labelledby="braille-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
+                <textarea role="application" id="speech" aria-labelledby="speech-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
                     {&self.speech}
                 </textarea>
                 <h2 id="braille-heading">{"Braille"}</h2>
-                <table role="presentation"><tr>
-                    <td>{"Braille Settings:"}</td>
-                    <td><input type="radio" id="Nemeth" name="braille_setting" checked=true value="Nemeth"
-                            onclick=self.link.callback(|_| Msg::BrailleCode("Nemeth"))/>
-                        <label for="Nemeth">{"Nemeth"}</label></td>
-                    <td><input type="radio" id="UEB" name="braille_setting" value="UEB" disabled=true
-                            onclick=self.link.callback(|_| Msg::BrailleCode("UEB"))/>
-                        <label for="UEB">{"UEB"}</label></td>
-                </tr><tr>
-                    <td>{"View Braille As:"}</td>
-                    <td><input type="radio" id="Dots" name="view_braille_as" value="Dots"
-                            checked = {self.braille_display_as == "Dots"}
-                            onclick=self.link.callback(|_| Msg::BrailleDisplayAs("Dots"))/>
-                        <label for="Dots">{"Dots"}</label></td>
-                    <td><input type="radio" id="ASCIIBraille" name="view_braille_as" value="ASCIIBraille"
-                            checked = {self.braille_display_as == "ASCIIBraille"}
-                            onclick=self.link.callback(|_| Msg::BrailleDisplayAs("ASCIIBraille"))/>
-                            <label for="ASCIIBraille">{"ASCIIBraille"}</label>
-                    </td>
+                <table role="presentation"><tr>     // 1x2 outside table
+                    <td><table role="presentation"><tr>
+                        <td>{"Braille Settings:"}</td>
+                        <td><input type="radio" id="Nemeth" name="braille_setting" checked=true value="Nemeth"
+                                onclick=self.link.callback(|_| Msg::BrailleCode("Nemeth"))/>
+                            <label for="Nemeth">{"Nemeth"}</label></td>
+                        <td><input type="radio" id="UEB" name="braille_setting" value="UEB" disabled=true
+                                onclick=self.link.callback(|_| Msg::BrailleCode("UEB"))/>
+                            <label for="UEB">{"UEB"}</label></td>
+                    </tr><tr>
+                        <td>{"View Braille As:"}</td>
+                        <td><input type="radio" id="Dots" name="view_braille_as" value="Dots"
+                                checked = {self.braille_display_as == "Dots"}
+                                onclick=self.link.callback(|_| Msg::BrailleDisplayAs("Dots"))/>
+                            <label for="Dots">{"Dots"}</label></td>
+                        <td><input type="radio" id="ASCIIBraille" name="view_braille_as" value="ASCIIBraille"
+                                checked = {self.braille_display_as == "ASCIIBraille"}
+                                onclick=self.link.callback(|_| Msg::BrailleDisplayAs("ASCIIBraille"))/>
+                                <label for="ASCIIBraille">{"ASCIIBraille"}</label>
+                        </td>
+                    </tr></table></td>
+                    <td><table role="presentation"><tr> // 1x2 table on right
+                        <td>{"\u{A0}"}</td> // empty row to get alignment right
+                        </tr> <tr>
+                        <td>{"\u{A0}\u{A0}\u{A0}Navigation Indicator:"}</td>
+                        <td><input type="radio" id="DotsOff" name="dots-78"
+                                checked = {self.braille_dots78 == "Off"}
+                                onclick=self.link.callback(|_| Msg::Dots("Off"))/>
+                            <label for="DotsOff">{"Off"}</label></td>
+                        <td><input type="radio" id="DotsFirstChar" name="dots-78"
+                                checked = {self.braille_dots78 == "FirstChar"}
+                                onclick=self.link.callback(|_| Msg::Dots("FirstChar"))/>
+                            <label for="DotsFirstChar">{"FirstChar"}</label></td>
+                        <td><input type="radio" id="DotsEndPoints" name="dots-78" value="EndPoints"
+                                checked = {self.braille_dots78 == "EndPoints"}                           
+                                onclick=self.link.callback(|_| Msg::Dots("EndPoints"))/>
+                            <label for="DotsEndPoints">{"EndPoints"}</label></td>
+                        <td><input type="radio" id="DotsAll" name="dots-78" value="All"
+                                checked = {self.braille_dots78 == "All"}                           
+                                onclick=self.link.callback(|_| Msg::Dots("All"))/>
+                            <label for="DotsAll">{"All"}</label></td>
+                    </tr> </table></td>
                 </tr></table>
-                <textarea aria-labelledby="braille-heading" id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off">
-                    {&self.braille}
-                </textarea>
+                <p aria-labelledby="braille-heading" id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off"
+                    ref={self.braille_node_ref.clone()}>
+                </p>
             </div>
         }
+    }
+
+    fn rendered(&mut self, _first_render: bool) {
+        // this allows for bolding of chars in the braille ASCII display
+        let el = self.braille_node_ref.cast::<Element>().unwrap();
+        el.set_inner_html(&self.braille);
     }
 }
 
@@ -356,6 +423,9 @@ extern "C" {
 
     #[wasm_bindgen(js_name = "HighlightNavigationElement")]
     pub fn highlight_nav_element(text: &str);
+
+    #[wasm_bindgen(js_name = "RemoveFocus")]
+    pub fn remove_focus(text: &str);
 
     #[wasm_bindgen(js_name = "RustInit")]
     pub fn do_it(text: String);
