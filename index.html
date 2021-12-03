@@ -1,3 +1,4 @@
+<!-- import { load_yaml_file } from './pkg'; -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -63,6 +64,23 @@
     function RustInit(str) {
       eval(str);
     }
+
+    // For debugging, popup a file selector to reload the file instead of recompiling and waiting
+    function GetFile() {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept="text/*.yaml"
+      input.onchange = e => { 
+        var file = e.target.files[0]; 
+        var reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        reader.onload = readerEvent => {
+            var content = readerEvent.target.result; // this is the content!
+            load_yaml_file( content );
+        }
+      }
+      input.click();  // triggers 'onchange'
+    }
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
 
@@ -78,6 +96,11 @@
           window['MathCAT'].readAloudAudio.pause();
           removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
           console.warn("paused playback");
+        }
+
+        // empty text is a way of stopping speech
+        if (!text) {
+          return;
         }
 
         // Create the JSON parameters for getSynthesizeSpeechUrl

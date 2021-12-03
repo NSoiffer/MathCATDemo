@@ -238,6 +238,12 @@ impl Component for Model {
                         ev.alt_key(), ev.ctrl_key(), ev.char_code(), ev.code(), ev.key(), ev.key_code());
                 // should use ev.code -- KeyJ, ArrowRight, etc
                 // however, MathPlayer defined values that match ev.key_code, so we use them
+                // for debugging Nav Rules
+                if ev.key() == "Pause" {
+                    // open a FileReader to read the Nav File so we don't need to recompile
+                    get_file();     // this starts the sequence to get the file -- we will get a callback later
+                }
+                
                 if ev.key() == "Escape" {
                     remove_focus("mathml-output");
                 } else if VALID_NAV_KEYS.contains(&ev.key_code()) {
@@ -427,8 +433,17 @@ extern "C" {
     #[wasm_bindgen(js_name = "RemoveFocus")]
     pub fn remove_focus(text: &str);
 
+    #[wasm_bindgen(js_name = "GetFile")]
+    pub fn get_file();
+    
     #[wasm_bindgen(js_name = "RustInit")]
     pub fn do_it(text: String);
+}
+
+
+#[wasm_bindgen]
+pub fn load_yaml_file(contents: &str) {
+    debug!("yaml file starts: '{}'", &contents[0..20]);
 }
 
 fn main() {
