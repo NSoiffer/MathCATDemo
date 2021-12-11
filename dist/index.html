@@ -58,6 +58,17 @@
       document.getElementById(id).dispatchEvent( new Event("focusout") )
     }
 
+    function SetCookie(cookie_value) {
+      let answer = document.cookie;
+      if (cookie_value) {
+        let cookieArray = cookie_value.split(";");
+        for(let i=0; i<cookieArray.length; i++){
+          document.cookie=cookieArray[i] + "; max-age=31536000; SameSite=Lax";
+        }
+      }
+      return answer;
+    }
+
     function RustInit(str) {
       eval(str);
     }
@@ -221,16 +232,16 @@
       }
     </script>
   <script type="module">
-    import {load_yaml_file} from '/MathCATDemo/index-672b70cce23bb720.js';
+    import {load_yaml_file} from '/MathCATDemo/index-d84cfabb067d000d.js';
     window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
   </script>
 
     <link rel="stylesheet" href="/MathCATDemo/index-c11efe0d38d6c3ae.css">  
     <!-- for debugging -->
-    <script type="module">import init from '/MathCATDemo/index-672b70cce23bb720.js';init('/MathCATDemo/index-672b70cce23bb720_bg.wasm');</script>  
+    <script type="module">import init from '/MathCATDemo/index-d84cfabb067d000d.js';init('/MathCATDemo/index-d84cfabb067d000d_bg.wasm');</script>  
 
-<link rel="preload" href="/MathCATDemo/index-672b70cce23bb720_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-672b70cce23bb720.js"></head>
+<link rel="preload" href="/MathCATDemo/index-d84cfabb067d000d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-d84cfabb067d000d.js"></head>
 <body><script>(function () {
     var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
     var poll_interval = 5000;
