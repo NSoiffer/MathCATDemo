@@ -30,6 +30,8 @@ extern crate log;
 #[derive(Debug)]
 enum Msg {
     NewMathML,
+    NavMode(&'static str),
+    NavVerbosity(&'static str),
     SpeechStyle(&'static str),
     SpeechVerbosity(&'static str),
     BrailleCode(&'static str),
@@ -44,24 +46,67 @@ struct Model {
     // It can be used to send messages to the component
     link: ComponentLink<Self>,
     math_string: String,
+    nav_mode: String,
+    nav_verbosity: String,
     display: Html,
-    speech_style: &'static str,
-    verbosity: &'static str,
+    speech_style: String,
+    verbosity: String,
     speech: String,
     speak: bool,
     nav_id: String,
-    braille_code: &'static str,
-    braille_display_as: &'static str,
-    braille_dots78: &'static str,
+    braille_code: String,
+    braille_display_as: String,
+    braille_dots78: String,
     braille: String,
     braille_node_ref: NodeRef,
-    tts: &'static str,
+    tts: String,
 
     update_speech: bool,
     update_braille: bool,
 }
 
-static INPUT_MESSAGE: &'static str = "Enter math: use $...$ for TeX, `...` for ASCIIMath, <math>...</math> for MathML\n";
+impl Model {
+    fn save_state(&self) {
+        let mut cookie = String::with_capacity(1024);
+        cookie += &format!("nav_mode={};", self.nav_mode);
+        cookie += &format!("nav_verbosity={};", self.nav_verbosity);
+        cookie += &format!("speech_style={};", self.speech_style);
+        cookie += &format!("verbosity={};", self.verbosity);
+        cookie += &format!("braille_code={};", self.braille_code);
+        cookie += &format!("braille_display_as={};", self.braille_display_as);
+        cookie += &format!("braille_dots78={};", self.braille_dots78);
+        cookie += &format!("tts={};", self.tts);        set_cookie(&cookie);
+    }
+
+    fn init_state_from_cookies(&mut self) {
+        let cookies = set_cookie("");
+        for cookie in cookies.split(';') {
+            let mut key_value = cookie.split('=');
+            let key = key_value.next();
+            let value = key_value.next();
+            match (key, value) {
+                (Some(key), Some(value)) => set_state(self, key.trim(), value.trim()),
+                _ => (),
+            }
+        }
+
+        fn set_state(model: &mut Model, name: &str, value: &str) {
+            let value = value.to_string();
+            match name {
+                "nav_mode" => model.nav_mode = value,
+                "nav_verbosity" => model.nav_verbosity = value,
+                "speech_style" => model.speech_style = value,
+                "verbosity" => model.verbosity = value,
+                "braille_code" => model.braille_code = value,
+                "braille_display_as" => model.braille_display_as = value,
+                "braille_dots78" => model.braille_dots78 = value,
+                "tts" => model.tts = value,
+                _ => (),
+            }
+        }
+    }
+}
+static INPUT_MESSAGE: &'static str = "Auto-detect format: override using $...$ for TeX, `...` for ASCIIMath, <math>...</math> for MathML\n";
 static START_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
 // static START_FORMULA: &'static str = r"$x = {t \over 2a}$";
 
@@ -71,10 +116,10 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_speech {
-        SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.to_string())).unwrap();
-        SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.to_string())).unwrap();
-        let tts = if component.tts == "Off" {"None"} else {component.tts};
-        SetPreference("TTS".to_string(), StringOrFloat::AsString(tts.to_string())).unwrap();
+        SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.clone())).unwrap();
+        SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.clone())).unwrap();
+        let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
+        SetPreference("TTS".to_string(), StringOrFloat::AsString(tts)).unwrap();
         SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
         let speech = GetSpokenText().unwrap();
         component.speech = speech;
@@ -88,7 +133,7 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_braille {
-        SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.to_string())).unwrap();
+        SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.clone())).unwrap();
         let mut braille = GetBraille(component.nav_id.clone()).unwrap();
         if component.braille_display_as == "ASCIIBraille" {
             lazy_static! {
@@ -117,26 +162,30 @@ impl Component for Model {
     type Properties = ();
 
     fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        debug!("In Create");
-        Self {
+        let mut initial_state = Self {
             link,
             math_string: String::default(),
+            nav_mode: "Enhanced".to_string(),
+            nav_verbosity: "Verbose".to_string(),
             display: Html::VRef(yew::utils::document().create_element("div").unwrap().into()),
-            speech_style: "ClearSpeak",
+            speech_style: "ClearSpeak".to_string(),
             speak: true,
-            verbosity: "Verbose",
+            verbosity: "Verbose".to_string(),
             speech: String::default(),
             nav_id: String::default(),
-            braille_dots78: "EndPoints",
-            braille_code: "Nemeth",
-            braille_display_as: "Dots",
+            braille_dots78: "EndPoints".to_string(),
+            braille_code: "Nemeth".to_string(),
+            braille_display_as: "Dots".to_string(),
             braille: String::default(),
             braille_node_ref: NodeRef::default(),
-            tts: "Off", // "SSML",
+            tts: "SSML".to_string(),
 
             update_speech: true,
             update_braille: true,
-        }
+        };
+        
+        initial_state.init_state_from_cookies();
+        return initial_state;
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
@@ -146,7 +195,7 @@ impl Component for Model {
             static ref MATHML: Regex = Regex::new("(?m)^(?P<start><)(?P<math>.+?)(?P<end>>)$").unwrap();
         };
 
-        debug!("In update: msg: {:?}", msg);
+        debug!("======= In update: msg: {:?}", msg);
         self.update_braille = false;    // turn on when appropriate
         self.update_speech = false;     // turn on when appropriate
         match msg {
@@ -158,20 +207,38 @@ impl Component for Model {
                     let mut mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
+                        mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                     } else if let Some(caps) = ASCIIMATH.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "ASCIIMath"));
                     } else if MATHML.is_match(&math_str) {
                         // Don't need to convert
                         mathml = Some( math_str );
                     } else {
-                        mathml = None;
+                        // auto-detect -- look for {}'s as a sign it is TeX, otherwise ASCIIMath (which accepts a lot of TeX)
+                        mathml = Some(
+                            string_to_mathml(
+                            &math_str,
+                            if math_str.contains("}") {"TeX"} else {"ASCIIMath"}
+                            )
+                        );
                     };
-
                     // this adds ids and canonicalizes the MathML
-                    if let Some(math) = mathml {
+                    if let Some(mut math) = mathml {
+                        if !math.contains("display=\"block\"") && !math.contains("display='block'") {
+                            math = math.replace("<math ", "<math display='block' ");
+                        }
                         // MathJax bug https://github.com/mathjax/MathJax/issues/2805:  newline at end causes MathJaX to hang(!)
-                        mathml = Some( SetMathML(math).unwrap().trim_end().to_string() );
-                        debug!("MathML with ids: \n{}", mathml.as_ref().unwrap());
+                        match SetMathML(math) {
+                            Ok(m) => {
+                                let math = m.trim_end().to_string();
+                                debug!("MathML with ids: \n{}", &math);
+                                mathml = Some(math);
+                            },
+                            Err(e) => {
+                                error!("{}", e);
+                                mathml = None;
+                            },
+                        }
                     }
 
                     let mathjax_html = match mathml {
@@ -194,37 +261,38 @@ impl Component for Model {
                     self.update_braille = true;
                     self.update_speech = true;
                 };
-                true
+            },
+            Msg::NavMode(text) => {
+                self.nav_mode = text.to_string();
+                SetPreference("NavMode".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
+            },
+            Msg::NavVerbosity(text) => {
+                self.nav_verbosity = text.to_string();
+                SetPreference("NavVerbosity".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
             },
             Msg::SpeechStyle(text) => {
-                self.speech_style = text;
+                self.speech_style = text.to_string();
                 self.update_speech = true;
-                true
             },
             Msg::SpeechVerbosity(text) => {
-                self.verbosity = text;
+                self.verbosity = text.to_string();
                 self.update_speech = true;
-                true
             },
             Msg::BrailleCode(text) => {
-                self.braille_code = text;
+                self.braille_code = text.to_string();
                 self.update_braille = true;
-                true
             },
             Msg::BrailleDisplayAs(text) => {
-                self.braille_display_as = text;
+                self.braille_display_as = text.to_string();
                 self.update_braille = true;
-                true
             },
             Msg::TTS(text) => {
-                self.tts = text;
+                self.tts = text.to_string();
                 self.update_speech = true;
-                true
             },
             Msg::Dots(text) => {
-                self.braille_dots78 = text;
+                self.braille_dots78 = text.to_string();
                 self.update_braille = true;
-                true
             },
             Msg::Navigate(ev) => {
                 use phf::phf_set;
@@ -239,7 +307,7 @@ impl Component for Model {
                 // should use ev.code -- KeyJ, ArrowRight, etc
                 // however, MathPlayer defined values that match ev.key_code, so we use them
                 // for debugging Nav Rules
-                if ev.key() == "Pause" {
+                if ev.key() == "Pause" || ev.key() == "F12" {
                     // open a FileReader to read the Nav File so we don't need to recompile
                     get_file();     // this starts the sequence to get the file -- we will get a callback later
                 }
@@ -255,6 +323,7 @@ impl Component for Model {
                             let id_and_offset = GetNavigationMathMLId().unwrap();
                             self.nav_id = id_and_offset.0;
                             highlight_nav_element(&self.nav_id);
+                            self.nav_mode = GetPreference("NavMode".to_string()).unwrap();
                             self.speak = true;
                             self.update_braille = true;
                         },
@@ -262,12 +331,12 @@ impl Component for Model {
                             libmathcat::speech::print_errors(&e.chain_err(|| "Navigation failure!"));
                             self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
                         },
-                    };    
+                    };
                 }
-                true
             },
         };
         update_speech_and_braille(self);
+        self.save_state();
         return true;
     }
 
@@ -283,7 +352,7 @@ impl Component for Model {
         html! {
             <div>
                 <h1>{"MathCAT Demo"}</h1>
-                <h2>{"MathML"}</h2>
+                <h2>{"Math Input Area"}</h2>
                 <textarea id="mathml-input"  rows="5" cols="80" autocorrect="off"
                     placeholder={INPUT_MESSAGE}>
                     {INPUT_MESSAGE.to_string() + START_FORMULA}
@@ -295,9 +364,38 @@ impl Component for Model {
                 </div>
                 <h2>
                     {"Displayed Math (click to navigate, ESC to exit ["}
-                    <a href="https://docs.wiris.com/en/mathplayer/navigation_commands" target="_blank">{"nav help"}</a>
+                    <a href="https://docs.wiris.com/en/mathplayer/navigation_commands" target="_blank" rel="noreferrer">{"nav help"}</a>
                     {"])"}
                 </h2>
+                <table role="presentation"><tr> // 2x3 table on left
+                        <td>{"Navigation Mode:"}</td>
+                        <td><input type="radio" id="Enhanced" name="nav_mode"
+                                checked = {self.nav_mode == "Enhanced"}
+                                onclick=self.link.callback(|_| Msg::NavMode("Enhanced"))/>
+                        <label for="Enhanced">{"Enhanced"}</label></td>
+                        <td><input type="radio" id="Simple" name="nav_mode" value="Simple"
+                                checked = {self.nav_mode == "Simple"}                           
+                                onclick=self.link.callback(|_| Msg::NavMode("Simple"))/>
+                            <label for="Simple">{"Simple"}</label></td>
+                        <td><input type="radio" id="Character" name="nav_mode" value="Character"
+                                checked = {self.nav_mode == "Character"}                           
+                                onclick=self.link.callback(|_| Msg::NavMode("Character"))/>
+                            <label for="Character">{"Character"}</label></td>
+                    </tr><tr>
+                        <td>{"Navigation Verbosity:"}</td>
+                        <td><input type="radio" id="NavTerse" name="nav_verbosity" value="Terse"
+                                checked = {self.nav_verbosity == "Terse"}
+                                onclick=self.link.callback(|_| Msg::NavVerbosity("Terse"))/>
+                            <label for="NavTerse">{"Terse"}</label></td>
+                        <td><input type="radio" id="NavMedium" name="nav_verbosity" value="Medium"
+                                checked = {self.nav_verbosity == "Medium"}
+                                onclick=self.link.callback(|_| Msg::NavVerbosity("Medium"))/>
+                            <label for="NavMedium">{"Medium"}</label></td>
+                        <td><input type="radio" id="NavVerbose" name="nav_verbosity" value="Verbose"
+                                checked = {self.nav_verbosity == "Verbose"}
+                                onclick=self.link.callback(|_| Msg::NavVerbosity("Verbose"))/>
+                            <label for="NavVerbose">{"Verbose"}</label></td>
+                    </tr></table>
                 <div role="application" id="mathml-output" tabindex="0" aria-roledescription="navigable displayed math"
                         onkeydown=self.link.callback(|ev| Msg::Navigate(ev))>
                     {self.display.clone()}
@@ -393,8 +491,11 @@ impl Component for Model {
                             <label for="DotsAll">{"All"}</label></td>
                     </tr> </table></td>
                 </tr></table>
-                <p aria-labelledby="braille-heading" id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off"
+                <div role="region" aria-labelledby="braille-heading" id="braille" readonly=true rows="2" cols="80" data-hint="" autocorrect="off"
                     ref={self.braille_node_ref.clone()}>
+                </div>
+                <p>
+                  <a href="https://github.com/NSoiffer/MathCAT/issues" target="_blank" rel="noreferrer">{"Please report bugs here."}</a>
                 </p>
             </div>
         }
@@ -436,6 +537,9 @@ extern "C" {
     #[wasm_bindgen(js_name = "GetFile")]
     pub fn get_file();
     
+    #[wasm_bindgen(js_name = "SetCookie")]
+    pub fn set_cookie(new_cookie: &str) -> String;
+    
     #[wasm_bindgen(js_name = "RustInit")]
     pub fn do_it(text: String);
 }
@@ -443,7 +547,7 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn load_yaml_file(contents: &str) {
-    debug!("yaml file starts: '{}'", &contents[0..20]);
+    libmathcat::shim_filesystem::override_file_for_debugging_rules("Rules/en/navigate.yaml", contents);
 }
 
 fn main() {
@@ -457,7 +561,7 @@ fn main() {
         );
 
     fn solve(ch: char) -> char {
-        let x = ( (65.0 + ((65*65-4*2*(66-(ch as usize))) as f64).sqrt()) / (2.0*2.0) ).round();
+        let x = ( (65.0 + ((65*65-4*2*(66-(ch as isize))) as f64).sqrt()) / (2.0*2.0) ).round();
         return unsafe { char::from_u32_unchecked(x as u32) }
     }
 }
