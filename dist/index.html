@@ -18,14 +18,19 @@
       MathJax.startup.defaultReady();
       let options = {display: true};
       let mathml;
-      if (math_format == 'ASCIIMath') {
-        mathml = MathJax.asciimath2mml(math_str, options);
-      } else if (math_format == 'TeX') {
-        mathml = MathJax.tex2mml(math_str, options);
-      } else {  // should be "MathML"
-        mathml = MathJax.mathml2mml(math_str, options);
-      };
-      // console.log("ConvertToMathML:\n" + mathml.toString());
+      try {
+        if (math_format == 'ASCIIMath') {
+          mathml = MathJax.asciimath2mml(math_str, options);
+        } else if (math_format == 'TeX') {
+          mathml = MathJax.tex2mml(math_str, options);
+        } else {  // should be "MathML"
+          mathml = MathJax.mathml2mml(math_str, options);
+        };
+      } catch (e) {
+        console.error("MathJax conversion error: ", e);
+        mathml = "<math><merror>MathJax conversion error</merror></math>"
+      }
+      console.log("ConvertToMathML:\n" + mathml.toString());
       return mathml;
     }
 
@@ -58,15 +63,43 @@
       document.getElementById(id).dispatchEvent( new Event("focusout") )
     }
 
+    function SetCookie(cookie_value) {
+      let answer = document.cookie;
+      if (cookie_value) {
+        let cookieArray = cookie_value.split(";");
+        for(let i=0; i<cookieArray.length; i++){
+          document.cookie=cookieArray[i] + "; max-age=31536000; SameSite=Lax";
+        }
+      }
+      return answer;
+    }
+
     function RustInit(str) {
       eval(str);
+    }
+
+    // For debugging, popup a file selector to reload the file instead of recompiling and waiting
+    function GetFile() {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept='.yaml';
+      input.onchange = e => { 
+        var file = e.target.files[0]; 
+        var reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        reader.onload = readerEvent => {
+            var content = readerEvent.target.result; // this is the content!
+            load_yaml_file( content );
+        }
+      }
+      input.click();  // triggers 'onchange'
     }
     </script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
 
     <!-- AWS Poly speech/sync highlighting stuff -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1033.0.min.js"></script>
-    <script type="text/javascript">
+    <script>
       window['MathCAT'] = {};
 
       // Function invoked by button click
@@ -76,6 +109,11 @@
           window['MathCAT'].readAloudAudio.pause();
           removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
           console.warn("paused playback");
+        }
+
+        // empty text is a way of stopping speech
+        if (!text) {
+          return;
         }
 
         // Create the JSON parameters for getSynthesizeSpeechUrl
@@ -198,13 +236,19 @@
         }
       }
     </script>
+  <script type="module">
+    import {load_yaml_file} from '/MathCATDemo/index-3a058ba3606e259d.js';
+    window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
+  </script>
 
-    <link rel="stylesheet" href="/MathCATDemo/index-c11efe0d38d6c3ae.css">
+    <link rel="stylesheet" href="/MathCATDemo/index-2cf400b26753f95b.css">  
+    <!-- for debugging -->
+    <script type="module">import init from '/MathCATDemo/index-3a058ba3606e259d.js';init('/MathCATDemo/index-3a058ba3606e259d_bg.wasm');</script>  
 
-<link rel="preload" href="/MathCATDemo/index-5e3fd1c7797db22d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-5e3fd1c7797db22d.js"></head>
-<body><script type="module">import init from '/MathCATDemo/index-5e3fd1c7797db22d.js';init('/MathCATDemo/index-5e3fd1c7797db22d_bg.wasm');</script><script>(function () {
-    var url = 'ws://' + window.location.host + '/_trunk/ws';
+<link rel="preload" href="/MathCATDemo/index-3a058ba3606e259d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-3a058ba3606e259d.js"></head>
+<body><script>(function () {
+    var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
     var poll_interval = 5000;
     var reload_upon_connect = () => {
         window.setTimeout(
