@@ -7,4 +7,13 @@ open = true		# changed from default
 no_autoreload = false
 
 [build]
+# The public URL from which assets are to be served.
 public_url = "/MathCATDemo/"
+# Build in release mode.
+release = true
+
+[watch]
+# Paths to watch. The `build.target`'s parent folder is watched by default.
+# watch = ["c:/Users/neils/MathCAT/src"]
+# Paths to ignore.
+ignore = []

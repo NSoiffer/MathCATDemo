@@ -185,6 +185,9 @@ impl Component for Model {
         };
         
         initial_state.init_state_from_cookies();
+        if SetRulesDir("Rules".to_string()).is_err() {
+            panic!("Didn't find rules dir");
+        };
         return initial_state;
     }
 
@@ -206,7 +209,6 @@ impl Component for Model {
                     let math_str = math_str.replace(INPUT_MESSAGE, "").trim().to_string();
                     let mut mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
-                        mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                     } else if let Some(caps) = ASCIIMATH.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "ASCIIMath"));
@@ -328,7 +330,7 @@ impl Component for Model {
                             self.update_braille = true;
                         },
                         Err(e) => {
-                            libmathcat::speech::print_errors(&e.chain_err(|| "Navigation failure!"));
+                            error!("{}", libmathcat::speech::get_errors(&e.chain_err(|| "Navigation failure!")));
                             self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
                         },
                     };
