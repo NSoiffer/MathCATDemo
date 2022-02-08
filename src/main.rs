@@ -121,7 +121,10 @@ fn update_speech_and_braille(component: &mut Model) {
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
         SetPreference("TTS".to_string(), StringOrFloat::AsString(tts)).unwrap();
         SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
-        let speech = GetSpokenText().unwrap();
+        let speech = match GetSpokenText() {
+            Ok(text) => text,
+            Err(e) => errors_to_string(&e),
+        };
         component.speech = speech;
         component.speak = true;  
         component.update_speech = false;  
@@ -133,8 +136,12 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_braille {
+        SetPreference("Code".to_string(), StringOrFloat::AsString(component.braille_code.clone())).unwrap();
         SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.clone())).unwrap();
-        let mut braille = GetBraille(component.nav_id.clone()).unwrap();
+        let mut braille = match GetBraille(component.nav_id.clone()) {
+            Ok(str) => str,
+            Err(e) => errors_to_string(&e),
+        };
         if component.braille_display_as == "ASCIIBraille" {
             lazy_static! {
                 static ref UNICODE_TO_ASCII: Vec<char> =
@@ -330,7 +337,7 @@ impl Component for Model {
                             self.update_braille = true;
                         },
                         Err(e) => {
-                            error!("{}", libmathcat::speech::get_errors(&e.chain_err(|| "Navigation failure!")));
+                            error!("{}", errors_to_string(&e.chain_err(|| "Navigation failure!")));
                             self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
                         },
                     };
@@ -453,10 +460,12 @@ impl Component for Model {
                 <table role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr>
                         <td>{"Braille Settings:"}</td>
-                        <td><input type="radio" id="Nemeth" name="braille_setting" checked=true value="Nemeth"
+                        <td><input type="radio" id="Nemeth" name="braille_setting"
+                                checked = {self.braille_code == "Nemeth"}
                                 onclick=self.link.callback(|_| Msg::BrailleCode("Nemeth"))/>
                             <label for="Nemeth">{"Nemeth"}</label></td>
-                        <td><input type="radio" id="UEB" name="braille_setting" value="UEB" disabled=true
+                        <td><input type="radio" id="UEB" name="braille_setting" value="UEB"
+                                checked = {self.braille_code == "UEB"}
                                 onclick=self.link.callback(|_| Msg::BrailleCode("UEB"))/>
                             <label for="UEB">{"UEB"}</label></td>
                     </tr><tr>
