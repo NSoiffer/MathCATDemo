@@ -9,7 +9,7 @@ extern crate lazy_static;
 
 use wasm_bindgen::prelude::*;
 use cfg_if::cfg_if;
-use libmathcat::interface::*;
+use libmathcat::*;
 
 
 cfg_if! {
@@ -116,12 +116,12 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_speech {
-        SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.clone())).unwrap();
-        SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.clone())).unwrap();
+        set_preference("Verbosity".to_string(), component.verbosity.clone()).unwrap();
+        set_preference("SpeechStyle".to_string(), component.speech_style.clone()).unwrap();
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
-        SetPreference("TTS".to_string(), StringOrFloat::AsString(tts)).unwrap();
-        SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
-        let speech = match GetSpokenText() {
+        set_preference("TTS".to_string(), tts).unwrap();
+        set_preference("Bookmark".to_string(), "true".to_string()).unwrap();
+        let speech = match get_spoken_text() {
             Ok(text) => text,
             Err(e) => errors_to_string(&e),
         };
@@ -136,9 +136,9 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_braille {
-        SetPreference("Code".to_string(), StringOrFloat::AsString(component.braille_code.clone())).unwrap();
-        SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.clone())).unwrap();
-        let mut braille = match GetBraille(component.nav_id.clone()) {
+        set_preference("BrailleCode".to_string(), component.braille_code.clone()).unwrap();
+        set_preference("BrailleNavHighlight".to_string(), component.braille_dots78.clone()).unwrap();
+        let mut braille = match get_braille(component.nav_id.clone()) {
             Ok(str) => str,
             Err(e) => errors_to_string(&e),
         };
@@ -192,7 +192,7 @@ impl Component for Model {
         };
         
         initial_state.init_state_from_cookies();
-        if SetRulesDir("Rules".to_string()).is_err() {
+        if set_rules_dir("Rules".to_string()).is_err() {
             panic!("Didn't find rules dir");
         };
         return initial_state;
@@ -237,7 +237,7 @@ impl Component for Model {
                             math = math.replace("<math ", "<math display='block' ");
                         }
                         // MathJax bug https://github.com/mathjax/MathJax/issues/2805:  newline at end causes MathJaX to hang(!)
-                        match SetMathML(math) {
+                        match set_mathml(math) {
                             Ok(m) => {
                                 let math = m.trim_end().to_string();
                                 debug!("MathML with ids: \n{}", &math);
@@ -273,11 +273,11 @@ impl Component for Model {
             },
             Msg::NavMode(text) => {
                 self.nav_mode = text.to_string();
-                SetPreference("NavMode".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
+                set_preference("NavMode".to_string(), text.to_string()).unwrap();
             },
             Msg::NavVerbosity(text) => {
                 self.nav_verbosity = text.to_string();
-                SetPreference("NavVerbosity".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
+                set_preference("NavVerbosity".to_string(), text.to_string()).unwrap();
             },
             Msg::SpeechStyle(text) => {
                 self.speech_style = text.to_string();
@@ -326,13 +326,13 @@ impl Component for Model {
                 } else if VALID_NAV_KEYS.contains(&ev.key_code()) {
                     ev.stop_propagation();
                     ev.prevent_default();    
-                    match DoNavigateKeyPress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
+                    match do_navigate_keypress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
                         Ok(speech) => {
                             self.speech = speech;
-                            let id_and_offset = GetNavigationMathMLId().unwrap();
+                            let id_and_offset = get_navigation_mathml_id().unwrap();
                             self.nav_id = id_and_offset.0;
                             highlight_nav_element(&self.nav_id);
-                            self.nav_mode = GetPreference("NavMode".to_string()).unwrap();
+                            self.nav_mode = get_preference("NavMode".to_string()).unwrap();
                             self.speak = true;
                             self.update_braille = true;
                         },
