@@ -110,6 +110,12 @@ static INPUT_MESSAGE: &'static str = "Auto-detect format: override using $...$ f
 static START_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
 // static START_FORMULA: &'static str = r"$x = {t \over 2a}$";
 
+/// get text for level 1 header
+fn get_header() -> String {
+    return format!("MathCAT Demo (using v{})", get_version());
+}
+
+
 fn update_speech_and_braille(component: &mut Model) {
     if component.math_string.is_empty() {
         return;
@@ -360,7 +366,7 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
-                <h1>{"MathCAT Demo"}</h1>
+                <h1>{get_header()}</h1>
                 <h2>{"Math Input Area"}</h2>
                 <textarea id="mathml-input"  rows="5" cols="80" autocorrect="off"
                     placeholder={INPUT_MESSAGE}>
