@@ -61,7 +61,6 @@
     }
 
     function RemoveFocus(id) {
-      console.log("RemoveFocus", id)
       document.getElementById(id).dispatchEvent( new Event("focusout") )
     }
 
@@ -90,8 +89,8 @@
         var reader = new FileReader();
         reader.readAsText(file,'UTF-8');
         reader.onload = readerEvent => {
-            var content = readerEvent.target.result; // this is the content!
-            load_yaml_file( content );
+            var content = readerEvent.target.result; // this is the content of the file
+            load_yaml_file(file.name, content );     // 'file.name' is only the last component (security reasons)
         }
       }
       input.click();  // triggers 'onchange'

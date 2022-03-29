@@ -563,8 +563,10 @@ extern "C" {
 
 
 #[wasm_bindgen]
-pub fn load_yaml_file(contents: &str) {
-    libmathcat::shim_filesystem::override_file_for_debugging_rules("Rules/en/navigate.yaml", contents);
+pub fn load_yaml_file(file_name: &str, contents: &str) {
+    // for security reasons, only the last component of the name is available. We assume (for debugging) the location
+    let file_path = format!("Rules/Languages/en/{}", file_name);
+    libmathcat::shim_filesystem::override_file_for_debugging_rules(&file_path, contents);
 }
 
 fn main() {
