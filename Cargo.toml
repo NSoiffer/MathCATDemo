@@ -1,6 +1,6 @@
 [package]
 name = "math_cat_demo"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 
 
@@ -21,9 +21,9 @@ cfg-if = "1.0"
 phf = { version = "0.10.0", features = ["macros"] }
 
 [dependencies.mathcat]
-version = "0.1.15"
-# for testing MathCAT without having to publish a new version (change two occurences)
-#path = "../MathCAT/"
+version = "0.1.17"
+# for testing MathCAT without having to publish a new version 
+# path = "../MathCAT/"
 
 
 [dependencies.getrandom]
