@@ -59,7 +59,6 @@
     }
 
     function RemoveFocus(id) {
-      console.log("RemoveFocus", id)
       document.getElementById(id).dispatchEvent( new Event("focusout") )
     }
 
@@ -88,8 +87,8 @@
         var reader = new FileReader();
         reader.readAsText(file,'UTF-8');
         reader.onload = readerEvent => {
-            var content = readerEvent.target.result; // this is the content!
-            load_yaml_file( content );
+            var content = readerEvent.target.result; // this is the content of the file
+            load_yaml_file(file.name, content );     // 'file.name' is only the last component (security reasons)
         }
       }
       input.click();  // triggers 'onchange'
@@ -237,16 +236,16 @@
       }
     </script>
   <script type="module">
-    import {load_yaml_file} from '/MathCATDemo/index-95829a95adad9d47.js';
+    import {load_yaml_file} from '/MathCATDemo/index-ebf544c715864af6.js';
     window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
   </script>
 
     <link rel="stylesheet" href="/MathCATDemo/index-2cf400b26753f95b.css">  
     <!-- for debugging -->
-    <script type="module">import init from '/MathCATDemo/index-95829a95adad9d47.js';init('/MathCATDemo/index-95829a95adad9d47_bg.wasm');</script>  
+    <script type="module">import init from '/MathCATDemo/index-ebf544c715864af6.js';init('/MathCATDemo/index-ebf544c715864af6_bg.wasm');</script>  
 
-<link rel="preload" href="/MathCATDemo/index-95829a95adad9d47_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-95829a95adad9d47.js"></head>
+<link rel="preload" href="/MathCATDemo/index-ebf544c715864af6_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-ebf544c715864af6.js"></head>
 <body><script>(function () {
     var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
     var poll_interval = 5000;
