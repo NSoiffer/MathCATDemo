@@ -8,10 +8,13 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', 'input/asciimath']},
+      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath']},
+      tex: {packages: {'[+]': ['mhchem']}},
       options: {
         enableMenu: false, // interferes with navigation
-        enableAssistiveMml: true,
+        // enableAssistiveMml: true,
+        enableEnrichment: false,
+        enableExplorer: false,
       }
     };
 
@@ -96,7 +99,7 @@
       input.click();  // triggers 'onchange'
     }
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-alpha.1/es5/tex-mml-chtml.js"></script> 
 
     <!-- AWS Poly speech/sync highlighting stuff -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1033.0.min.js"></script>
@@ -238,7 +241,7 @@
       }
     </script>
   <script type="module">
-    import {load_yaml_file} from '/MathCATDemo/index-d6c3fa1d4eb6975.js';
+    import {load_yaml_file} from '/MathCATDemo/index-844b68763f8ae55f.js';
     window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
   </script>
 
