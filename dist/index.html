@@ -6,7 +6,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath']},
+      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath', '[mml]/mml3']},
       tex: {packages: {'[+]': ['mhchem']}},
       options: {
         enableMenu: false, // interferes with navigation
@@ -243,16 +243,16 @@
       }
     </script>
   <script type="module">
-    import {load_yaml_file} from '/MathCATDemo/index-531d69e192740f81.js';
+    import {load_yaml_file} from '/MathCATDemo/index-8f51f958581f1c4.js';
     window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
   </script>
 
     <link rel="stylesheet" href="/MathCATDemo/index-2cf400b26753f95b.css">  
     <!-- for debugging -->
-    <script type="module">import init from '/MathCATDemo/index-531d69e192740f81.js';init('/MathCATDemo/index-531d69e192740f81_bg.wasm');</script>  
+    <script type="module">import init from '/MathCATDemo/index-8f51f958581f1c4.js';init('/MathCATDemo/index-8f51f958581f1c4_bg.wasm');</script>  
 
-<link rel="preload" href="/MathCATDemo/index-531d69e192740f81_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-531d69e192740f81.js"></head>
+<link rel="preload" href="/MathCATDemo/index-8f51f958581f1c4_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-8f51f958581f1c4.js"></head>
 <body><script>(function () {
     var url = 'wss://' + window.location.host + '/_trunk/ws';
     var poll_interval = 5000;
