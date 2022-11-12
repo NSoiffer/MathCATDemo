@@ -6,10 +6,13 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', 'input/asciimath']},
+      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath', '[mml]/mml3']},
+      tex: {packages: {'[+]': ['mhchem']}},
       options: {
         enableMenu: false, // interferes with navigation
-        enableAssistiveMml: true,
+        // enableAssistiveMml: true,
+        enableEnrichment: false,
+        enableExplorer: false,
       }
     };
 
@@ -59,7 +62,6 @@
     }
 
     function RemoveFocus(id) {
-      console.log("RemoveFocus", id)
       document.getElementById(id).dispatchEvent( new Event("focusout") )
     }
 
@@ -88,14 +90,14 @@
         var reader = new FileReader();
         reader.readAsText(file,'UTF-8');
         reader.onload = readerEvent => {
-            var content = readerEvent.target.result; // this is the content!
-            load_yaml_file( content );
+            var content = readerEvent.target.result; // this is the content of the file
+            load_yaml_file(file.name, content );     // 'file.name' is only the last component (security reasons)
         }
       }
       input.click();  // triggers 'onchange'
     }
     </script>
-    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script> 
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0-alpha.1/es5/tex-mml-chtml.js"></script> 
 
     <!-- AWS Poly speech/sync highlighting stuff -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1033.0.min.js"></script>
@@ -116,6 +118,10 @@
           return;
         }
 
+        const CAP_LETTER = /(<say-as interpret-as='characters'>[A-Z]<\/say-as>)/g;
+        const PITCH_CHANGE = "<prosody pitch='+90%'>$1</prosody>"
+        text = text.replace(CAP_LETTER, PITCH_CHANGE);
+        console.log("TTS:", text);
         // Create the JSON parameters for getSynthesizeSpeechUrl
         var speechParams = {
             OutputFormat: "json",
@@ -237,18 +243,18 @@
       }
     </script>
   <script type="module">
-    import {load_yaml_file} from '/MathCATDemo/index-3a058ba3606e259d.js';
+    import {load_yaml_file} from '/MathCATDemo/index-ce55960a90889f1d.js';
     window.load_yaml_file = load_yaml_file; // put in global scope so it can be called from global scope functions
   </script>
 
     <link rel="stylesheet" href="/MathCATDemo/index-2cf400b26753f95b.css">  
     <!-- for debugging -->
-    <script type="module">import init from '/MathCATDemo/index-3a058ba3606e259d.js';init('/MathCATDemo/index-3a058ba3606e259d_bg.wasm');</script>  
+    <script type="module">import init from '/MathCATDemo/index-ce55960a90889f1d.js';init('/MathCATDemo/index-ce55960a90889f1d_bg.wasm');</script>  
 
-<link rel="preload" href="/MathCATDemo/index-3a058ba3606e259d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/MathCATDemo/index-3a058ba3606e259d.js"></head>
+<link rel="preload" href="/MathCATDemo/index-ce55960a90889f1d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/MathCATDemo/index-ce55960a90889f1d.js"></head>
 <body><script>(function () {
-    var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
+    var url = 'wss://' + window.location.host + '/_trunk/ws';
     var poll_interval = 5000;
     var reload_upon_connect = () => {
         window.setTimeout(

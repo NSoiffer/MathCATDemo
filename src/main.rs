@@ -9,7 +9,7 @@ extern crate lazy_static;
 
 use wasm_bindgen::prelude::*;
 use cfg_if::cfg_if;
-use libmathcat::interface::*;
+use libmathcat::*;
 
 
 cfg_if! {
@@ -34,6 +34,7 @@ enum Msg {
     NavVerbosity(&'static str),
     SpeechStyle(&'static str),
     SpeechVerbosity(&'static str),
+    SayCaps(&'static str),
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
     TTS(&'static str),
@@ -51,6 +52,7 @@ struct Model {
     display: Html,
     speech_style: String,
     verbosity: String,
+    say_caps: bool,
     speech: String,
     speak: bool,
     nav_id: String,
@@ -72,6 +74,7 @@ impl Model {
         cookie += &format!("nav_verbosity={};", self.nav_verbosity);
         cookie += &format!("speech_style={};", self.speech_style);
         cookie += &format!("verbosity={};", self.verbosity);
+        cookie += &format!("say_caps={};", self.say_caps);
         cookie += &format!("braille_code={};", self.braille_code);
         cookie += &format!("braille_display_as={};", self.braille_display_as);
         cookie += &format!("braille_dots78={};", self.braille_dots78);
@@ -97,6 +100,7 @@ impl Model {
                 "nav_verbosity" => model.nav_verbosity = value,
                 "speech_style" => model.speech_style = value,
                 "verbosity" => model.verbosity = value,
+                "say_caps" => model.say_caps = value=="true",
                 "braille_code" => model.braille_code = value,
                 "braille_display_as" => model.braille_display_as = value,
                 "braille_dots78" => model.braille_dots78 = value,
@@ -110,18 +114,30 @@ static INPUT_MESSAGE: &'static str = "Auto-detect format: override using $...$ f
 static START_FORMULA: &'static str = r"$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$";
 // static START_FORMULA: &'static str = r"$x = {t \over 2a}$";
 
+/// get text for level 1 header
+fn get_header() -> String {
+    return format!("MathCAT Demo (using v{})", get_version());
+}
+
+
 fn update_speech_and_braille(component: &mut Model) {
     if component.math_string.is_empty() {
         return;
     }
 
     if component.update_speech {
-        SetPreference("Verbosity".to_string(), StringOrFloat::AsString(component.verbosity.clone())).unwrap();
-        SetPreference("SpeechStyle".to_string(), StringOrFloat::AsString(component.speech_style.clone())).unwrap();
+        set_preference("Verbosity".to_string(), component.verbosity.clone()).unwrap();
+        set_preference("SpeechOverrides_CapitalLetters".to_string(),
+             (if component.say_caps {"cap"} else {""}).to_string()).unwrap();
+        set_preference("SpeechStyle".to_string(), component.speech_style.clone()).unwrap();
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
-        SetPreference("TTS".to_string(), StringOrFloat::AsString(tts)).unwrap();
-        SetPreference("Bookmark".to_string(), StringOrFloat::AsString("true".to_string())).unwrap();
-        let speech = GetSpokenText().unwrap();
+        set_preference("TTS".to_string(), tts).unwrap();
+        set_preference("Bookmark".to_string(), "true".to_string()).unwrap();
+        let speech = match get_spoken_text() {
+            Ok(text) => text,
+            Err(e) => errors_to_string(&e),
+        };
+
         component.speech = speech;
         component.speak = true;  
         component.update_speech = false;  
@@ -133,8 +149,12 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.update_braille {
-        SetPreference("BrailleNavHighlight".to_string(), StringOrFloat::AsString(component.braille_dots78.clone())).unwrap();
-        let mut braille = GetBraille(component.nav_id.clone()).unwrap();
+        set_preference("BrailleCode".to_string(), component.braille_code.clone()).unwrap();
+        set_preference("BrailleNavHighlight".to_string(), component.braille_dots78.clone()).unwrap();
+        let mut braille = match get_braille(component.nav_id.clone()) {
+            Ok(str) => str,
+            Err(e) => errors_to_string(&e),
+        };
         if component.braille_display_as == "ASCIIBraille" {
             lazy_static! {
                 static ref UNICODE_TO_ASCII: Vec<char> =
@@ -171,6 +191,7 @@ impl Component for Model {
             speech_style: "ClearSpeak".to_string(),
             speak: true,
             verbosity: "Verbose".to_string(),
+            say_caps: false,
             speech: String::default(),
             nav_id: String::default(),
             braille_dots78: "EndPoints".to_string(),
@@ -185,6 +206,9 @@ impl Component for Model {
         };
         
         initial_state.init_state_from_cookies();
+        if set_rules_dir("Rules".to_string()).is_err() {
+            panic!("Didn't find rules dir");
+        };
         return initial_state;
     }
 
@@ -203,10 +227,10 @@ impl Component for Model {
                 // Get the MathML input string, and clear any previous output
                 if let Html::VRef(node) = &self.display {
                     let math_str = get_text_of_element("mathml-input");
-                    let math_str = math_str.replace(INPUT_MESSAGE, "").trim().to_string();
+                    let math_str = math_str.replace(INPUT_MESSAGE, "").replace("\n", " ").trim().to_string();
                     let mut mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
-                        mathml = Some(string_to_mathml(&caps["math"], "TeX"));
+                        debug!("TeX: '{}'", &math_str);
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                     } else if let Some(caps) = ASCIIMATH.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "ASCIIMath"));
@@ -228,7 +252,7 @@ impl Component for Model {
                             math = math.replace("<math ", "<math display='block' ");
                         }
                         // MathJax bug https://github.com/mathjax/MathJax/issues/2805:  newline at end causes MathJaX to hang(!)
-                        match SetMathML(math) {
+                        match set_mathml(math) {
                             Ok(m) => {
                                 let math = m.trim_end().to_string();
                                 debug!("MathML with ids: \n{}", &math);
@@ -264,11 +288,11 @@ impl Component for Model {
             },
             Msg::NavMode(text) => {
                 self.nav_mode = text.to_string();
-                SetPreference("NavMode".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
+                set_preference("NavMode".to_string(), text.to_string()).unwrap();
             },
             Msg::NavVerbosity(text) => {
                 self.nav_verbosity = text.to_string();
-                SetPreference("NavVerbosity".to_string(), StringOrFloat::AsString(text.to_string())).unwrap();
+                set_preference("NavVerbosity".to_string(), text.to_string()).unwrap();
             },
             Msg::SpeechStyle(text) => {
                 self.speech_style = text.to_string();
@@ -276,6 +300,10 @@ impl Component for Model {
             },
             Msg::SpeechVerbosity(text) => {
                 self.verbosity = text.to_string();
+                self.update_speech = true;
+            },
+            Msg::SayCaps(_text) => {
+                self.say_caps = !self.say_caps;
                 self.update_speech = true;
             },
             Msg::BrailleCode(text) => {
@@ -317,18 +345,18 @@ impl Component for Model {
                 } else if VALID_NAV_KEYS.contains(&ev.key_code()) {
                     ev.stop_propagation();
                     ev.prevent_default();    
-                    match DoNavigateKeyPress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
+                    match do_navigate_keypress(ev.key_code() as usize, ev.shift_key(), ev.ctrl_key(), ev.alt_key(), ev.meta_key()) {
                         Ok(speech) => {
                             self.speech = speech;
-                            let id_and_offset = GetNavigationMathMLId().unwrap();
+                            let id_and_offset = get_navigation_mathml_id().unwrap();
                             self.nav_id = id_and_offset.0;
                             highlight_nav_element(&self.nav_id);
-                            self.nav_mode = GetPreference("NavMode".to_string()).unwrap();
+                            self.nav_mode = get_preference("NavMode".to_string()).unwrap();
                             self.speak = true;
                             self.update_braille = true;
                         },
                         Err(e) => {
-                            libmathcat::speech::print_errors(&e.chain_err(|| "Navigation failure!"));
+                            error!("{}", errors_to_string(&e.chain_err(|| "Navigation failure!")));
                             self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
                         },
                     };
@@ -351,7 +379,7 @@ impl Component for Model {
     fn view(&self) -> Html {
         html! {
             <div>
-                <h1>{"MathCAT Demo"}</h1>
+                <h1>{get_header()}</h1>
                 <h2>{"Math Input Area"}</h2>
                 <textarea id="mathml-input"  rows="5" cols="80" autocorrect="off"
                     placeholder={INPUT_MESSAGE}>
@@ -401,7 +429,7 @@ impl Component for Model {
                     {self.display.clone()}
                 </div>
                 <h2 id="speech-heading">{"Speech"}</h2>
-                <table role="presentation"><tr>     // 1x2 outside table
+                <table id="speech-table" role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr> // 2x3 table on left
                         <td>{"Speech Style:"}</td>
                         <td><input type="radio" id="ClearSpeak" name="speech_style"
@@ -427,7 +455,7 @@ impl Component for Model {
                                 onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
                             <label for="Verbose">{"Verbose"}</label></td>
                     </tr></table></td>
-                    <td><table role="presentation"><tr> // 1x2 table on right
+                    <td><table role="presentation" style="margin-left: 2em;"><tr> // 2x1 table on right
                         <td>{"TTS:"}</td>
                         <td><input type="radio" id="Off" name="tts"
                                 checked = {self.tts == "Off"}
@@ -441,7 +469,12 @@ impl Component for Model {
                                 checked = {self.tts == "SSML"}                           
                                 onclick=self.link.callback(|_| Msg::TTS("SSML"))/>
                             <label for="SSML">{"SSML"}</label></td>
-                    </tr> <tr> <td>{"\u{A0}"}</td> // empty row to get alignment right
+                    </tr> <tr> 
+                        <td><label for="Cap">{"Say \"cap\""}</label></td>
+                        <td><input type="checkbox" id="Cap" name="say-cap"
+                                checked = {self.say_caps}
+                                onclick=self.link.callback(|_| Msg::SayCaps("ignored"))/>
+                        </td>
                     </tr></table></td>
                 </tr></table>
                 <textarea role="application" id="speech" aria-labelledby="speech-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
@@ -451,10 +484,12 @@ impl Component for Model {
                 <table role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr>
                         <td>{"Braille Settings:"}</td>
-                        <td><input type="radio" id="Nemeth" name="braille_setting" checked=true value="Nemeth"
+                        <td><input type="radio" id="Nemeth" name="braille_setting"
+                                checked = {self.braille_code == "Nemeth"}
                                 onclick=self.link.callback(|_| Msg::BrailleCode("Nemeth"))/>
                             <label for="Nemeth">{"Nemeth"}</label></td>
-                        <td><input type="radio" id="UEB" name="braille_setting" value="UEB" disabled=true
+                        <td><input type="radio" id="UEB" name="braille_setting" value="UEB"
+                                checked = {self.braille_code == "UEB"}
                                 onclick=self.link.callback(|_| Msg::BrailleCode("UEB"))/>
                             <label for="UEB">{"UEB"}</label></td>
                     </tr><tr>
@@ -546,8 +581,10 @@ extern "C" {
 
 
 #[wasm_bindgen]
-pub fn load_yaml_file(contents: &str) {
-    libmathcat::shim_filesystem::override_file_for_debugging_rules("Rules/en/navigate.yaml", contents);
+pub fn load_yaml_file(file_name: &str, contents: &str) {
+    // for security reasons, only the last component of the name is available. We assume (for debugging) the location
+    let file_path = format!("Rules/Languages/en/{}", file_name);
+    libmathcat::shim_filesystem::override_file_for_debugging_rules(&file_path, contents);
 }
 
 fn main() {
