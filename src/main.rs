@@ -34,6 +34,7 @@ enum Msg {
     NavVerbosity(&'static str),
     SpeechStyle(&'static str),
     SpeechVerbosity(&'static str),
+    SayCaps(&'static str),
     BrailleCode(&'static str),
     BrailleDisplayAs(&'static str),
     TTS(&'static str),
@@ -51,6 +52,7 @@ struct Model {
     display: Html,
     speech_style: String,
     verbosity: String,
+    say_caps: bool,
     speech: String,
     speak: bool,
     nav_id: String,
@@ -72,6 +74,7 @@ impl Model {
         cookie += &format!("nav_verbosity={};", self.nav_verbosity);
         cookie += &format!("speech_style={};", self.speech_style);
         cookie += &format!("verbosity={};", self.verbosity);
+        cookie += &format!("say_caps={};", self.say_caps);
         cookie += &format!("braille_code={};", self.braille_code);
         cookie += &format!("braille_display_as={};", self.braille_display_as);
         cookie += &format!("braille_dots78={};", self.braille_dots78);
@@ -97,6 +100,7 @@ impl Model {
                 "nav_verbosity" => model.nav_verbosity = value,
                 "speech_style" => model.speech_style = value,
                 "verbosity" => model.verbosity = value,
+                "say_caps" => model.say_caps = value=="true",
                 "braille_code" => model.braille_code = value,
                 "braille_display_as" => model.braille_display_as = value,
                 "braille_dots78" => model.braille_dots78 = value,
@@ -123,6 +127,8 @@ fn update_speech_and_braille(component: &mut Model) {
 
     if component.update_speech {
         set_preference("Verbosity".to_string(), component.verbosity.clone()).unwrap();
+        set_preference("SpeechOverrides_CapitalLetters".to_string(),
+             (if component.say_caps {"cap"} else {""}).to_string()).unwrap();
         set_preference("SpeechStyle".to_string(), component.speech_style.clone()).unwrap();
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
         set_preference("TTS".to_string(), tts).unwrap();
@@ -131,6 +137,7 @@ fn update_speech_and_braille(component: &mut Model) {
             Ok(text) => text,
             Err(e) => errors_to_string(&e),
         };
+
         component.speech = speech;
         component.speak = true;  
         component.update_speech = false;  
@@ -184,6 +191,7 @@ impl Component for Model {
             speech_style: "ClearSpeak".to_string(),
             speak: true,
             verbosity: "Verbose".to_string(),
+            say_caps: false,
             speech: String::default(),
             nav_id: String::default(),
             braille_dots78: "EndPoints".to_string(),
@@ -219,9 +227,10 @@ impl Component for Model {
                 // Get the MathML input string, and clear any previous output
                 if let Html::VRef(node) = &self.display {
                     let math_str = get_text_of_element("mathml-input");
-                    let math_str = math_str.replace(INPUT_MESSAGE, "").trim().to_string();
+                    let math_str = math_str.replace(INPUT_MESSAGE, "").replace("\n", " ").trim().to_string();
                     let mut mathml;
                     if let Some(caps) = TEX.captures(&math_str) {
+                        debug!("TeX: '{}'", &math_str);
                         mathml = Some(string_to_mathml(&caps["math"], "TeX"));
                     } else if let Some(caps) = ASCIIMATH.captures(&math_str) {
                         mathml = Some(string_to_mathml(&caps["math"], "ASCIIMath"));
@@ -291,6 +300,10 @@ impl Component for Model {
             },
             Msg::SpeechVerbosity(text) => {
                 self.verbosity = text.to_string();
+                self.update_speech = true;
+            },
+            Msg::SayCaps(_text) => {
+                self.say_caps = !self.say_caps;
                 self.update_speech = true;
             },
             Msg::BrailleCode(text) => {
@@ -416,7 +429,7 @@ impl Component for Model {
                     {self.display.clone()}
                 </div>
                 <h2 id="speech-heading">{"Speech"}</h2>
-                <table role="presentation"><tr>     // 1x2 outside table
+                <table id="speech-table" role="presentation"><tr>     // 1x2 outside table
                     <td><table role="presentation"><tr> // 2x3 table on left
                         <td>{"Speech Style:"}</td>
                         <td><input type="radio" id="ClearSpeak" name="speech_style"
@@ -442,7 +455,7 @@ impl Component for Model {
                                 onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
                             <label for="Verbose">{"Verbose"}</label></td>
                     </tr></table></td>
-                    <td><table role="presentation"><tr> // 1x2 table on right
+                    <td><table role="presentation" style="margin-left: 2em;"><tr> // 2x1 table on right
                         <td>{"TTS:"}</td>
                         <td><input type="radio" id="Off" name="tts"
                                 checked = {self.tts == "Off"}
@@ -456,7 +469,12 @@ impl Component for Model {
                                 checked = {self.tts == "SSML"}                           
                                 onclick=self.link.callback(|_| Msg::TTS("SSML"))/>
                             <label for="SSML">{"SSML"}</label></td>
-                    </tr> <tr> <td>{"\u{A0}"}</td> // empty row to get alignment right
+                    </tr> <tr> 
+                        <td><label for="Cap">{"Say \"cap\""}</label></td>
+                        <td><input type="checkbox" id="Cap" name="say-cap"
+                                checked = {self.say_caps}
+                                onclick=self.link.callback(|_| Msg::SayCaps("ignored"))/>
+                        </td>
                     </tr></table></td>
                 </tr></table>
                 <textarea role="application" id="speech" aria-labelledby="speech-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">

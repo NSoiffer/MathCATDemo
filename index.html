@@ -8,7 +8,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
-      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath']},
+      loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath', '[mml]/mml3']},
       tex: {packages: {'[+]': ['mhchem']}},
       options: {
         enableMenu: false, // interferes with navigation
@@ -120,6 +120,10 @@
           return;
         }
 
+        const CAP_LETTER = /(<say-as interpret-as='characters'>[A-Z]<\/say-as>)/g;
+        const PITCH_CHANGE = "<prosody pitch='+90%'>$1</prosody>"
+        text = text.replace(CAP_LETTER, PITCH_CHANGE);
+        console.log("TTS:", text);
         // Create the JSON parameters for getSynthesizeSpeechUrl
         var speechParams = {
             OutputFormat: "json",
