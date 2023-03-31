@@ -17,7 +17,7 @@ To upload to the github website, do the following ([based on this github page](h
 ```
     import {load_yaml_file} from '/MathCATDemo/index-
 ```
-    with the value from the line
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with the value from the line
 ```
     <link rel="modulepreload" href="/MathCATDemo/index-
 ```
