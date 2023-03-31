@@ -2,3 +2,34 @@
 <img src="logo.png" style="position: relative; top: 16px; z-index: -1;"> is a library that supports conversion of MathML to speech and braille among other things.
 This project adds a GUI to MathCAT to demo some of its capabilities.
 Visit [the MathCAT project page](https://nsoiffer.github.io/MathCAT/) for more info or if you want to play around, [try out the demo](https://nsoiffer.github.io/MathCATDemo/).
+
+
+## Local builds
+To build this and run locally, you need to download and install [trunk](https://docs.trunk.io/docs/install). Then type
+```
+trunk serve
+```
+
+## Website builds
+To upload to the github website, do the following ([based on this github page](https://gist.github.com/cobyism/4730490)):
+1. stop trunk serve (it will rebuild the file and wipe the following change)
+2. In dist/index.html: update the line that starts:
+```
+    import {load_yaml_file} from '/MathCATDemo/index-
+```
+    with the value from the line
+```
+    <link rel="modulepreload" href="/MathCATDemo/index-
+```
+3. change url line to use "wss"
+```
+    var url = 'wss://' + window.location.host + '/MathCATDemo/_trunk/ws';
+```
+4. In the shell, issue the commands (the first might not be needed)
+```
+    git push origin --delete gh-pages
+    git add dist && git commit -m "update"
+    c:/Software/Git/bin/git subtree push --prefix dist origin gh-pages 
+```
+
+Note: step '2' shouldn't be needed, but I haven't figured out the configuration settings to get it to do the update properly.
