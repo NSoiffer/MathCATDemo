@@ -276,14 +276,14 @@ async function load(module, imports) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        input = new URL('index-ac0f9bda2c8729e4_bg.wasm', import.meta.url);
+        input = new URL('index-d6690c7aa41c3352_bg.wasm', import.meta.url);
     }
     const imports = {};
     imports.wbg = {};
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
-    imports.wbg.__wbg_GetTextOfElement_9ef1c40c664c3a5d = function(arg0, arg1, arg2) {
+    imports.wbg.__wbg_GetTextOfElement_ec5c521768686dc4 = function(arg0, arg1, arg2) {
         const ret = GetTextOfElement(getStringFromWasm0(arg1, arg2));
         const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
@@ -305,7 +305,7 @@ async function init(input) {
         const ret = getObject(arg0).keyCode;
         return ret;
     };
-    imports.wbg.__wbg_ConvertToCHTML_67e2ff2dfb75c594 = function(arg0, arg1) {
+    imports.wbg.__wbg_ConvertToCHTML_89b1dd8c3ac5c5de = function(arg0, arg1) {
         try {
             const ret = ConvertToCHTML(getStringFromWasm0(arg0, arg1));
             return addHeapObject(ret);
@@ -316,7 +316,7 @@ async function init(input) {
     imports.wbg.__wbg_settextContent_2f06df37ffdb33e7 = function(arg0, arg1, arg2) {
         getObject(arg0).textContent = arg1 === 0 ? undefined : getStringFromWasm0(arg1, arg2);
     };
-    imports.wbg.__wbg_GetFile_d2637105111a12f3 = typeof GetFile == 'function' ? GetFile : notDefined('GetFile');
+    imports.wbg.__wbg_GetFile_07a9065af7cc8c95 = typeof GetFile == 'function' ? GetFile : notDefined('GetFile');
     imports.wbg.__wbg_stopPropagation_63abc0c04280af82 = function(arg0) {
         getObject(arg0).stopPropagation();
     };
@@ -331,13 +331,13 @@ async function init(input) {
         const ret = getObject(arg0).metaKey;
         return ret;
     };
-    imports.wbg.__wbg_RemoveFocus_cbe83d52abe214a7 = function(arg0, arg1) {
+    imports.wbg.__wbg_RemoveFocus_0a7d1be96138aabb = function(arg0, arg1) {
         RemoveFocus(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbg_HighlightNavigationElement_dbd8fed04ecf8f66 = function(arg0, arg1) {
+    imports.wbg.__wbg_HighlightNavigationElement_80e85e30ae608a82 = function(arg0, arg1) {
         HighlightNavigationElement(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbg_SpeakText_4fb2267f77616867 = function(arg0, arg1) {
+    imports.wbg.__wbg_SpeakText_716c034f43d8b422 = function(arg0, arg1) {
         SpeakText(getStringFromWasm0(arg0, arg1));
     };
     imports.wbg.__wbg_querySelector_c03126fc82664294 = function() { return handleError(function (arg0, arg1, arg2) {
@@ -356,21 +356,21 @@ async function init(input) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_RustInit_8b24263e1544a900 = function(arg0, arg1) {
+    imports.wbg.__wbg_RustInit_d55f5172bf8cb36f = function(arg0, arg1) {
         try {
             RustInit(getStringFromWasm0(arg0, arg1));
         } finally {
             wasm.__wbindgen_free(arg0, arg1);
         }
     };
-    imports.wbg.__wbg_ConvertToMathML_eec34584ec6d2a88 = function(arg0, arg1, arg2, arg3, arg4) {
+    imports.wbg.__wbg_ConvertToMathML_57539850ff0ee9fa = function(arg0, arg1, arg2, arg3, arg4) {
         const ret = ConvertToMathML(getStringFromWasm0(arg1, arg2), getStringFromWasm0(arg3, arg4));
         const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len0;
         getInt32Memory0()[arg0 / 4 + 0] = ptr0;
     };
-    imports.wbg.__wbg_SetCookie_7cdacf6d4806324c = function(arg0, arg1, arg2) {
+    imports.wbg.__wbg_SetCookie_ab123f961f1ebddc = function(arg0, arg1, arg2) {
         const ret = SetCookie(getStringFromWasm0(arg1, arg2));
         const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
