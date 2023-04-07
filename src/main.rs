@@ -127,8 +127,10 @@ fn update_speech_and_braille(component: &mut Model) {
 
     if component.update_speech {
         set_preference("Verbosity".to_string(), component.verbosity.clone()).unwrap();
-        set_preference("SpeechOverrides_CapitalLetters".to_string(),
-             (if component.say_caps {"cap"} else {""}).to_string()).unwrap();
+        set_preference("CapitalLetters_UseWord".to_string(),
+             (if component.say_caps {"true"} else {"false"}).to_string()).unwrap();
+        set_preference("CapitalLetters_Pitch".to_string(),
+             (if !component.say_caps {"40.0"} else {"0.0"}).to_string()).unwrap();
         set_preference("SpeechStyle".to_string(), component.speech_style.clone()).unwrap();
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
         set_preference("TTS".to_string(), tts).unwrap();
