@@ -382,8 +382,8 @@ impl Component for Model {
         html! {
             <div>
                 <h1>{get_header()}</h1>
-                <h2>{"Math Input Area"}</h2>
-                <textarea id="mathml-input"  rows="5" cols="80" autocorrect="off"
+                <h2 id="math-input-area">{"Math Input Area"}</h2>
+                <textarea id="mathml-input" name="math-input-area" rows="5" cols="80" autocorrect="off"
                     placeholder={INPUT_MESSAGE}>
                     {INPUT_MESSAGE.to_string() + START_FORMULA}
                 </textarea>
