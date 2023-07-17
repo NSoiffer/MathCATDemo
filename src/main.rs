@@ -359,7 +359,7 @@ impl Component for Model {
                         },
                         Err(e) => {
                             error!("{}", errors_to_string(&e.chain_err(|| "Navigation failure!")));
-                            self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
+                            self.speech = "Error in Navigation (key combo not yet implemented?) -- see console log for more info".to_string()
                         },
                     };
                 }
