@@ -78,7 +78,7 @@ impl Model {
         cookie += &format!("braille_code={};", self.braille_code);
         cookie += &format!("braille_display_as={};", self.braille_display_as);
         cookie += &format!("braille_dots78={};", self.braille_dots78);
-        cookie += &format!("tts={};", self.tts);        set_cookie(&cookie);
+        cookie += &format!("tts={};", self.tts);
     }
 
     fn init_state_from_cookies(&mut self) {
@@ -206,9 +206,11 @@ impl Component for Model {
         };
         
         initial_state.init_state_from_cookies();
-        if set_rules_dir("Rules".to_string()).is_err() {
-            panic!("Didn't find rules dir");
+        if let Err(e) = set_rules_dir("Rules".to_string()) {
+            error!("Didn't find rules dir: {}", e.to_string());
         };
+        set_preference("CheckRuleFiles".to_string(), "None".to_string()).unwrap();
+
         return initial_state;
     }
 
