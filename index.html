@@ -5,7 +5,6 @@
     <title>MathCAT Demo</title>
 
     <!-- MathJax-related stuff -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
     MathJax = {
       loader: {load: ['input/tex', '[tex]/mhchem', 'input/asciimath', '[mml]/mml3']},
@@ -33,7 +32,7 @@
         };
       } catch (e) {
         console.error("MathJax conversion error: ", e);
-        mathml = "<math><merror>MathJax conversion error</merror></math>"
+        mathml = "<math><merror><mtext>MathJax conversion error</mtext></merror></math>"
       }
       console.log("ConvertToMathML:\n" + mathml.toString());
       return mathml;
