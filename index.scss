@@ -10,6 +10,9 @@ h2 {
 h2:first-child {
   margin-top: .5em;
 }
+.next-group {
+  padding-left: 3em;
+}
 #mathml-input {
   font-family: monospace;
   font-size: 100%;
@@ -25,7 +28,6 @@ h2:first-child {
   margin-bottom: 3ex;
   margin-left: auto;
   margin-right: auto
-  
 }
 #mathml-output {
     font-size: 110%;
@@ -36,6 +38,31 @@ h2:first-child {
     width: 100%;
     white-space: pre;
   }
+select {
+    appearance: none;
+    outline: 0;
+    background: rgb(176, 236, 176);
+    background-image: none;
+    height: 100%;
+    color: black;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: 90%;
+}
+.select {
+  position: relative;
+  height: 2em;
+  line-height: 3;
+  overflow: hidden;
+  border-radius: .25em;
+  padding-bottom: 10px;
+}
+option {
+  background: rgb(225, 255, 225);;
+  color: black;
+  font-size: 90%;
+}
 
 textarea {
   word-wrap: normal;

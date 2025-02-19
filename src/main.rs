@@ -32,6 +32,7 @@ enum Msg {
     NewMathML,
     NavMode(&'static str),
     NavVerbosity(&'static str),
+    Language(&'static str),
     SpeechStyle(&'static str),
     SpeechVerbosity(&'static str),
     SayCaps(&'static str),
@@ -50,6 +51,7 @@ struct Model {
     nav_mode: String,
     nav_verbosity: String,
     display: Html,
+    language: String,
     speech_style: String,
     verbosity: String,
     say_caps: bool,
@@ -72,6 +74,7 @@ impl Model {
         let mut cookie = String::with_capacity(1024);
         cookie += &format!("nav_mode={};", self.nav_mode);
         cookie += &format!("nav_verbosity={};", self.nav_verbosity);
+        cookie += &format!("language={};", self.language);
         cookie += &format!("speech_style={};", self.speech_style);
         cookie += &format!("verbosity={};", self.verbosity);
         cookie += &format!("say_caps={};", self.say_caps);
@@ -98,6 +101,7 @@ impl Model {
             match name {
                 "nav_mode" => model.nav_mode = value,
                 "nav_verbosity" => model.nav_verbosity = value,
+                "language" => model.language = value,
                 "speech_style" => model.speech_style = value,
                 "verbosity" => model.verbosity = value,
                 "say_caps" => model.say_caps = value=="true",
@@ -129,6 +133,7 @@ fn update_speech_and_braille(component: &mut Model) {
         set_preference("Verbosity".to_string(), component.verbosity.clone()).unwrap();
         set_preference("SpeechOverrides_CapitalLetters".to_string(),
              (if component.say_caps {"cap"} else {""}).to_string()).unwrap();
+        set_preference("Language".to_string(), component.language.clone()).unwrap();
         set_preference("SpeechStyle".to_string(), component.speech_style.clone()).unwrap();
         let tts = if component.tts == "Off" {"None".to_string()} else {component.tts.clone()};
         set_preference("TTS".to_string(), tts).unwrap();
@@ -144,7 +149,7 @@ fn update_speech_and_braille(component: &mut Model) {
     }
 
     if component.speak && component.tts != "Off" {
-        speak_text(&component.speech);
+        speak_text(&component.speech, &component.language);
         component.speak = false;
     }
 
@@ -188,6 +193,7 @@ impl Component for Model {
             nav_mode: "Enhanced".to_string(),
             nav_verbosity: "Verbose".to_string(),
             display: Html::VRef(yew::utils::document().create_element("div").unwrap().into()),
+            language: "en".to_string(),
             speech_style: "ClearSpeak".to_string(),
             speak: true,
             verbosity: "Verbose".to_string(),
@@ -295,6 +301,10 @@ impl Component for Model {
             Msg::NavVerbosity(text) => {
                 self.nav_verbosity = text.to_string();
                 set_preference("NavVerbosity".to_string(), text.to_string()).unwrap();
+            },
+            Msg::Language(text) => {
+                self.language = text.to_string();
+                self.update_speech = true;
             },
             Msg::SpeechStyle(text) => {
                 self.speech_style = text.to_string();
@@ -430,9 +440,23 @@ impl Component for Model {
                         onkeydown=self.link.callback(|ev| Msg::Navigate(ev))>
                     {self.display.clone()}
                 </div>
-                <h2 id="speech-heading">{"Speech"}</h2>
-                <table id="speech-table" role="presentation"><tr>     // 1x2 outside table
-                    <td><table role="presentation"><tr> // 2x3 table on left
+                
+                <table id="speech-table" role="presentation">
+                    <tr>     // 1x2 outside table
+                        <td><h2 id="speech-heading">{"Speech"}</h2></td>
+                        <td colspan="3"><label for="Language">{"Language: "}</label>
+                            <span class="select"><select name="language" id="language">
+                            // FIX: this should search available languages
+                                <option value="en" onclick=self.link.callback(|_| Msg::Language("en"))>{"English"}</option>
+                                <option value="es" onclick=self.link.callback(|_| Msg::Language("es"))>{"Spanish"}</option>
+                                <option value="fi" onclick=self.link.callback(|_| Msg::Language("fi"))>{"Finnish"}</option>
+                                <option value="sv" onclick=self.link.callback(|_| Msg::Language("sv"))>{"Swedish"}</option>
+                                <option value="id" onclick=self.link.callback(|_| Msg::Language("id"))>{"Indonesian"}</option>
+                                <option value="vi" onclick=self.link.callback(|_| Msg::Language("vi"))>{"Vietnamese"}</option>
+                                <option value="zh-tw" onclick=self.link.callback(|_| Msg::Language("zh-tw"))>{"Chinese (TW)"}</option>
+                            </select></span>
+                        </td>
+                    </tr><tr>
                         <td>{"Speech Style:"}</td>
                         <td><input type="radio" id="ClearSpeak" name="speech_style"
                                 checked = {self.speech_style == "ClearSpeak"}
@@ -442,6 +466,20 @@ impl Component for Model {
                                 checked = {self.speech_style == "SimpleSpeak"}                           
                                 onclick=self.link.callback(|_| Msg::SpeechStyle("SimpleSpeak"))/>
                             <label for="SimpleSpeak">{"SimpleSpeak"}</label></td>
+                        <td/>
+                        <td class="next-group">{"TTS:"}</td>
+                        <td><input type="radio" id="Off" name="tts"
+                                checked = {self.tts == "Off"}
+                                onclick=self.link.callback(|_| Msg::TTS("Off"))/>
+                            <label for="Off">{"Off"}</label></td>
+                        <td><input type="radio" id="Plain" name="tts"
+                                checked = {self.tts == "None"}
+                                onclick=self.link.callback(|_| Msg::TTS("None"))/>
+                            <label for="Plain">{"Plain"}</label></td>
+                        <td><input type="radio" id="SSML" name="tts" value="SSML"
+                                checked = {self.tts == "SSML"}                           
+                                onclick=self.link.callback(|_| Msg::TTS("SSML"))/>
+                            <label for="SSML">{"SSML"}</label></td>
                     </tr><tr>
                         <td>{"Speech Verbosity:"}</td>
                         <td><input type="radio" id="Terse" name="verbosity" value="Terse"
@@ -456,29 +494,13 @@ impl Component for Model {
                                 checked = {self.verbosity == "Verbose"}
                                 onclick=self.link.callback(|_| Msg::SpeechVerbosity("Verbose"))/>
                             <label for="Verbose">{"Verbose"}</label></td>
-                    </tr></table></td>
-                    <td><table role="presentation" style="margin-left: 2em;"><tr> // 2x1 table on right
-                        <td>{"TTS:"}</td>
-                        <td><input type="radio" id="Off" name="tts"
-                                checked = {self.tts == "Off"}
-                                onclick=self.link.callback(|_| Msg::TTS("Off"))/>
-                            <label for="Off">{"Off"}</label></td>
-                        <td><input type="radio" id="Plain" name="tts"
-                                checked = {self.tts == "None"}
-                                onclick=self.link.callback(|_| Msg::TTS("None"))/>
-                            <label for="Plain">{"Plain"}</label></td>
-                        <td><input type="radio" id="SSML" name="tts" value="SSML"
-                                checked = {self.tts == "SSML"}                           
-                                onclick=self.link.callback(|_| Msg::TTS("SSML"))/>
-                            <label for="SSML">{"SSML"}</label></td>
-                    </tr> <tr> 
-                        <td><label for="Cap">{"Say \"cap\""}</label></td>
+                        <td><label for="Cap" class="next-group">{"Say \"cap\""}</label></td>
                         <td><input type="checkbox" id="Cap" name="say-cap"
                                 checked = {self.say_caps}
                                 onclick=self.link.callback(|_| Msg::SayCaps("ignored"))/>
                         </td>
-                    </tr></table></td>
-                </tr></table>
+                    </tr>
+                </table>
                 <textarea role="application" id="speech" aria-labelledby="speech-heading" readonly=true rows="3" cols="80" data-hint="" autocorrect="off">
                     {&self.speech}
                 </textarea>
@@ -563,7 +585,7 @@ extern "C" {
     //     .unchecked_into::<HtmlElement>();
 
     #[wasm_bindgen(js_name = "SpeakText")]
-    pub fn speak_text(text: &str);
+    pub fn speak_text(text: &str, lang: &str);
 
     #[wasm_bindgen(js_name = "HighlightNavigationElement")]
     pub fn highlight_nav_element(text: &str);
