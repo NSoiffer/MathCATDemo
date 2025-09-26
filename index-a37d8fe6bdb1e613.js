@@ -210,7 +210,7 @@ export function load_yaml_file(file_name, contents) {
 }
 
 function __wbg_adapter_18(arg0, arg1, arg2) {
-    wasm.closure432_externref_shim(arg0, arg1, arg2);
+    wasm.closure431_externref_shim(arg0, arg1, arg2);
 }
 
 async function __wbg_load(module, imports) {
@@ -567,8 +567,8 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper5518 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 433, __wbg_adapter_18);
+    imports.wbg.__wbindgen_closure_wrapper5533 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 432, __wbg_adapter_18);
         return ret;
     };
     imports.wbg.__wbindgen_debug_string = function(arg0, arg1) {
@@ -656,7 +656,7 @@ async function __wbg_init(module_or_path) {
     }
 
     if (typeof module_or_path === 'undefined') {
-        module_or_path = new URL('index-4bc2f153f7b8dcdd_bg.wasm', import.meta.url);
+        module_or_path = new URL('index-a37d8fe6bdb1e613_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
