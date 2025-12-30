@@ -54,12 +54,13 @@
       }
     }
 
-    function HighlightNavigationElement(id) {
-      if (window['MathCAT'].navigationMark) {
-        removeHighlight(window['MathCAT'].navigationMark, 'nav-highlight');
+    function HighlightNavigationElement(id, offset) {
+      if (window['MathCAT'].navMark) {
+        removeHighlight(window['MathCAT'].navMark, window['MathCAT'].navMarkOffset, 'nav-highlight');
       };
-      window['MathCAT'].navigationMark = id
-      highlightID(id, 'nav-highlight');
+      window['MathCAT'].navMark = id
+      window['MathCAT'].navMarkOffset = offset
+      highlightID(id, offset, 'nav-highlight');
     }
 
     function RemoveFocus(id) {
@@ -109,7 +110,7 @@
         if (window['MathCAT'].readAloudAudio) {
           // pause current playback to allow new playback
           window['MathCAT'].readAloudAudio.pause();
-          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+          removeHighlight(window['MathCAT'].readAloudCurrentMark, 0, 'sync-highlight');
           console.warn("paused playback");
         }
 
@@ -206,7 +207,7 @@
                     window['MathCAT'].readAloudAudio.addEventListener(
                         'ended',
                         () => {
-                          removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+                          removeHighlight(window['MathCAT'].readAloudCurrentMark, 0, 'sync-highlight');
                           window['MathCAT'].readAloudAudio = null; // flag indicate not currently speaking
                         }
                     );
@@ -229,9 +230,9 @@
                                 }
                             }
                             if (window['MathCAT'].readAloudCurrentMark !== value) {
-                                removeHighlight(window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+                                removeHighlight(window['MathCAT'].readAloudCurrentMark, 0, 'sync-highlight');
                                 window['MathCAT'].readAloudCurrentMark = value;
-                                highlightID( window['MathCAT'].readAloudCurrentMark, 'sync-highlight');
+                                highlightID( window['MathCAT'].readAloudCurrentMark, 0, 'sync-highlight');
                             }
                         }
                     );
@@ -246,19 +247,43 @@
         });
       }
 
-      function removeHighlight(id, className) {
+      const leafElements = ['mi', 'mn', 'mo', 'ms', 'mtext'];
+
+      function removeHighlight(id, offset, className) {
         if (id) {
           let element = document.getElementById(id);
           if (element) {
-            element.classList.remove(className);
+            if (offset > 0 && leafElements.includes(element.tagName.toLowerCase().replace('mjx-', ''))) {
+              // for leaf elements, we may have wrapped a span around the content
+              let span = element.querySelector('span.' + className);
+              if (span) {
+                span.replaceWith(...span.childNodes); // unwrap the span
+              }
+            } else {
+              element.classList.remove(className);
+            }
           }
         }
       }
 
-      function highlightID(id, className) {
+      function highlightID(id, offset, className) {
         let element = document.getElementById(id);
         if (element) {
-          element.classList.add(className);
+          if (offset > 0 && leafElements.includes(element.tagName.toLowerCase().replace('mjx-', ''))) {
+            // for leaf elements, wrap a span around the content
+            let range = document.createRange();
+            console.log("highlightID: wrapping span around ", element,  " at offset ", offset);
+            range.setStart(element, offset - 1);
+            range.setEnd(element, offset);
+            let span = document.createElement('span');
+            span.classList.add(className);
+            span.style.display = 'inline-block';
+            range.surroundContents(span);
+            console.log("highlightID: wrapped span around ", element, " at offset ", offset);
+          } else {
+            element.classList.add(className);
+            console.log("highlightID: added class to ", element);
+          }
         }
       }
     </script>

@@ -58,6 +58,7 @@ struct Model {
     speech: String,
     speak: bool,
     nav_id: String,
+    nav_offset: usize,
     braille_code: String,
     braille_display_as: String,
     braille_dots78: String,
@@ -200,6 +201,7 @@ impl Component for Model {
             say_caps: false,
             speech: String::default(),
             nav_id: String::default(),
+            nav_offset: 0,
             braille_dots78: "EndPoints".to_string(),
             braille_code: "Nemeth".to_string(),
             braille_display_as: "Dots".to_string(),
@@ -290,6 +292,7 @@ impl Component for Model {
                         panic!("append_child returned error '{:?}'", e);
                     };
                     self.nav_id = "".to_string();
+                    self.nav_offset = 0;
                     self.update_braille = true;
                     self.update_speech = true;
                 };
@@ -362,13 +365,14 @@ impl Component for Model {
                             self.speech = speech;
                             let id_and_offset = get_navigation_mathml_id().unwrap();
                             self.nav_id = id_and_offset.0;
-                            highlight_nav_element(&self.nav_id);
+                            self.nav_offset = id_and_offset.1;
+                            highlight_nav_element(&self.nav_id, self.nav_offset);
                             self.nav_mode = get_preference("NavMode".to_string()).unwrap();
                             self.speak = true;
                             self.update_braille = true;
                         },
                         Err(e) => {
-                            error!("{}", errors_to_string(&e.chain_err(|| "Navigation failure!")));
+                            error!("{}", errors_to_string(&e.context("Navigation failure!")));
                             self.speech = "Error in Navigation (key combo not yet implement?) -- see console log for more info".to_string()
                         },
                     };
@@ -588,7 +592,7 @@ extern "C" {
     pub fn speak_text(text: &str, lang: &str);
 
     #[wasm_bindgen(js_name = "HighlightNavigationElement")]
-    pub fn highlight_nav_element(text: &str);
+    pub fn highlight_nav_element(text: &str, offset: usize);
 
     #[wasm_bindgen(js_name = "RemoveFocus")]
     pub fn remove_focus(text: &str);
